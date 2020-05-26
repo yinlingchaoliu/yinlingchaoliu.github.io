@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="####1、java并发挑战上下文切换、死锁、硬件和软件资源限制 #####上下文切换任务状态从保存到再加载的过程是一次上下文切换线程创建和上下文切换的会影响效率 检查工具Lmbench3(性能分析工具)   测量上下文切换时长vmstat（linux命令）  切换次数（cs） 解决方案：  减少上下文切换：  1）无锁并发编程：减少使用锁，将数据分段，每个线程处理一段  2）CAS算法：atom">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java并发核心机制和内存模型">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/java高并发编程/java并发核心机制和内存模型/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="####1、java并发挑战上下文切换、死锁、硬件和软件资源限制 #####上下文切换任务状态从保存到再加载的过程是一次上下文切换线程创建和上下文切换的会影响效率 检查工具Lmbench3(性能分析工具)   测量上下文切换时长vmstat（linux命令）  切换次数（cs） 解决方案：  减少上下文切换：  1）无锁并发编程：减少使用锁，将数据分段，每个线程处理一段  2）CAS算法：atom">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.898Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java并发核心机制和内存模型">
+<meta name="twitter:description" content="####1、java并发挑战上下文切换、死锁、硬件和软件资源限制 #####上下文切换任务状态从保存到再加载的过程是一次上下文切换线程创建和上下文切换的会影响效率 检查工具Lmbench3(性能分析工具)   测量上下文切换时长vmstat（linux命令）  切换次数（cs） 解决方案：  减少上下文切换：  1）无锁并发编程：减少使用锁，将数据分段，每个线程处理一段  2）CAS算法：atom">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/java高并发编程/java并发核心机制和内存模型/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>java并发核心机制和内存模型 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/java并发核心机制和内存模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java并发核心机制和内存模型
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java高并发编程/" itemprop="url" rel="index"><span itemprop="name">java高并发编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>####1、java并发挑战<br>上下文切换、死锁、硬件和软件资源限制</p>
+<p>#####上下文切换<br>任务状态从保存到再加载的过程是一次上下文切换<br>线程创建和上下文切换的会影响效率</p>
+<p>检查工具<br>Lmbench3(性能分析工具)   测量上下文切换时长<br>vmstat（linux命令）  切换次数（cs）</p>
+<p>解决方案：</p>
+<ul>
+<li>减少上下文切换：<br>  1）无锁并发编程：减少使用锁，将数据分段，每个线程处理一段<br>  2）CAS算法：atomic  数值原子操作</li>
+<li><p>减少线程<br>  1）使用最少线程：避免创建不需要线程</p>
+<p>实战，减少大量WAITING状态线程</p>
+</li>
+</ul>
+<p>1、jstack pid &gt; txt , dump线程信息<br>2、统计线程状态<br>grep  “java.lang.Thread.State”  文件 | awk <code>{print $2$3$4$5}</code> |sort| uniq -c </p>
+<p>#####死锁定义·<br>如果一组进程中的每一个进程都在等待仅由该组进程中的其他进程才能引发的事件，那么该组进程是死锁的。</p>
+<p>一句话解析：多个锁之间关系要同一层级对应，死锁原因锁之间关系是越层级等待</p>
+<p>如何避免：<br>1、避免一个线程同时获取多个锁<br>2、避免一个线程内锁内同时只有多个资源<br>3、尝试定时锁 lock.tryLock(time)</p>
+<p>#####资源限制定义<br>进行并发编程时，程序的执行速度受限于计算机硬件资源或者软件资源</p>
+<p>资源限制引发问题<br>并行代码，受到资源限制，串行执行，那么上下文切换与资源调度极大浪费时间。</p>
+<p>解决方案：<br>1、硬件资源，集群并行执行（带宽和硬盘）<br>2、资源池复用（连接数）</p>
+<p>####2、java并发机制和原理<br>线程安全：如果一个对象可以安全被多个线程同时使用，那么它就是线程安全的</p>
+<p>#####并发三个特性</p>
+<ul>
+<li>原子性：是指一个操作或多个操作要么全部执行，且执行的过程不会被任何因素打断，要么就都不执行。</li>
+</ul>
+<p>关键词：原子</p>
+<ul>
+<li>可见性：当一个线程修改共享变量的值，其他线程能够立即得知这个修改</li>
+</ul>
+<p>关键词：volatile </p>
+<ul>
+<li>有序性：即程序执行的顺序按照代码的先后顺序执行</li>
+</ul>
+<p>关键词：先后顺序</p>
+<p>#####volatile<br>实现原理<br>1、将当前处理器缓存行的数据写回到系统内存<br>2、这个写回内存的操作会使在其他cpu里缓存该内存地址的数据无效</p>
+<p>#####synchronized<br>原理：jvm基于进入和退出Monitor对象来实现方法同步和代码块同步的</p>
+<p>synchronized 重量锁<br>1、对于普通同步方法，锁是当前实例对象<br>2、对于静态同步方法，锁是当前类的Class对象<br>3、对于同步方法块，锁是synchonized括号里的配置对象</p>
+<p>锁的级别，只可以升级，不能降级<br>从低到高：无状态锁、偏向锁、轻量级锁、重量级锁</p>
+<p>#####原子操作<br>不可中断的一个或一系列操作</p>
+<p>原理：<br>通过总线锁保证原子性<br>使用缓存锁保证原子性 </p>
+<h4 id="3、java内存模型（JMM）"><a href="#3、java内存模型（JMM）" class="headerlink" title="3、java内存模型（JMM）"></a>3、java内存模型（JMM）</h4><p>并发编程关键问题：<br>1）共享内存<br>2）消息传递  </p>
+<p>#####指令重排：<br>在执行程序时，为提高性能，编译器和处理器会对指令重新排序</p>
+<p><strong><em>插入内存屏障，来禁止指令重排序</em></strong></p>
+<p>#####volatile修饰含义：<br>1、使用同一个锁对这些单个读/写操作做了同步<br>2、修饰变量指令禁止重排<br>3、多个volatile复合操作，不具有原子性。eg:volatile++</p>
+<p>进阶：<br><a href="https://www.cnblogs.com/huichuan/archive/2013/06/14/3136033.html" target="_blank" rel="noopener">《java理论与实践 正确使用Volatile变量》</a></p>
+<p>#####锁的内存语义：<br>锁可以让临界区互斥执行<br>从内存读取共享变量，而不是缓存</p>
+<p>#####final域内存语义<br>1、在构造函数内对一个final域写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序</p>
+<p>2、初次读一个包含final域的对象引用，与随后初次读这个final域，这两个操作之间不能重排序</p>
+<p>3、final引用不能从构造函数内“逸出” obj=this</p>
+<p>4、被构造对象的引用在构造函数中没有“逸出”。<br>那么不需要使用同步就可以保证任意线程都能看到这个初始值</p>
+<p>happens-before原则</p>
+<p>JMM设计<br>偏好：<br>程序员： 强内存模型来编写代码<br>编译器：基于优化弱内存模型</p>
+<p>原则<br>1、会改变程序执行结果的禁止重排序<br>2、不会改变程序结果的重排序</p>
+<p>#####双重检查锁定错误<br>double-checked lock(双重锁定是错误的)<br>问题：当instance !=null 时，实例初始化未完成</p>
+<p>问题根源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">instance = new Singleton()</span><br><span class="line">memory = allocate() //1、分配内存空间</span><br><span class="line">ctorInstance(memory)//2、初始化对象</span><br><span class="line">instance = memory// 3、设置instance指向内存分配地址</span><br><span class="line"></span><br><span class="line">第2、3步可能重排序</span><br></pre></td></tr></table></figure></p>
+<p>解决方案<br>1、禁止重排序<br>2、允许重排序，不容许其他线程“看到”</p>
+<p>#####实战</p>
+<p>######1、基于volatile解决方案 (禁止重排序)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class SafeDoubleCheckedLocking&#123;</span><br><span class="line">    private volatile static Instance instance;</span><br><span class="line">    public static Instance getInstance()&#123;</span><br><span class="line">        if(instance == null)&#123;</span><br><span class="line">            synchronized(SafeDoubleCheckedLocking.class)&#123;</span><br><span class="line">                if(instance == null)&#123;</span><br><span class="line">                    instance = new Instance();</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>######2、基于类初始化的解决方案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class SingleFactory&#123;</span><br><span class="line">    private static class InstanceHolder&#123;</span><br><span class="line">        public static final Instance instance = new Instance();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Instance getInstance()&#123;</span><br><span class="line">        return InstanceHolder.instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/java高并发编程/生产-消费者模式/" rel="next" title="生产-消费者模式">
+                <i class="fa fa-chevron-left"></i> 生产-消费者模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/java高并发编程/Worker-Thread-模式/" rel="prev" title="Worker-Thread-模式">
+                Worker-Thread-模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#3、java内存模型（JMM）"><span class="nav-number">1.</span> <span class="nav-text">3、java内存模型（JMM）</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

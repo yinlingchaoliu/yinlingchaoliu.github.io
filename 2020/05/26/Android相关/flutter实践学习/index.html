@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="#####导航1、flutter学习思路flutter简易启动框架flutter开发工具and so on… 1、flutter学习思路学习一门新语言，很难通过一步一步学习，快速接入项目，原因是1、商业项目一般是多个技术点的综合运用2、学习到技术也符合28定律，真正运用到实践技术不多3、实际中项目学习，一般是先有，后优化关系综上，我采取思路是，  1、采用已开源代码成熟代码整合出一个新项目。关系就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flutter实践学习">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/Android相关/flutter实践学习/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="#####导航1、flutter学习思路flutter简易启动框架flutter开发工具and so on… 1、flutter学习思路学习一门新语言，很难通过一步一步学习，快速接入项目，原因是1、商业项目一般是多个技术点的综合运用2、学习到技术也符合28定律，真正运用到实践技术不多3、实际中项目学习，一般是先有，后优化关系综上，我采取思路是，  1、采用已开源代码成熟代码整合出一个新项目。关系就">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-b6bfc9652aa5e72a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.193Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="flutter实践学习">
+<meta name="twitter:description" content="#####导航1、flutter学习思路flutter简易启动框架flutter开发工具and so on… 1、flutter学习思路学习一门新语言，很难通过一步一步学习，快速接入项目，原因是1、商业项目一般是多个技术点的综合运用2、学习到技术也符合28定律，真正运用到实践技术不多3、实际中项目学习，一般是先有，后优化关系综上，我采取思路是，  1、采用已开源代码成熟代码整合出一个新项目。关系就">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5526061-b6bfc9652aa5e72a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/Android相关/flutter实践学习/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>flutter实践学习 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter实践学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">flutter实践学习
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#####导航<br>1、flutter学习思路<br>flutter简易启动框架<br>flutter开发工具<br>and so on…</p>
+<h4 id="1、flutter学习思路"><a href="#1、flutter学习思路" class="headerlink" title="1、flutter学习思路"></a>1、flutter学习思路</h4><p>学习一门新语言，很难通过一步一步学习，快速接入项目，原因是<br><code>1、商业项目一般是多个技术点的综合运用</code><br><code>2、学习到技术也符合28定律，真正运用到实践技术不多</code><br><code>3、实际中项目学习，一般是先有，后优化关系</code><br>综上，我采取思路是，</p>
+<ul>
+<li>1、采用已开源代码成熟代码整合出一个新项目。关系就是先有鸡，后有蛋</li>
+<li>2、不考虑新语言音速，新开发一个APP，我需要什么？需要什么样子一个技术框图</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-b6bfc9652aa5e72a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="flutter学习思路"></p>
+<p>站在我需要什么，而不是flutter有什么技术<br>站在使用者角度，不考虑原理，先出基本效果，再后续优化，That’s all.</p>
+<p>本文支持学习项目：<br><a href="https://github.com/yinlingchaoliu/flutter-easy.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/flutter-easy.git</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//已写好工具</span><br><span class="line">SpUtil 支持本地存储 </span><br><span class="line">HttpManager 基于dio支持网络请求任意灵活配置</span><br><span class="line">Fluttertoast 第三方工具</span><br></pre></td></tr></table></figure></p>
+<p>基于GSYGithubAppFlutter项目重构</p>
+<p>json to dart<br><a href="https://javiercbk.github.io/json_to_dart/" target="_blank" rel="noopener">https://javiercbk.github.io/json_to_dart/</a></p>
+<p>星期八的文章<br><a href="https://www.cnblogs.com/hupo376787/default.html?page=2" target="_blank" rel="noopener">https://www.cnblogs.com/hupo376787/default.html?page=2</a></p>
+<p>网络框架<br><a href="https://github.com/flutterchina/dio" target="_blank" rel="noopener">https://github.com/flutterchina/dio</a></p>
+<p>json to dart<br><a href="https://javiercbk.github.io/json_to_dart/" target="_blank" rel="noopener">https://javiercbk.github.io/json_to_dart/</a></p>
+<p>future<br><a href="http://www.ccc5.cc/2462.html" target="_blank" rel="noopener">http://www.ccc5.cc/2462.html</a></p>
+<p>开源项目<br><a href="https://github.com/yinlingchaoliu/flutter-easy.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/flutter-easy.git</a></p>
+<p>临时笔记<br>打包<br>flutter build apk</p>
+<p>参考资料</p>
+<p>官方教程<br><a href="https://flutter.cn/" target="_blank" rel="noopener">https://flutter.cn/</a></p>
+<p>flutter实战<br><a href="https://book.flutterchina.club" target="_blank" rel="noopener">https://book.flutterchina.club</a></p>
+<p>任玉刚<br><a href="https://mp.weixin.qq.com/s/4G6hWW6GxnmV_j6d2rVBpA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/4G6hWW6GxnmV_j6d2rVBpA</a></p>
+<p>系统学习<br><a href="https://github.com/AweiLoveAndroid/Flutter-learning" target="_blank" rel="noopener">https://github.com/AweiLoveAndroid/Flutter-learning</a></p>
+<p>优秀开源<br><a href="https://github.com/alibaba/flutter-go" target="_blank" rel="noopener">https://github.com/alibaba/flutter-go</a></p>
+<p>flutter weex rn kotlin四种实现<br><a href="https://github.com/CarGuo/GSYGithubAppFlutter" target="_blank" rel="noopener">https://github.com/CarGuo/GSYGithubAppFlutter</a></p>
+<p>native插件集成<br><a href="https://github.com/alibaba/flutter_boost" target="_blank" rel="noopener">https://github.com/alibaba/flutter_boost</a></p>
+<p>路由解决方案<br><a href="https://github.com/alibaba-flutter/annotation_route" target="_blank" rel="noopener">https://github.com/alibaba-flutter/annotation_route</a></p>
+<p>框架方案 redux<br><a href="https://github.com/alibaba/fish-redux" target="_blank" rel="noopener">https://github.com/alibaba/fish-redux</a></p>
+<p>setting 模板<br><a href="https://www.jianshu.com/p/4184745d6983" target="_blank" rel="noopener">https://www.jianshu.com/p/4184745d6983</a></p>
+<p>感受布局的基本语法<br><a href="https://www.jianshu.com/p/7511cb18a05e" target="_blank" rel="noopener">https://www.jianshu.com/p/7511cb18a05e</a></p>
+<p>闲鱼开源<br><a href="https://github.com/MissYoung/Flutter_shop" target="_blank" rel="noopener">https://github.com/MissYoung/Flutter_shop</a></p>
+<p>技术点收集<br><a href="https://github.com/Sky24n/flutter_wanandroid" target="_blank" rel="noopener">https://github.com/Sky24n/flutter_wanandroid</a></p>
+<p>临时存储<br><a href="https://www.jianshu.com/p/806219fd4d0b" target="_blank" rel="noopener">https://www.jianshu.com/p/806219fd4d0b</a></p>
+<p>参考文章<br>dio网络<br><a href="https://github.com/flutterchina/dio/blob/flutter/README-ZH.md#features-and-bugs" target="_blank" rel="noopener">https://github.com/flutterchina/dio/blob/flutter/README-ZH.md#features-and-bugs</a></p>
+<p>异步<br><a href="https://segmentfault.com/a/1190000014396421" target="_blank" rel="noopener">https://segmentfault.com/a/1190000014396421</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/keystore应用签名(md5)/" rel="next" title="keystore应用签名(md5)">
+                <i class="fa fa-chevron-left"></i> keystore应用签名(md5)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/java-io-IOException--Cleartext-HTTP-traffic-to-xxx-xxx-xxx-xxx-not-per/" rel="prev" title="java-io-IOException--Cleartext-HTTP-traffic-to-xxx-xxx-xxx-xxx-not-per">
+                java-io-IOException--Cleartext-HTTP-traffic-to-xxx-xxx-xxx-xxx-not-per <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、flutter学习思路"><span class="nav-number">1.</span> <span class="nav-text">1、flutter学习思路</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

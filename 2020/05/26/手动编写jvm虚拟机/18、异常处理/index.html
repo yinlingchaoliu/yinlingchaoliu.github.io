@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+<meta property="og:type" content="article">
+<meta property="og:title" content="18、异常处理">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/18、异常处理/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:50.966Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="18、异常处理">
+<meta name="twitter:description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/18、异常处理/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>18、异常处理 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/18、异常处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">18、异常处理
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####异常处理<br>unchecked 异常 ： java.lang.RuntimeException、java.lang.Error<br>checked异常:其他<br>异常父类：java.lang.Throwable</p>
+<p>异常指令 athrow</p>
+<p>需要实现Throwable native方法<br>private native Throwable fillInStackTrace(int dummy)</p>
+<p>1、注册native方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">const jlThrowable = &quot;java/lang/Throwable&quot;</span><br><span class="line"></span><br><span class="line">type StackTraceElement struct &#123;</span><br><span class="line">	fileName   string</span><br><span class="line">	className  string</span><br><span class="line">	methodName string</span><br><span class="line">	lineNumber int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *StackTraceElement) String() string &#123;</span><br><span class="line">	return fmt.Sprintf(&quot;%s.%s(%s:%d)&quot;,</span><br><span class="line">		self.className, self.methodName, self.fileName, self.lineNumber)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	native.Register(jlThrowable, &quot;fillInStackTrace&quot;, &quot;(I)Ljava/lang/Throwable;&quot;, fillInStackTrace)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// private native Throwable fillInStackTrace(int dummy);</span><br><span class="line">// (I)Ljava/lang/Throwable;</span><br><span class="line">func fillInStackTrace(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	frame.OperandStack().PushRef(this)</span><br><span class="line"></span><br><span class="line">	stes := createStackTraceElements(this, frame.Thread())</span><br><span class="line">	this.SetExtra(stes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>java代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void catchOne()&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        tryItOut()</span><br><span class="line">    &#125;catch(TestExc e)&#123;</span><br><span class="line">        handleExc(e)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常处理表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type ExceptionHandler struct &#123;</span><br><span class="line">	startPc   int       //try代码段</span><br><span class="line">	endPc     int       //try代码段</span><br><span class="line">	handlerPc int       //处理句柄</span><br><span class="line">	catchType *ClassRef //异常类</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Method<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">type Method struct &#123;</span><br><span class="line">	exceptionTable ExceptionTable //异常处理表</span><br><span class="line">	lineNumberTable * classfile.LineNumberTableAttribute</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) &#123;</span><br><span class="line">	if codeAttr := cfMethod.CodeAttribute(); codeAttr != nil &#123;</span><br><span class="line">		self.maxStack = codeAttr.MaxStack()</span><br><span class="line">		self.maxLocals = codeAttr.MaxLocals()</span><br><span class="line">		self.code = codeAttr.Code()</span><br><span class="line">		//todo exception 增加异常处理</span><br><span class="line">		self.exceptionTable = newExceptionTable(codeAttr.ExceptionTable(),self.class.constantPool)</span><br><span class="line">		// todo 代码行号</span><br><span class="line">		self.lineNumberTable = codeAttr.LineNumberTableAttribute()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func (self *Method) FindExceptionHandler(exClass *Class, pc int) int &#123;</span><br><span class="line">	handler := self.exceptionTable.findExceptionHandler(exClass, pc)</span><br><span class="line">	if handler != nil &#123;</span><br><span class="line">		return handler.handlerPc</span><br><span class="line">	&#125;</span><br><span class="line">	return -1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Method) GetLineNumber(pc int) int &#123;</span><br><span class="line">	if self.IsNative() &#123;</span><br><span class="line">		return -2</span><br><span class="line">	&#125;</span><br><span class="line">	if self.lineNumberTable == nil &#123;</span><br><span class="line">		return -1</span><br><span class="line">	&#125;</span><br><span class="line">	return self.lineNumberTable.GetLineNumber(pc)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>newExceptionTable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">//todo exception 异常处理</span><br><span class="line">type ExceptionTable []*ExceptionHandler</span><br><span class="line"></span><br><span class="line">type ExceptionHandler struct &#123;</span><br><span class="line">	startPc   int       //try代码段</span><br><span class="line">	endPc     int       //try代码段</span><br><span class="line">	handlerPc int       //处理句柄</span><br><span class="line">	catchType *ClassRef //异常类</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//从classfile生成异常处理</span><br><span class="line">func newExceptionTable(entries []*classfile.ExceptionTableEntry, cp *ConstantPool) ExceptionTable &#123;</span><br><span class="line">	table := make([]*ExceptionHandler, len(entries))</span><br><span class="line">	for i, entry := range entries &#123;</span><br><span class="line">		table[i] = &amp;ExceptionHandler&#123;</span><br><span class="line">			startPc:   int(entry.StartPc()),</span><br><span class="line">			endPc:     int(entry.EndPc()),</span><br><span class="line">			handlerPc: int(entry.HandlerPc()),</span><br><span class="line">			catchType: getCatchType(uint(entry.CatchType()), cp),</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return table</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//获得异常类</span><br><span class="line">func getCatchType(index uint, cp *ConstantPool) *ClassRef &#123;</span><br><span class="line">	if index == 0 &#123;</span><br><span class="line">		return nil // catch all</span><br><span class="line">	&#125;</span><br><span class="line">	return cp.GetConstant(index).(*ClassRef)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self ExceptionTable) findExceptionHandler(exClass *Class, pc int) *ExceptionHandler &#123;</span><br><span class="line">	for _, handler := range self &#123;</span><br><span class="line">		// jvms: The start_pc is inclusive and end_pc is exclusive</span><br><span class="line">		if pc &gt;= handler.startPc &amp;&amp; pc &lt; handler.endPc &#123;</span><br><span class="line">			if handler.catchType == nil &#123;</span><br><span class="line">				return handler //catch-all</span><br><span class="line">			&#125;</span><br><span class="line">			catchClass := handler.catchType.ResolvedClass()</span><br><span class="line">			if catchClass == exClass || catchClass.IsSuperClassOf(exClass) &#123;</span><br><span class="line">				return handler</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>异常代码行数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func (self *CodeAttribute) LineNumberTableAttribute() *LineNumberTableAttribute &#123;</span><br><span class="line">	for _, attrInfo := range self.attributes &#123;</span><br><span class="line">		switch attrInfo.(type) &#123;</span><br><span class="line">		case *LineNumberTableAttribute:</span><br><span class="line">			return attrInfo.(*LineNumberTableAttribute)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常指令athrow<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">func (self *ATHROW) Execute(frame *rtda.Frame) &#123;</span><br><span class="line">	ex := frame.OperandStack().PopRef()</span><br><span class="line">	if ex == nil &#123;</span><br><span class="line">		panic(&quot;java.lang.NullPointerException&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	thread := frame.Thread()</span><br><span class="line">	//未找异常处理方法</span><br><span class="line">	if !findAndGotoExceptionHandler(thread, ex) &#123;</span><br><span class="line">		//抛出uncaught异常</span><br><span class="line">		handleUncaughtException(thread, ex)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func findAndGotoExceptionHandler(thread *rtda.Thread, ex *heap.Object) bool &#123;</span><br><span class="line">	for &#123;</span><br><span class="line">		frame := thread.CurrentFrame()</span><br><span class="line">		pc := frame.NextPC() - 1</span><br><span class="line"></span><br><span class="line">		handlerPC := frame.Method().FindExceptionHandler(ex.Class(), pc)</span><br><span class="line">		if handlerPC &gt; 0 &#123;</span><br><span class="line">			stack := frame.OperandStack()</span><br><span class="line">			stack.Clear()</span><br><span class="line">			stack.PushRef(ex)</span><br><span class="line">			frame.SetNextPC(handlerPC)</span><br><span class="line">			return true</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		thread.PopFrame()</span><br><span class="line">		if thread.IsStackEmpty() &#123;</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// todo</span><br><span class="line">func handleUncaughtException(thread *rtda.Thread, ex *heap.Object) &#123;</span><br><span class="line">	thread.ClearStack()</span><br><span class="line"></span><br><span class="line">	jMsg := ex.GetRefVar(&quot;detailMessage&quot;, &quot;Ljava/lang/String;&quot;)</span><br><span class="line">	goMsg := heap.GoString(jMsg)</span><br><span class="line">	println(ex.Class().JavaName() + &quot;: &quot; + goMsg)</span><br><span class="line"></span><br><span class="line">	stes := reflect.ValueOf(ex.Extra())</span><br><span class="line">	for i := 0; i &lt; stes.Len(); i++ &#123;</span><br><span class="line">		ste := stes.Index(i).Interface().(interface &#123;</span><br><span class="line">			String() string</span><br><span class="line">		&#125;)</span><br><span class="line">		println(&quot;	at &quot; + ste.String())</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#exception 异常处理</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  123</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  abc</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest</span><br></pre></td></tr></table></figure></p>
+<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+<p>提交标签 “exception”</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/手动编写jvm虚拟机/19、-启动jvm/" rel="next" title="19、-启动jvm">
+                <i class="fa fa-chevron-left"></i> 19、-启动jvm
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/手动编写jvm虚拟机/17、ClassLoader原理/" rel="prev" title="17、ClassLoader原理">
+                17、ClassLoader原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#实战项目地址"><span class="nav-number">1.</span> <span class="nav-text">实战项目地址</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

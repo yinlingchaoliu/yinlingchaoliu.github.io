@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+<meta property="og:type" content="article">
+<meta property="og:title" content="16、本地方法调用">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/16、本地方法调用/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:50.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="16、本地方法调用">
+<meta name="twitter:description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/16、本地方法调用/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>16、本地方法调用 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/16、本地方法调用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">16、本地方法调用
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####本地方法注册与调用<br>注册<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">//本地方法定义为函数</span><br><span class="line">type NativeMethod func(frame *rtda.Frame)</span><br><span class="line"></span><br><span class="line">//定义函数数组</span><br><span class="line">var registry = map[string]NativeMethod&#123;&#125;</span><br><span class="line"></span><br><span class="line">//空方法</span><br><span class="line">func emptyNativeMethod(frame *rtda.Frame) &#123;</span><br><span class="line">	// do nothing</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//注册本地方法</span><br><span class="line">func Register(className, methodName, methodDescriptor string, method NativeMethod) &#123;</span><br><span class="line">	key := className + &quot;~&quot; + methodName + &quot;~&quot; + methodDescriptor</span><br><span class="line">	registry[key] = method</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//寻找注册方法</span><br><span class="line">func FindNativeMethod(className, methodName, methodDescriptor string) NativeMethod &#123;</span><br><span class="line">	key := className + &quot;~&quot; + methodName + &quot;~&quot; + methodDescriptor</span><br><span class="line">	if method, ok := registry[key]; ok &#123;</span><br><span class="line">		return method</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//如果是 object中 registerNatives 返回空方法，且此方法不会注册到registry中</span><br><span class="line">	if methodDescriptor == &quot;()V&quot; &amp;&amp; methodName == &quot;registerNatives&quot;&#123;</span><br><span class="line">		return emptyNativeMethod</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>invoke_native指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame) &#123;</span><br><span class="line">	method := frame.Method()</span><br><span class="line">	className := method.Class().Name()</span><br><span class="line">	methodName := method.Name()</span><br><span class="line">	methodDescriptor := method.Descriptor()</span><br><span class="line"></span><br><span class="line">	nativeMethod := native.FindNativeMethod(className, methodName, methodDescriptor)</span><br><span class="line">	if nativeMethod == nil &#123;</span><br><span class="line">		methodInfo := className + &quot;.&quot; + methodName + methodDescriptor</span><br><span class="line">		panic(&quot;java.lang.UnsatisfiedLinkError: &quot; + methodInfo)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	nativeMethod(frame)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>调用本地方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">method.go</span><br><span class="line"></span><br><span class="line">func newMethod(class *Class, cfMethod *classfile.MemberInfo) *Method &#123;</span><br><span class="line">	method := &amp;Method&#123;&#125;</span><br><span class="line">	method.class = class</span><br><span class="line">	method.copyMemberInfo(cfMethod)</span><br><span class="line">	method.copyAttributes(cfMethod)</span><br><span class="line">	//method.calArgSlotCount() //参数</span><br><span class="line">	md := parseMethodDescriptor(method.descriptor)</span><br><span class="line">	method.calcArgSlotCount(md.parameterTypes)</span><br><span class="line">	if method.IsNative() &#123;</span><br><span class="line">                //方法字节码表插入Code</span><br><span class="line">		method.injectCodeAttribute(md.returnType)</span><br><span class="line">	&#125;</span><br><span class="line">	return method</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//0xfe 对应助记符指令 invoke_native</span><br><span class="line">func (self *Method) injectCodeAttribute(returnType string) &#123;</span><br><span class="line">	self.maxStack = 4 // todo</span><br><span class="line">	self.maxLocals = self.argSlotCount</span><br><span class="line">	switch returnType[0] &#123;</span><br><span class="line">	case &apos;V&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xb1&#125; // return</span><br><span class="line">	case &apos;L&apos;, &apos;[&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xb0&#125; // areturn</span><br><span class="line">	case &apos;D&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xaf&#125; // dreturn</span><br><span class="line">	case &apos;F&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xae&#125; // freturn</span><br><span class="line">	case &apos;J&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xad&#125; // lreturn</span><br><span class="line">	default:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xac&#125; // ireturn</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####添加native类<br>native/java/lang/Object.go</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">package lang</span><br><span class="line"></span><br><span class="line">import &quot;unsafe&quot;</span><br><span class="line">import &quot;main/native&quot;</span><br><span class="line">import &quot;main/rtda&quot;</span><br><span class="line"></span><br><span class="line">const jlObject = &quot;java/lang/Object&quot;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	native.Register(jlObject, &quot;getClass&quot;, &quot;()Ljava/lang/Class;&quot;, getClass)</span><br><span class="line">	native.Register(jlObject, &quot;hashCode&quot;, &quot;()I&quot;, hashCode)</span><br><span class="line">	native.Register(jlObject, &quot;clone&quot;, &quot;()Ljava/lang/Object;&quot;, clone)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// public final native Class&lt;?&gt; getClass();</span><br><span class="line">// ()Ljava/lang/Class;</span><br><span class="line">func getClass(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	class := this.Class().JClass()</span><br><span class="line">	frame.OperandStack().PushRef(class)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// public native int hashCode();</span><br><span class="line">// ()I</span><br><span class="line">func hashCode(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	hash := int32(uintptr(unsafe.Pointer(this)))</span><br><span class="line">	frame.OperandStack().PushInt(hash)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// protected native Object clone() throws CloneNotSupportedException;</span><br><span class="line">// ()Ljava/lang/Object;</span><br><span class="line">func clone(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line"></span><br><span class="line">	cloneable := this.Class().Loader().LoadClass(&quot;java/lang/Cloneable&quot;)</span><br><span class="line">	if !this.Class().IsImplements(cloneable) &#123;</span><br><span class="line">		panic(&quot;java.lang.CloneNotSupportedException&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	frame.OperandStack().PushRef(this.Clone())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在invoke_native中注册</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//todo 非常重要</span><br><span class="line">	_ &quot;main/native/java/lang&quot; //@todo init 注册</span><br></pre></td></tr></table></figure>
+<p>测试方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#测试本地方法调用</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.GetClassTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.StringTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.ObjectTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.CloneTest</span><br></pre></td></tr></table></figure></p>
+<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+<p>提交标签 “native”</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/手动编写jvm虚拟机/17、ClassLoader原理/" rel="next" title="17、ClassLoader原理">
+                <i class="fa fa-chevron-left"></i> 17、ClassLoader原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/手动编写jvm虚拟机/15、jvm支持字符串-数组扩展/" rel="prev" title="15、jvm支持字符串-数组扩展">
+                15、jvm支持字符串-数组扩展 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#实战项目地址"><span class="nav-number">1.</span> <span class="nav-text">实战项目地址</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

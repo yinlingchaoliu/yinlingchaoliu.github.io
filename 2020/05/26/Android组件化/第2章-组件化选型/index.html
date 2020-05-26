@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="####1、组件化选型结论方案是Arouter+auto-register+自己造轮子补充原因：arouter使用简单，可以做组件间解耦，auto-register 解决了arouter加载组件是反射效率低下问题。原理asm修改字节码 ####2、其他组件方案对比 ######1、美团猫眼电影android模块化实战可以学习到的思想1、无入侵式配置各种服务采用serviceload缺点：最重要一点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第2章-组件化选型">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/Android组件化/第2章-组件化选型/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="####1、组件化选型结论方案是Arouter+auto-register+自己造轮子补充原因：arouter使用简单，可以做组件间解耦，auto-register 解决了arouter加载组件是反射效率低下问题。原理asm修改字节码 ####2、其他组件方案对比 ######1、美团猫眼电影android模块化实战可以学习到的思想1、无入侵式配置各种服务采用serviceload缺点：最重要一点">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-8edba5ea1e96d7c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.432Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第2章-组件化选型">
+<meta name="twitter:description" content="####1、组件化选型结论方案是Arouter+auto-register+自己造轮子补充原因：arouter使用简单，可以做组件间解耦，auto-register 解决了arouter加载组件是反射效率低下问题。原理asm修改字节码 ####2、其他组件方案对比 ######1、美团猫眼电影android模块化实战可以学习到的思想1、无入侵式配置各种服务采用serviceload缺点：最重要一点">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5526061-8edba5ea1e96d7c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/Android组件化/第2章-组件化选型/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>第2章-组件化选型 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/第2章-组件化选型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第2章-组件化选型
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>####1、组件化选型结论<br><code>方案是Arouter+auto-register+自己造轮子补充</code><br>原因：arouter使用简单，可以做组件间解耦，<br>auto-register 解决了arouter加载组件是反射效率低下问题。原理asm修改字节码</p>
+<p>####2、其他组件方案对比</p>
+<p>######1、<a href="https://www.jianshu.com/p/d372cc6802e5" target="_blank" rel="noopener">美团猫眼电影android模块化实战</a><br>可以学习到的思想<br>1、无入侵式配置各种服务<br>采用serviceload<br>缺点：<br>最重要一点：无代码示例<br>1、serviceload (SPI)对于用户来讲不易使用<br>2、无论spi还是arouter，都不能解决配置下沉到base，不如使用arouter<br>3、最好解决方案还是”腾讯.api方案”</p>
+<h6 id="2、-Android彻底组件化demo发布"><a href="#2、-Android彻底组件化demo发布" class="headerlink" title="2、 Android彻底组件化demo发布"></a>2、 <a href="https://www.jianshu.com/p/59822a7b2fad" target="_blank" rel="noopener">Android彻底组件化demo发布</a></h6><p>可以学习到思想：<br>1、代码和资源隔离<br><code>2、组件单独运行和集成发布 ，提供gradle插件（采用）</code><br>3、借鉴采用javassit<br>缺点：<br>1、JIMI用户不多<br>2、API调用暴露了很多底层细节，开发者用户还需要反复看源代码，才能清晰明白<br>3、core代码写得不够洁癖</p>
+<h6 id="3、WMRouter：美团外卖Android开源路由框架"><a href="#3、WMRouter：美团外卖Android开源路由框架" class="headerlink" title="3、WMRouter：美团外卖Android开源路由框架"></a>3、<a href="https://www.jianshu.com/p/020a5b18ba42" target="_blank" rel="noopener">WMRouter：美团外卖Android开源路由框架</a></h6><p>美团的博客：<a href="https://tech.meituan.com/2018/08/23/meituan-waimai-android-open-source-routing-framework.html" target="_blank" rel="noopener">WMRouter：美团外卖Android开源路由框架</a><br><a href="https://cloud.tencent.com/developer/article/1333363" target="_blank" rel="noopener">美团外卖开源路由框架 WMRouter 源码分析</a></p>
+<p>最初背景：产品希望通过后台下发URI控制客户端跳到指定页面，从而实现灵活的运营配置</p>
+<p>优点：<br>基于URI开发的框架，可灵活配置<br><code>自定义ServiceLoader,不错的扩展性，可以跨组件访问数据(采用)</code></p>
+<p>缺点：<br>1、灵活性强，反衬易用性不足<br>2、ServiceLoader，并不能真正意义解除依赖，<br>还需要将Interfaces下沉的base,或者引用该moudle</p>
+<p>总之，可以备选的，基于URI的优秀的路由框架</p>
+<p>######4、<a href="https://www.wanandroid.com/blog/show/2072" target="_blank" rel="noopener">使用简单但功能强大的安卓组件化框架 CC</a><br>介绍网页：<a href="https://qibilly.com/CC-website/" target="_blank" rel="noopener">https://qibilly.com/CC-website/</a><br>优点：<br><code>1、文档全面介绍详实(采用)</code><br><code>2、组件间调用者(采用)</code><br><code>3、cc-register 采用asm，可以配合arouter(采用)</code><br><code>4、采用服务架构，将组件间关系扁平化</code></p>
+<p>缺点：<br>1、集成太复杂<br>2、调用方式，还不够亲民<br>3、代码编写，暴露给用户细节太多<br>4、gradle的配置，实在是难以让人接受<br>5、跨组件调用，用不到RPC（AIDL）技术<br>6、RPC建议专门一个库实现，例如饿了么Hermes<br>7、组件提供的功能太多，提供api越多，后期兼容性越差，关键核心类要采用final修饰，避免使用者有歧义</p>
+<p>总之：非常好的总线框架，学习成本高，需要经验</p>
+<h6 id="5、Apache-Dubbo"><a href="#5、Apache-Dubbo" class="headerlink" title="5、Apache Dubbo"></a>5、<a href="http://dubbo.apache.org/zh-cn/index.html" target="_blank" rel="noopener">Apache Dubbo</a></h6><ul>
+<li>软件架构<img src="https://upload-images.jianshu.io/upload_images/5526061-8edba5ea1e96d7c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
+</ul>
+<p>分布式系统学习笔记<br><a href="https://blog.csdn.net/lchpersonal521/article/details/84107272" target="_blank" rel="noopener">https://blog.csdn.net/lchpersonal521/article/details/84107272</a><br>优点<br>1、分布式服务，服务组件间隔离<br>2、服务降级，服务发现，服务注册<br>3、RPC+依赖注入+SPI+javassit<br>缺点：<br>这套思想应用安卓场景需要适配，参考CC</p>
+<p>核心思想：依赖注入+SPI+RPC+javassit</p>
+<p>######6、<a href="https://github.com/alibaba/ARouter" target="_blank" rel="noopener">Arouter</a></p>
+<p>优点：<br><code>解除依赖，调用页面服务，只需要知道对应常量</code><br><code>使用简单易懂，用户群体大，资料详细</code></p>
+<p>缺点：<br>常量需要下沉到基础库</p>
+<p>总之，采用Arouter方案</p>
+<h6 id="7、微信Android模块化架构重构实践"><a href="#7、微信Android模块化架构重构实践" class="headerlink" title="7、微信Android模块化架构重构实践"></a>7、<a href="https://mp.weixin.qq.com/s/6Q818XA5FaHd7jJMFBG60w" target="_blank" rel="noopener">微信Android模块化架构重构实践</a></h6><p>优秀思想<br><code>①重塑模块化，分解为三个目标</code><br>1、改变通信方式 ： spi+”.api化” 采用<br>2、重新设计模块：重新设计代码分层，强化职责和设计<br>3、约束代码边界：隔离思想，采用pins工程<br><code>②代码之外，架构之内</code><br>1、模块负责人制度<br>2、重构与开发者心态<br>3、模块划分经验之谈</p>
+<p>优点：指明思路和方向<br>缺点：代码需要自己实现</p>
+<p>评价：采用微信的组件化思想，代码逻辑需要因地制宜实现</p>
+<p>#####自己手动编写轮子Thor<br>组件化需要一套系统完整的方案，来综上所述的优点，也避免一些不易用的缺点，为了实现这个目标，最好的<code>方案是Arouter+auto-register+自己造轮子补充</code><br>接下来一段时间，我要自己造轮子了，吼吼~~~</p>
+<p>#####Android架构思考(模块化、多进程)<br>也推荐这篇文章<br><a href="http://blog.spinytech.com/2016/12/28/android_modularization/" target="_blank" rel="noopener">http://blog.spinytech.com/2016/12/28/android_modularization/</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/Android组件化/第3章-仿微信" -api"化-实现原理（下） " rel="next" title="第3章-仿微信" -api"化-实现原理（下）">
+                <i class="fa fa-chevron-left"></i> 第3章-仿微信"-api"化-实现原理（下）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/Android组件化/第1章-组件单独调试与集成发布/" rel="prev" title="第1章-组件单独调试与集成发布">
+                第1章-组件单独调试与集成发布 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#2、-Android彻底组件化demo发布"><span class="nav-number">1.</span> <span class="nav-text">2、 Android彻底组件化demo发布</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3、WMRouter：美团外卖Android开源路由框架"><span class="nav-number">2.</span> <span class="nav-text">3、WMRouter：美团外卖Android开源路由框架</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5、Apache-Dubbo"><span class="nav-number">3.</span> <span class="nav-text">5、Apache Dubbo</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#7、微信Android模块化架构重构实践"><span class="nav-number">4.</span> <span class="nav-text">7、微信Android模块化架构重构实践</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

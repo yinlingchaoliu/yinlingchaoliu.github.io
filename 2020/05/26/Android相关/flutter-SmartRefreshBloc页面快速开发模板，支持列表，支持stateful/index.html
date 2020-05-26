@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="项目地址：https://github.com/yinlingchaoliu/SmartRefreshBloc #####编写项目的思路flutter处处体现widget，我们开发过程中，核心放在的是业务层面逻辑，减少不必要的widget编写，减少不必要重复劳动，减少不必要代码层级，作为提高效率的切入点  解决问题方式1231、用View与Logic解耦方式，增加代码清晰度2、用模板的方式，给提供">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/Android相关/flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="项目地址：https://github.com/yinlingchaoliu/SmartRefreshBloc #####编写项目的思路flutter处处体现widget，我们开发过程中，核心放在的是业务层面逻辑，减少不必要的widget编写，减少不必要重复劳动，减少不必要代码层级，作为提高效率的切入点  解决问题方式1231、用View与Logic解耦方式，增加代码清晰度2、用模板的方式，给提供">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-763dfb4138b77da5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.155Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful">
+<meta name="twitter:description" content="项目地址：https://github.com/yinlingchaoliu/SmartRefreshBloc #####编写项目的思路flutter处处体现widget，我们开发过程中，核心放在的是业务层面逻辑，减少不必要的widget编写，减少不必要重复劳动，减少不必要代码层级，作为提高效率的切入点  解决问题方式1231、用View与Logic解耦方式，增加代码清晰度2、用模板的方式，给提供">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5526061-763dfb4138b77da5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/Android相关/flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>项目地址：<a href="https://github.com/yinlingchaoliu/SmartRefreshBloc" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc</a></p>
+<p>#####编写项目的思路<br>flutter处处体现widget，我们开发过程中，核心放在的是业务层面逻辑，减少不必要的widget编写，减少不必要重复劳动，减少不必要代码层级，作为提高效率的切入点</p>
+<ul>
+<li>解决问题方式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、用View与Logic解耦方式，增加代码清晰度</span><br><span class="line">2、用模板的方式，给提供统一开发规范方案（普通页面和列表页面）</span><br><span class="line">3、用快捷键方式，一键式快速开发</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>#####1、先实现View与logic解耦<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line"></span><br><span class="line">/// Created by chentong</span><br><span class="line">///</span><br><span class="line">/// 相当于MVP</span><br><span class="line">///</span><br><span class="line">class BlocProvider&lt;T extends BlocBase&gt; extends StatefulWidget &#123;</span><br><span class="line">  BlocProvider(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required this.child, //View</span><br><span class="line">    @required this.bloc, //logic</span><br><span class="line">  &#125;) : super(key: key);</span><br><span class="line"></span><br><span class="line">  final T bloc;</span><br><span class="line">  final Widget child;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  _BlocProviderState&lt;T&gt; createState() =&gt; _BlocProviderState&lt;T&gt;();</span><br><span class="line">///核心代码</span><br><span class="line">  static T of&lt;T extends BlocBase&gt;(BuildContext context) &#123;</span><br><span class="line">    final type = _typeOf&lt;BlocProvider&lt;T&gt;&gt;();</span><br><span class="line">    BlocProvider&lt;T&gt; provider = context.ancestorWidgetOfExactType(type);</span><br><span class="line">    return provider.bloc;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  static Type _typeOf&lt;T&gt;() =&gt; T;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class _BlocProviderState&lt;T&gt; extends State&lt;BlocProvider&lt;BlocBase&gt;&gt; &#123;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void initState() &#123;</span><br><span class="line">    super.initState();</span><br><span class="line">    widget.bloc.initState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return widget.child;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;</span><br><span class="line">    widget.bloc.dispose();</span><br><span class="line">    super.dispose();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">abstract class BlocBase &#123;</span><br><span class="line">  void initState();</span><br><span class="line"></span><br><span class="line">  void dispose();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个是核心模板，可以解耦当前flutter页面中Widget与业务逻辑混合在一起的问题。</p>
+<p>现在开发一个页面范例，将逻辑层迁移到DefaultBloc当中，而DefaultPage 专注于写widget，减少不必要的耦合。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/cupertino.dart&apos;;</span><br><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;base_bloc.dart&apos;;</span><br><span class="line"></span><br><span class="line">///@author: chentong</span><br><span class="line">///2019-4-9</span><br><span class="line">///视图层</span><br><span class="line">class DefaultPage extends StatefulWidget &#123;</span><br><span class="line">  ///路由跳转</span><br><span class="line">  static void pushDefaultPage(BuildContext context) &#123;</span><br><span class="line">    Navigator.push(</span><br><span class="line">        context,</span><br><span class="line">        new CupertinoPageRoute&lt;void&gt;(</span><br><span class="line">            builder: (ctx) =&gt; new BlocProvider&lt;DefaultBloc&gt;(</span><br><span class="line">                  child: new DefaultPage(),</span><br><span class="line">                  bloc: new DefaultBloc(),</span><br><span class="line">                )));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///获得当前页面实例</span><br><span class="line">  static StatefulWidget newInstance() &#123;</span><br><span class="line">    return new BlocProvider&lt;DefaultBloc&gt;(</span><br><span class="line">      child: new DefaultPage(),</span><br><span class="line">      bloc: new DefaultBloc(),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  _DefaultPageState createState() =&gt; new _DefaultPageState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">///</span><br><span class="line">/// 页面实现</span><br><span class="line">///</span><br><span class="line">class _DefaultPageState extends State&lt;DefaultPage&gt; &#123;</span><br><span class="line">  @override</span><br><span class="line">  void initState() &#123;</span><br><span class="line">    super.initState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    final DefaultBloc bloc = BlocProvider.of&lt;DefaultBloc&gt;(context);</span><br><span class="line"></span><br><span class="line">    return new Scaffold(</span><br><span class="line">      appBar: new AppBar(</span><br><span class="line">        title: new Text(&apos;demo&apos;),</span><br><span class="line">        centerTitle: true,</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;</span><br><span class="line">    super.dispose();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">///</span><br><span class="line">///逻辑层</span><br><span class="line">///todo:此处逻辑建议迁移出去 分离开解耦</span><br><span class="line">///</span><br><span class="line">class DefaultBloc extends BlocBase &#123;</span><br><span class="line">  @override</span><br><span class="line">  void initState() &#123;&#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####2、增加高频适配模板</p>
+<p><code>因为listview列表在APP中是高频使用的存在，基于pull_to_refresh编写列表页面，便于快速开发</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/cupertino.dart&apos;;</span><br><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line">import &apos;package:flutter/scheduler.dart&apos;;</span><br><span class="line">import &apos;package:pull_to_refresh/pull_to_refresh.dart&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;base_bloc.dart&apos;;</span><br><span class="line"></span><br><span class="line">///</span><br><span class="line">///list列表</span><br><span class="line">///author:chentong</span><br><span class="line">///</span><br><span class="line">abstract class SmartRefreshBloc extends PullToRefreshBloc &#123;</span><br><span class="line">  RefreshController refreshController;</span><br><span class="line">  ScrollController scrollController;</span><br><span class="line"></span><br><span class="line">  ///初始化</span><br><span class="line">  void initState() &#123;</span><br><span class="line">    scrollController = new ScrollController();</span><br><span class="line">    refreshController = new RefreshController();</span><br><span class="line">    SchedulerBinding.instance.addPostFrameCallback((_) &#123;</span><br><span class="line">      refreshController.requestRefresh(true);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void scrollTop() &#123;</span><br><span class="line">    scrollController.animateTo(0.0,</span><br><span class="line">        duration: new Duration(microseconds: 1000), curve: ElasticInCurve());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void onRefreshCallBack(bool up) &#123;</span><br><span class="line">    if (up) &#123;</span><br><span class="line">      onRefresh();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      onLoadMore();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///默认方法</span><br><span class="line">  void onOffsetCallback(bool isUp, double offset) &#123;</span><br><span class="line">    // if you want change some widgets state ,you should rewrite the callback</span><br><span class="line">    if (isUp) &#123;</span><br><span class="line">    &#125; else &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///请求</span><br><span class="line">  void refreshRequest(&#123;bool up = true&#125;) &#123;</span><br><span class="line">    refreshController.requestRefresh(up);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///完成</span><br><span class="line">  void refreshCompleted() &#123;</span><br><span class="line">    refreshController.sendBack(true, RefreshStatus.completed);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///空闲</span><br><span class="line">  void refreshIdle() &#123;</span><br><span class="line">    refreshController.sendBack(false, RefreshStatus.idle);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///失败</span><br><span class="line">  void refreshFailed() &#123;</span><br><span class="line">    refreshController.sendBack(false, RefreshStatus.failed);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///自定义头部</span><br><span class="line">  Widget headerCreate(BuildContext context, RefreshStatus mode) &#123;</span><br><span class="line">    return new ClassicIndicator(mode: mode);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///自定义脚部</span><br><span class="line">  Widget footerCreate(BuildContext context, RefreshStatus mode) &#123;</span><br><span class="line">    return new ClassicIndicator(mode: mode);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">///下拉刷新Bloc</span><br><span class="line">abstract class PullToRefreshBloc extends BlocBase &#123;</span><br><span class="line">  ///加载数据</span><br><span class="line">  Future getData(&#123;String labelId, int page&#125;);</span><br><span class="line"></span><br><span class="line">  ///刷新</span><br><span class="line">  Future onRefresh(&#123;String labelId&#125;);</span><br><span class="line"></span><br><span class="line">  ///更多</span><br><span class="line">  Future onLoadMore(&#123;String labelId, int page&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####3、快捷键一键式开发<br>导入livesettings.jar<br>地址：<a href="https://github.com/yinlingchaoliu/SmartRefreshBloc/blob/master/livesettings.jar" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc/blob/master/livesettings.jar</a></p>
+<p>快捷命令<br>fstatefulmvp 快速构建stateful页面<br>flistviewmvp 快速构建listview列表页面</p>
+<p>快速实现一键化开发</p>
+<p>其中还有flutter其他快捷命令<br>均是f开头,可以快捷名利可以快速唤起<br><img src="https://upload-images.jianshu.io/upload_images/5526061-763dfb4138b77da5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>####项目中示例<br>核心模板代码在此路径<br><a href="https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/base" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/base</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">///核心模板两个文件</span><br><span class="line">base_bloc.dart</span><br><span class="line">pulltofresh_bloc.dart</span><br><span class="line"></span><br><span class="line">///一键化生成代码示例，帮助你快速开发</span><br><span class="line">default_bloc.dart</span><br><span class="line">default_list_bloc.dart</span><br></pre></td></tr></table></figure></p>
+<p>项目中重构实战示例在<br><a href="https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/ui" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/ui</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TestExample.dart</span><br><span class="line">TestExample1.dart</span><br><span class="line">TestExample2.dart</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/flutter-提供View的-gone-visible-invisible/" rel="next" title="flutter-提供View的-gone-visible-invisible">
+                <i class="fa fa-chevron-left"></i> flutter-提供View的-gone-visible-invisible
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/app请求公共参数/" rel="prev" title="app请求公共参数">
+                app请求公共参数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

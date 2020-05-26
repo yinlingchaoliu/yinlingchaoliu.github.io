@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="####临时笔记http://ifeve.com/concurrentlinkedqueue/ #java并发编程基础线程优先级Priority jstack工具查看状态jps 查看列表jstack pid 线程状态初始(NEW)：    新创建了一个线程对象，但还没有调用start()方法。运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的成为“">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java临时笔记并发基础">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/java高并发编程/java临时笔记并发基础/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="####临时笔记http://ifeve.com/concurrentlinkedqueue/ #java并发编程基础线程优先级Priority jstack工具查看状态jps 查看列表jstack pid 线程状态初始(NEW)：    新创建了一个线程对象，但还没有调用start()方法。运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的成为“">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.889Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java临时笔记并发基础">
+<meta name="twitter:description" content="####临时笔记http://ifeve.com/concurrentlinkedqueue/ #java并发编程基础线程优先级Priority jstack工具查看状态jps 查看列表jstack pid 线程状态初始(NEW)：    新创建了一个线程对象，但还没有调用start()方法。运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的成为“">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/java高并发编程/java临时笔记并发基础/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>java临时笔记并发基础 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/java临时笔记并发基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java临时笔记并发基础
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java高并发编程/" itemprop="url" rel="index"><span itemprop="name">java高并发编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>####临时笔记<br><a href="http://ifeve.com/concurrentlinkedqueue/" target="_blank" rel="noopener">http://ifeve.com/concurrentlinkedqueue/</a></p>
+<p>#java并发编程基础<br>线程优先级<br>Priority</p>
+<p>jstack工具查看状态<br>jps 查看列表<br>jstack pid</p>
+<p>线程状态<br>初始(NEW)：    新创建了一个线程对象，但还没有调用start()方法。<br>运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的成为“运行”。<br>阻塞(BLOCKED)：表线程阻塞于锁。<br>等待(WAITING)：进入该状态的线程需要等待其他线程做出一些特定动作（通知或中断）。<br>超时等待(TIME_WAITING)：该状态不同于WAITING，它可以在指定的时间内自行返回。<br>终止(TERMINATED)：表示该线程已经执行完毕。<br>[图片上传失败…(image-dbcd3-1535531273194)]</p>
+<p><a href="https://img-blog.csdn.net/2018070117435683?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BhbmdlMTk5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" target="_blank" rel="noopener">线程状态图</a></p>
+<p>Daemon进程<br>精灵进程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thread.setDaemeon(true)</span><br></pre></td></tr></table></figure></p>
+<p>在进程启动之前设置</p>
+<p>线程初始化<br>1、daemon<br>2、priority<br>3、name<br>4、本地数据<br>5、线程ID</p>
+<p>最好自定义线程名字</p>
+<p>理解中断<br>线程的一个标识位属性，<br>interrupt()中断<br>interrupted() 复位</p>
+<p>Thread.isInterrupted()<br>sleep() 方法不能被中断</p>
+<p>过期方法 suspend(暂停) 、resume(恢复)、stop(停止)<br>死锁、不会释放资源</p>
+<p>安全终止线程<br>中断状态是线程的一个标识位，而中断操作是一种渐变的线程间交互方式<br>1、interrupt() 中断<br>2、boolean值变量来控制是否需要停止任务并且终止<br>flag &amp;&amp; Tread.currentThread().isInterrupted()</p>
+<p>推荐第二种：清理资源</p>
+<p>线程间通讯<br><strong>1、</strong>volatile、synchronized<br><strong>2、</strong>wait/notify<br>[图片上传失败…(image-5475ff-1535531273194)]</p>
+<p>生产者-消费者</p>
+<p>等待方-通知方<br>1、获取对象的锁<br>2、条件不满足等待（wait），被通知后仍要检查条件<br>3、条件满足执行</p>
+<p>1、等待方<br>synchrionized(对象){<br>    while(条件不满足){<br>        对象.wait();<br>    }<br>    处理逻辑<br>}<br>2、通知方<br>1、获得对象的锁<br>2、改变条件<br>3、通知所有等待对象上的线程<br>synchionized(对象){<br>    改变条件<br>    对象.notifyAll()<br>}</p>
+<p>3、<strong>管道输入/输出流</strong><br>线程之间数据传入<br>PipedReader / PipedWriter<br>PipedOutputStream / PipedInputStream<br>需要connect()绑定<br>out.connect(in)</p>
+<p>4、Thread.join()<br>当前线程，等待上一个终止后再开始</p>
+<p>5、ThreadLocal使用 线程变量</p>
+<p>实战用法<br>等待超时模式</p>
+<p>synchrionized void get(){<br>long future = System.currentTimeMills()+mills;<br>long remaining = mills;<br>    while(result == null &amp;&amp; remaining &gt; 0){<br>        对象.wait(remaining);<br>        remaining = future - System.currentTimeMills();<br>    }<br>    处理逻辑<br>}</p>
+<p>增加超时控制</p>
+<p>countDownLatch 预备-同时</p>
+<p>线程池<br>一个线程安全工作队列连接工作者线程和客户端线程<br>生产者-消费者</p>
+<p>#java中的锁<br>juc<br>使用和实现两个方面</p>
+<p>lock接口<br>锁是用来解决多个线程访问共享资源的方式</p>
+<p>synchionized 隐式调用</p>
+<p>Lock lock = new ReentrantLock();<br>lock.lock();<br>try{<br>    doSomething()<br>}finally{<br>    lock.unlock();<br>}</p>
+<p>队列同步器 AbstractQueuedSynchrionizer<br>getState()<br>setState(int status)<br>compareAndSetStatus(int expect,int update) 设置cas状态</p>
+<p>独占锁（互斥锁）<br>Mutex</p>
+<p>重入锁（条件锁）<br>支持一个线程对资源重复加锁<br>ReentrantLock</p>
+<p>公平锁与非公平锁问题<br>时间(FIFO先进先出原则)，条件</p>
+<p>排他锁</p>
+<p>读写锁<br>读写（锁）分离<br>ReentrantReadWriteLock<br>使用场景：读多于写的<br>3个特性：<br>公平性选择（加条件）<br>重进入<br>锁降级:写锁降级为读锁</p>
+<p>readLock()<br>writeLock()</p>
+<p>写法：<br>锁降级: 需要再确认一下<br>readLock.lock()<br>try{<br>    //先释放<br>    readLock.unlock()<br>    //写锁<br>    writeLock.lock()<br>    try{</p>
+<pre><code>    readLock.lock()
+}finally{
+    writeLock.unlock()
+}
+</code></pre><p>}finally{<br>    readLock.unlock();<br>}</p>
+<p>LockSupport工具<br>阻塞或唤醒线程</p>
+<p>Condition接口 (条件)</p>
+<p>Lock lock = new ReentrantLock()<br>Condition condition = lock.newCondition();</p>
+<p>public void conWait(){<br>    lock.lock();<br>    try{<br>        condition.await();<br>    }finally{<br>        lock.unlock();<br>    }<br>}</p>
+<p>public void conSigal(){<br>    lock.lock();<br>    try{<br>        condition.sigal();<br>    }finally{<br>        lock.unlock();<br>    }<br>}</p>
+<p>#并发容器和框架</p>
+<p>####1、ConcurrentHashMap 是线程安全且高效的HashMap<br>锁分段技术<br>1、线程不安全Hashmap，陷入死循环<br>2、效率低下的HashTable<br>锁分段技术<br>首先将数据分成一段一段的存储，并给每段数据配一把锁<br>当一个线程占用锁访问其中一段数据时，其他段数据也能被其他线程访问</p>
+<p>####ConcurrentLinkedQueue<br>线程安全队列<br>阻塞和非阻塞算法</p>
+<p>####Java阻塞队列</p>
+<p>重点看</p>
+<p>线程池的使用</p>
+<p>*简单线程池实现</p>
+<p>Executor 工作单元与执行单元分离</p>
+<p>#java并发实践</p>
+<p>生产者–消费者</p>
+<p>mark 阻塞队列用来给生产者与消费者解耦</p>
+<p>LinkedBlockingQueue</p>
+<p>一个生产者–多个消费者</p>
+<p>线程池与生产消费者模式</p>
+<p>线上问题定位<br>top命令<br>top  1<br>top H</p>
+<p>CPU占用率高，top前10</p>
+<p>jstat -gcuutil pid  1000  5<br>把线程dump下来<br>jstack pid  &gt; txt</p>
+<p>nid线程</p>
+<p>10进制转16进制<br>printf “x<br>“ nid</p>
+<p>性能测试<br>响应时间（RT）<br>吞吐量（TPS）  反比关系<br>并发数 承载多少用户操作<br>QPS 每秒查询数</p>
+<p>QPS必须是峰值</p>
+<p>netatat -nat | grep  port -c </p>
+<p>ps -eLf | grep java -c </p>
+<p>增加 线程数、CPU、机器</p>
+<p>1、查看网络流量<br>cat /proc/net/dev<br>查看平均负载<br>cat /proc/loadavg<br>查看系统内存情况<br>cat /proc/meminfo</p>
+<p>查看cpu利用率<br>cat /proc/stat</p>
+<p>异步线程池<br>场景：集群环境，解决线程池重启问题</p>
+<p>任务池–多线程池<br>任务状态<br>创建（NEW）<br>执行（EXECUTING）<br>重试(RETRY)<br>挂起（SUSPEND）<br>中止（TERMNER）<br>执行完成（FINISH）</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/java高并发编程/Worker-Thread-模式/" rel="next" title="Worker-Thread-模式">
+                <i class="fa fa-chevron-left"></i> Worker-Thread-模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/java高并发编程/Thread-Per-Message模式/" rel="prev" title="Thread-Per-Message模式">
+                Thread-Per-Message模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

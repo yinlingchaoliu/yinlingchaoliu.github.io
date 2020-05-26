@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="####webview input说明安卓webview禁用input，网上查看各种方案，都存在弊端。经过实践，完整可用调研了支持拍照和图片选择上传。 1、webview支持input标签2、安卓拍照支持适配7.0 takePhoto ####1、webview 初始化和销毁12345678910111213141516171819202122232425262728293031323334353">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webview支持input标签">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/Android相关/webview支持input标签/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="####webview input说明安卓webview禁用input，网上查看各种方案，都存在弊端。经过实践，完整可用调研了支持拍照和图片选择上传。 1、webview支持input标签2、安卓拍照支持适配7.0 takePhoto ####1、webview 初始化和销毁12345678910111213141516171819202122232425262728293031323334353">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.289Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webview支持input标签">
+<meta name="twitter:description" content="####webview input说明安卓webview禁用input，网上查看各种方案，都存在弊端。经过实践，完整可用调研了支持拍照和图片选择上传。 1、webview支持input标签2、安卓拍照支持适配7.0 takePhoto ####1、webview 初始化和销毁12345678910111213141516171819202122232425262728293031323334353">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/Android相关/webview支持input标签/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>webview支持input标签 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/webview支持input标签/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">webview支持input标签
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>####webview input说明<br>安卓webview禁用input，网上查看各种方案，都存在弊端。<br>经过实践，完整可用调研了支持拍照和图片选择上传。</p>
+<p><a href="https://www.jianshu.com/p/19084bbc0747" target="_blank" rel="noopener">1、webview支持input标签</a><br><a href="https://www.jianshu.com/p/40670b459e56" target="_blank" rel="noopener">2、安卓拍照支持适配7.0 takePhoto</a></p>
+<p>####1、webview 初始化和销毁<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">//webview初始化</span><br><span class="line">@SuppressLint(&quot;SetJavaScriptEnabled&quot;)</span><br><span class="line">public static void initX5Web(WebView x5Webview) &#123;</span><br><span class="line">    Context context = x5Webview.getContext();</span><br><span class="line">    WebSettings webSetting = x5Webview.getSettings();</span><br><span class="line">    webSetting.setJavaScriptEnabled( true );</span><br><span class="line">    webSetting.setAllowFileAccess( true );</span><br><span class="line">    webSetting.setLayoutAlgorithm( WebSettings.LayoutAlgorithm.NARROW_COLUMNS );</span><br><span class="line">    webSetting.setSupportZoom( false );</span><br><span class="line">    webSetting.setBuiltInZoomControls( false );</span><br><span class="line">    webSetting.setDisplayZoomControls(false);   //不显示webview缩放按钮</span><br><span class="line">    webSetting.setUseWideViewPort( true );</span><br><span class="line">    //多窗口问题</span><br><span class="line">    webSetting.setSupportMultipleWindows( false );</span><br><span class="line">    webSetting.setJavaScriptCanOpenWindowsAutomatically( true );</span><br><span class="line"></span><br><span class="line">    //h5数据存储</span><br><span class="line">    webSetting.setAppCacheEnabled( true );</span><br><span class="line">    webSetting.setDomStorageEnabled( true );</span><br><span class="line">    webSetting.setDatabaseEnabled(true);</span><br><span class="line">    webSetting.setAppCachePath(context.getDir(&quot;appcache&quot;, 0).getPath());</span><br><span class="line"></span><br><span class="line">    webSetting.setGeolocationEnabled( true );</span><br><span class="line">    webSetting.setAppCacheMaxSize( Long.MAX_VALUE );</span><br><span class="line">    webSetting.setDatabasePath(context.getDir(&quot;databases&quot;, 0).getPath());</span><br><span class="line">    webSetting.setGeolocationDatabasePath(context.getDir(&quot;geolocation&quot;, 0).getPath());</span><br><span class="line">    webSetting.setPluginState( WebSettings.PluginState.ON_DEMAND );</span><br><span class="line">    webSetting.setRenderPriority( WebSettings.RenderPriority.HIGH );</span><br><span class="line">    webSetting.setCacheMode( WebSettings.LOAD_NO_CACHE );</span><br><span class="line">    //sonic</span><br><span class="line">    x5Webview.removeJavascriptInterface(&quot;searchBoxJavaBridge_&quot;);</span><br><span class="line">    webSetting.setAllowContentAccess(true);</span><br><span class="line">    webSetting.setSavePassword(false);</span><br><span class="line">    webSetting.setSaveFormData(false);</span><br><span class="line">    webSetting.setLoadWithOverviewMode(true);</span><br><span class="line">    webSetting.setDefaultTextEncodingName(&quot;utf-8&quot;);</span><br><span class="line">    webSetting.setLoadsImagesAutomatically(true);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//webview销毁方法</span><br><span class="line">public static void onDestroy(WebView mWebView)&#123;</span><br><span class="line">    if (mWebView != null) &#123;</span><br><span class="line">        mWebView.clearHistory();</span><br><span class="line">        ((ViewGroup) mWebView.getParent()).removeView(mWebView);</span><br><span class="line">        mWebView.loadUrl(&quot;about:blank&quot;);</span><br><span class="line">        mWebView.stopLoading();</span><br><span class="line">        mWebView.setWebChromeClient(null);</span><br><span class="line">        mWebView.setWebViewClient(null);</span><br><span class="line">        mWebView.loadDataWithBaseURL(null, &quot;&quot;, &quot;text/html&quot;, &quot;utf-8&quot;, null);</span><br><span class="line">        mWebView.clearHistory();</span><br><span class="line">        mWebView.destroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####2、webchrome特别支持</p>
+<ul>
+<li><p>1、 initWebChrome</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">    //webview input 特别支持帮助类</span><br><span class="line">    private WebViewUploadFileHelper helper = new WebViewUploadFileHelper(this);</span><br><span class="line"></span><br><span class="line">    private void initWebChrome() &#123;</span><br><span class="line">        webview.setWebChromeClient( new InputFileWebChromeClient() );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">public class InputFileWebChromeClient extends WebChromeClient &#123;</span><br><span class="line">    //设置 进度条</span><br><span class="line">    @Override</span><br><span class="line">    public void onProgressChanged(WebView view, int newProgress) &#123;</span><br><span class="line">        super.onProgressChanged( view, newProgress );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // For Android &lt; 3.0</span><br><span class="line">    public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg) &#123;</span><br><span class="line">        helper.setUploadMessage( uploadMsg );</span><br><span class="line">        permission( () -&gt; &#123;</span><br><span class="line">            helper.openImageActivity();</span><br><span class="line">        &#125; );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // For Android 3.0+</span><br><span class="line">    public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType) &#123;</span><br><span class="line">        helper.setUploadMessage( uploadMsg );</span><br><span class="line">        permission( () -&gt; &#123;</span><br><span class="line">            helper.openImageActivity( acceptType );</span><br><span class="line">        &#125; );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // For Android  &gt; 4.1.1</span><br><span class="line">    public void openFileChooser(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture) &#123;</span><br><span class="line">        helper.setUploadMessage( uploadMsg );</span><br><span class="line">        permission( () -&gt; &#123;</span><br><span class="line">            helper.openImageActivity( acceptType, capture );</span><br><span class="line">        &#125; );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // For Android  &gt;= 5.0</span><br><span class="line">    public boolean onShowFileChooser(com.tencent.smtt.sdk.WebView webView,</span><br><span class="line">                                     ValueCallback&lt;Uri[]&gt; filePathCallback,</span><br><span class="line">                                     WebChromeClient.FileChooserParams fileChooserParams) &#123;</span><br><span class="line">        helper.setUploadMessageAboveL( filePathCallback );</span><br><span class="line">        permission( () -&gt; &#123;</span><br><span class="line">            helper.openImageActivity( fileChooserParams.getAcceptTypes(), fileChooserParams.isCaptureEnabled() );</span><br><span class="line">        &#125; );</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //==多窗口的问题</span><br><span class="line">    @Override</span><br><span class="line">    public boolean onCreateWindow(WebView view, boolean isDialog,</span><br><span class="line">                                  boolean isUserGesture, Message resultMsg) &#123;</span><br><span class="line">        WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;</span><br><span class="line">        transport.setWebView( view );</span><br><span class="line">        resultMsg.sendToTarget();</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">* 2 、回调</span><br></pre></td></tr></table></figure>
+<p>  @Override<br>  protected void onActivityResult(int requestCode, int resultCode, Intent data) {</p>
+<pre><code>//回调支持
+ super.onActivityResult(requestCode, resultCode, data);
+ helper.onActivityResult(requestCode, resultCode, data);
+</code></pre><p>  }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* 3 、权限</span><br></pre></td></tr></table></figure>
+<p>  @SuppressLint(“CheckResult”)<br>  public void permission(CallBack callBack){</p>
+<pre><code>// 权限支持
+ RxPermissions rxPermissions = new RxPermissions( this );
+ rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+         .subscribe(grant -&gt; {
+             if (grant) {
+                 //全部通过
+                 try {
+                     if (callBack!=null){
+                         callBack.onSucess();
+                     }
+                 } catch (Throwable throwable) {
+                     throwable.printStackTrace();
+                 }
+             } else {
+                     ToastUtils.show(&quot;请同意权限&quot;);
+             }
+         });
+</code></pre><p>  }</p>
+<p>  public interface CallBack{</p>
+<pre><code>void onSucess();
+</code></pre><p>  }</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 3、WebViewUploadFileHelper 帮助类</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">将input相关方法封装在一个帮助类中，便于多处复用</span><br><span class="line">```java</span><br><span class="line"></span><br><span class="line">public class WebViewUploadFileHelper &#123;</span><br><span class="line"></span><br><span class="line">    private ValueCallback&lt;Uri&gt; uploadMessage;</span><br><span class="line">    private ValueCallback&lt;Uri[]&gt; uploadMessageAboveL;</span><br><span class="line">    private final static int FILE_CHOOSER_RESULT_CODE = 10011;//文件选择</span><br><span class="line">    private Uri imageUri;</span><br><span class="line">    private Activity activity;</span><br><span class="line"></span><br><span class="line">    private WebViewUploadFileHelper() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public WebViewUploadFileHelper(Activity activity) &#123;</span><br><span class="line">        this.activity = activity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUploadMessage(ValueCallback&lt;Uri&gt; uploadMessage) &#123;</span><br><span class="line">        this.uploadMessage = uploadMessage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUploadMessageAboveL(ValueCallback&lt;Uri[]&gt; uploadMessageAboveL) &#123;</span><br><span class="line">        this.uploadMessageAboveL = uploadMessageAboveL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onActivityResult(int requestCode, int resultCode, Intent data) &#123;</span><br><span class="line">        if (requestCode != FILE_CHOOSER_RESULT_CODE) return;</span><br><span class="line"></span><br><span class="line">        // 经过上边(1)、(2)两个赋值操作，此处即可根据其值是否为空来决定采用哪种处理方法</span><br><span class="line">        if (uploadMessage != null) &#123;</span><br><span class="line">            chooseBelow( resultCode, data );</span><br><span class="line">        &#125; else if (uploadMessageAboveL != null) &#123;</span><br><span class="line">            chooseAbove( resultCode, data );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void openImageActivity() &#123;</span><br><span class="line">        chooseImage( &quot;image/*&quot; );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void openImageActivity(String acceptType) &#123;</span><br><span class="line">        chooseImage( acceptType );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void openImageActivity(String acceptType, String capture) &#123;</span><br><span class="line">        if (StringUtils.equals( capture, &quot;camera&quot; )) &#123;</span><br><span class="line">            takePhoto();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            chooseImage( acceptType );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void openImageActivity(String[] acceptType, boolean isCaptureEnabled) &#123;</span><br><span class="line">        if (isCaptureEnabled) &#123;</span><br><span class="line">            takePhoto();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            chooseImage( acceptType );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void chooseBelow(int resultCode, Intent data) &#123;</span><br><span class="line"></span><br><span class="line">        if (RESULT_OK == resultCode) &#123;</span><br><span class="line">            updatePhotos();</span><br><span class="line"></span><br><span class="line">            if (data != null) &#123;</span><br><span class="line">                // 这里是针对文件路径处理</span><br><span class="line">                Uri uri = data.getData();</span><br><span class="line">                if (uri != null) &#123;</span><br><span class="line">                    uploadMessage.onReceiveValue( uri );</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    uploadMessage.onReceiveValue( null );</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                // 以指定图像存储路径的方式调起相机，成功后返回data为空</span><br><span class="line">                uploadMessage.onReceiveValue( imageUri );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            uploadMessage.onReceiveValue( null );</span><br><span class="line">        &#125;</span><br><span class="line">        uploadMessage = null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void chooseAbove(int resultCode, Intent data) &#123;</span><br><span class="line">        if (RESULT_OK == resultCode) &#123;</span><br><span class="line">            updatePhotos();</span><br><span class="line"></span><br><span class="line">            if (data != null) &#123;</span><br><span class="line">                // 这里是针对从文件中选图片的处理</span><br><span class="line">                Uri[] results;</span><br><span class="line">                Uri uriData = data.getData();</span><br><span class="line">                if (uriData != null) &#123;</span><br><span class="line">                    results = new Uri[]&#123;uriData&#125;;</span><br><span class="line">                    uploadMessageAboveL.onReceiveValue( results );</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    uploadMessageAboveL.onReceiveValue( null );</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                uploadMessageAboveL.onReceiveValue( new Uri[]&#123;imageUri&#125; );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            uploadMessageAboveL.onReceiveValue( null );</span><br><span class="line">        &#125;</span><br><span class="line">        uploadMessageAboveL = null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void updatePhotos() &#123;</span><br><span class="line">        // 该广播即使多发（即选取照片成功时也发送）也没有关系，只是唤醒系统刷新媒体文件</span><br><span class="line">        Intent intent = new Intent( Intent.ACTION_MEDIA_SCANNER_SCAN_FILE );</span><br><span class="line">        intent.setData( imageUri );</span><br><span class="line">        activity.sendBroadcast( intent );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //调用相机</span><br><span class="line">    private void takePhoto() &#123;</span><br><span class="line">        String fileName = &quot;IMG_&quot; + DateFormat.format( &quot;yyyyMMdd_hhmmss&quot;, Calendar.getInstance( Locale.CHINA ) ) + &quot;.jpg&quot;;</span><br><span class="line">        // 步骤一：创建存储照片的文件</span><br><span class="line">        String imagePath = activity.getFilesDir() + File.separator + &quot;images&quot; + File.separator + fileName;</span><br><span class="line">        File file = new File( imagePath );</span><br><span class="line">        //创建文件夹</span><br><span class="line">        if (!file.getParentFile().exists())</span><br><span class="line">            file.getParentFile().mkdirs();</span><br><span class="line"></span><br><span class="line">        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.N) &#123;</span><br><span class="line">            //步骤二：Android 7.0及以上获取文件 Uri</span><br><span class="line">            imageUri = FileProvider.getUriForFile( activity, activity.getPackageName() + &quot;.fileprovider&quot;, file );</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            //步骤三：获取文件Uri</span><br><span class="line">            imageUri = Uri.fromFile( file );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Intent intent = new Intent();</span><br><span class="line">        intent.addFlags( Intent.FLAG_GRANT_READ_URI_PERMISSION );</span><br><span class="line">        intent.setAction( MediaStore.ACTION_IMAGE_CAPTURE );//设置Action为拍照</span><br><span class="line">        intent.putExtra( MediaStore.EXTRA_OUTPUT, imageUri );//将拍取的照片保存到指定URI</span><br><span class="line">        activity.startActivityForResult( intent, FILE_CHOOSER_RESULT_CODE );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //图片选择器</span><br><span class="line">    private void chooseImage(String[] acceptType) &#123;</span><br><span class="line">        Intent i = new Intent( Intent.ACTION_GET_CONTENT );</span><br><span class="line">        i.addCategory( Intent.CATEGORY_OPENABLE );</span><br><span class="line">        i.setType( &quot;*/*&quot; );</span><br><span class="line">        i.putExtra( Intent.EXTRA_MIME_TYPES, acceptType );</span><br><span class="line">        activity.startActivityForResult( i, FILE_CHOOSER_RESULT_CODE );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //图片选择器</span><br><span class="line">    private void chooseImage(String acceptType) &#123;</span><br><span class="line">        Intent i = new Intent( Intent.ACTION_GET_CONTENT );</span><br><span class="line">        i.addCategory( Intent.CATEGORY_OPENABLE );</span><br><span class="line">        if (TextUtils.isEmpty( acceptType )) &#123;</span><br><span class="line">            i.setType( &quot;*/*&quot; );</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            i.setType( acceptType );</span><br><span class="line">        &#125;</span><br><span class="line">        activity.startActivityForResult( Intent.createChooser( i, &quot;Image Chooser&quot; ), FILE_CHOOSER_RESULT_CODE );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/kotlin惯用语法/" rel="next" title="kotlin惯用语法">
+                <i class="fa fa-chevron-left"></i> kotlin惯用语法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/flutter解决布局嵌套问题/" rel="prev" title="flutter解决布局嵌套问题">
+                flutter解决布局嵌套问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

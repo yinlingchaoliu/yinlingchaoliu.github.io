@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3、搜索class文件">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/3、搜索class文件/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:51.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="3、搜索class文件">
+<meta name="twitter:description" content="gojvm目录1、搭建go环境2、cmd命令行参数解析3、搜索class文件4、添加testOption 便于单元测试5、解析classfile文件6、运行时数据区7、指令集8、解释器9、创建Class10、类加载器11、对象实例化new object12、方法调用和返回13 类初始化14、jvm支持数组15、jvm支持字符串-数组扩展16、本地方法调用17、ClassLoader原理18、异常处">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/3、搜索class文件/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>3、搜索class文件 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/3、搜索class文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">3、搜索class文件
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####1、知识扩展<br>java jvm根据类路径(class path)来搜索类，加载到内存</p>
+<table>
+<thead>
+<tr>
+<th>按照搜索先后顺序</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1、启动类路径(bootstrap classpath)</td>
+<td>Jre/lib</td>
+</tr>
+<tr>
+<td>2、扩展类路径(extension classpath)</td>
+<td>Jre/lib/ext</td>
+</tr>
+<tr>
+<td>3、用户类路径(user classpath)</td>
+<td>当前目录 .</td>
+</tr>
+</tbody>
+</table>
+<p>可以通过 -Xbootclasspath 修改启动类路径</p>
+<p>参数 -classpath /-cp</p>
+<p>go语言不需要显式实现接口<br>defer 确保异常及时处理</p>
+<p>####2、Cmd添加jre目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// java [-options] class [args...]</span><br><span class="line">type Cmd struct &#123;</span><br><span class="line">	XjreOption  string   // 指定jre启动类的目录</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func parseCmd() *Cmd &#123;</span><br><span class="line">	flag.StringVar(&amp;cmd.XjreOption,&quot;Xjre&quot;,&quot;&quot;,&quot;path to jre&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####3、类加载规则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">package classpath</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;path/filepath&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Classpath struct &#123;</span><br><span class="line">	bootClasspath Entry //启动类搜索</span><br><span class="line">	extClasspath  Entry //扩展类搜索</span><br><span class="line">	userClasspath Entry //用户类搜索</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//创建解析器</span><br><span class="line">func Parse(jreOption, cpOption string) *Classpath &#123;</span><br><span class="line">	cp := &amp;Classpath&#123;&#125;</span><br><span class="line">	//解析启动类加载</span><br><span class="line">	cp.parseBootAndExtClasspath(jreOption)</span><br><span class="line">	//解析用户类加载</span><br><span class="line">	cp.parseUserClasspath(cpOption)</span><br><span class="line">	return cp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 读取文件名称为className的class文件</span><br><span class="line">func (self *Classpath) ReadClass(className string) ([]byte, Entry, error) &#123;</span><br><span class="line">	className = className + &quot;.class&quot;</span><br><span class="line">	// 1. 从启动类路径寻找读取 &lt;className&gt;.class 类</span><br><span class="line">	if data, entry, err := self.bootClasspath.readClass(className); err == nil &#123;</span><br><span class="line">		return data, entry, err</span><br><span class="line">	&#125;</span><br><span class="line">	// 2. 从扩展类路径寻找读取 &lt;className&gt;.class 类</span><br><span class="line">	if data, entry, err := self.extClasspath.readClass(className); err == nil &#123;</span><br><span class="line">		return data, entry, err</span><br><span class="line">	&#125;</span><br><span class="line">	// 3. 从用户类路径寻找读取 &lt;className&gt;.class 类</span><br><span class="line">	return self.userClasspath.readClass(className)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Classpath) String() string &#123;</span><br><span class="line">	return self.userClasspath.String()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Classpath) parseBootAndExtClasspath(jreOption string) &#123;</span><br><span class="line">	jreDir := getJreDir(jreOption)</span><br><span class="line">	self.bootClasspath = newWildcardEntry(filepath.Join(jreDir, &quot;lib&quot;, &quot;*&quot;))       // jre/lib/*</span><br><span class="line">	self.extClasspath = newWildcardEntry(filepath.Join(jreDir, &quot;lib&quot;, &quot;ext&quot;, &quot;*&quot;)) // jre/lib/ext/*</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func getJreDir(jreOption string) string &#123;</span><br><span class="line">	// 先读取命令行参数-Xjre，如果存在，直接返回（为了简化，不做错误输入的处理）</span><br><span class="line">	if jreOption != &quot;&quot; &#123;</span><br><span class="line">		return jreOption</span><br><span class="line">	&#125;</span><br><span class="line">	// 如果命令行没有传入-Xjre，使用JAVA_HOME/jre</span><br><span class="line">	if javaHome := os.Getenv(&quot;JAVA_HOME&quot;); javaHome != &quot;&quot; &#123;</span><br><span class="line">		return filepath.Join(javaHome, &quot;jre&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	panic(&quot;Can&apos;t find jre folder&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Classpath) parseUserClasspath(cpOption string) &#123;</span><br><span class="line">	if cpOption == &quot;&quot; &#123;</span><br><span class="line">		cpOption = &quot;.&quot;</span><br><span class="line">	&#125;</span><br><span class="line">	self.userClasspath = newEntry(cpOption)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####4、类路径查找</p>
+<p>1、Entry搜索类路径<br>2、DirEntry 搜索目录下类路径<br>3、ZipEntry 搜索zip或jar文件形式类路径<br>4、CompositeEntry 组合类路径<br>5、WildcardEntry 所有通配符下类路径</p>
+<p>Entry 类路径查找<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package classpath</span><br><span class="line"></span><br><span class="line">import &quot;os&quot;</span><br><span class="line">import &quot;strings&quot;</span><br><span class="line"></span><br><span class="line">//分隔符 &quot;:&quot;</span><br><span class="line">const pathListSeparator = string(os.PathListSeparator)</span><br><span class="line"></span><br><span class="line">//定义接口</span><br><span class="line">type Entry interface &#123;</span><br><span class="line">	// 寻找和读取 class 文件</span><br><span class="line">	// 入参：className - class文件的相对路径，eg. 如果要读取 java.lang.Object 类，则className = java/lang/Object.class</span><br><span class="line">	// 返回值：</span><br><span class="line">	// 1. 读取到的class文件内容的[]byte</span><br><span class="line">	// 2. 最终定位到包含className文件的Entry对象</span><br><span class="line">	// 3. 错误信息error</span><br><span class="line">	readClass(className string) ([]byte, Entry, error)</span><br><span class="line">	//获得className</span><br><span class="line">	string() string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//根据参数类型创建不同搜索模式</span><br><span class="line">func newEntry(path string) Entry &#123;</span><br><span class="line"></span><br><span class="line">	//读取多个className文件 java -cp path1/classes:path2/classes</span><br><span class="line">	if strings.Contains(path, pathListSeparator) &#123;</span><br><span class="line">		return newCompositeEntry(path)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 读取path下所有jar文件的className文件  java -cp path/*</span><br><span class="line">	if strings.HasSuffix(path, &quot;*&quot;) &#123;</span><br><span class="line">		return newWildcardEntry(path)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 从path/lib1.jar下查找并读取className文件：java -cp path/lib1.jar 或者 java -cp path/lib1.zip</span><br><span class="line">	//读取zip/jar下 className文件 :java -cp path/lib1.jar</span><br><span class="line">	if strings.HasSuffix(path, &quot;.jar&quot;) || strings.HasSuffix(path, &quot;.zip&quot;) &#123;</span><br><span class="line">		return newZipEntry(path)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//遍历目录</span><br><span class="line">	return newDirEntry(path)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//测试classpath</span><br><span class="line">func parseClasspath(cmd *Cmd) &#123;</span><br><span class="line">	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)</span><br><span class="line">	fmt.Printf(&quot;classpath:%v class:%v args:%v</span><br><span class="line">&quot;,</span><br><span class="line">		cp, cmd.class, cmd.args)</span><br><span class="line"></span><br><span class="line">	className := strings.Replace(cmd.class, &quot;.&quot;, &quot;/&quot;, -1)</span><br><span class="line">	classData, _, err := cp.ReadClass(className)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;Could not find or load main class %s</span><br><span class="line">&quot;, cmd.class)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;class data:%v</span><br><span class="line">&quot;, classData)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####实战项目地址<br><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a><br>提交标签classpath</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/手动编写jvm虚拟机/4、添加testOption-便于单元测试/" rel="next" title="4、添加testOption-便于单元测试">
+                <i class="fa fa-chevron-left"></i> 4、添加testOption-便于单元测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/手动编写jvm虚拟机/1、搭建go环境/" rel="prev" title="1、搭建go环境">
+                1、搭建go环境 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

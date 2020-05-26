@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="####1、目的建立UI和开发人员规范认知的一致性，便于高效团队合作 ####2、ios规范 ######2.1 UI交付给开发者资料2x切图（以640为宽度尺寸为基准切图）640*9603x切图（以1280为宽度尺寸为基准切图）1280*1920若提供一张切图，ios必须是2x ######2.2 ios logo系统标准要求（尺寸规定严格）且提供对应1x 2x 3x1234567820*20">
+<meta property="og:type" content="article">
+<meta property="og:title" content="移动端UI开发规范">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/Android相关/移动端UI开发规范/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="####1、目的建立UI和开发人员规范认知的一致性，便于高效团队合作 ####2、ios规范 ######2.1 UI交付给开发者资料2x切图（以640为宽度尺寸为基准切图）640*9603x切图（以1280为宽度尺寸为基准切图）1280*1920若提供一张切图，ios必须是2x ######2.2 ios logo系统标准要求（尺寸规定严格）且提供对应1x 2x 3x1234567820*20">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.307Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="移动端UI开发规范">
+<meta name="twitter:description" content="####1、目的建立UI和开发人员规范认知的一致性，便于高效团队合作 ####2、ios规范 ######2.1 UI交付给开发者资料2x切图（以640为宽度尺寸为基准切图）640*9603x切图（以1280为宽度尺寸为基准切图）1280*1920若提供一张切图，ios必须是2x ######2.2 ios logo系统标准要求（尺寸规定严格）且提供对应1x 2x 3x1234567820*20">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/Android相关/移动端UI开发规范/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>移动端UI开发规范 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/移动端UI开发规范/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">移动端UI开发规范
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>####1、目的<br>建立UI和开发人员规范认知的一致性，便于高效团队合作</p>
+<p>####2、ios规范</p>
+<p>######2.1 UI交付给开发者资料<br>2x切图（以640为宽度尺寸为基准切图）<strong>640*960</strong><br>3x切图（以1280为宽度尺寸为基准切图）<strong>1280*1920</strong><br><code>若提供一张切图，ios必须是2x</code></p>
+<p>######2.2 ios logo系统标准要求（尺寸规定严格）且提供对应1x 2x 3x<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">20*20 通知logo</span><br><span class="line">29*29 设置</span><br><span class="line">40*40 搜索icon</span><br><span class="line">60*60 app icon</span><br><span class="line">1024*1024 app store</span><br><span class="line"></span><br><span class="line">76*76 ipad</span><br><span class="line">83.5*83.5 ipad pro</span><br></pre></td></tr></table></figure></p>
+<p>######2.3 闪屏业界标准<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">640x960  iPhone 4S</span><br><span class="line">640x1136  iPhone 5S</span><br><span class="line">750x1334   iPhone 8</span><br><span class="line">1242x2208  iPhone 8 Plus</span><br><span class="line">1125x2436  iPhoneX</span><br><span class="line">828 x 1792 iPhone XR</span><br><span class="line">1242 x 2688 iPhone XS Max</span><br></pre></td></tr></table></figure></p>
+<p>####3、android规范</p>
+<p>######3.1 UI交付给开发者资料</p>
+<table>
+<thead>
+<tr>
+<th>图片类型</th>
+<th>屏幕</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mdpi</td>
+<td>320*480</td>
+</tr>
+<tr>
+<td>hdpi</td>
+<td>480*800</td>
+</tr>
+<tr>
+<td>xhdpi</td>
+<td>720*1280</td>
+</tr>
+<tr>
+<td>xxhdpi</td>
+<td>1080*1920</td>
+</tr>
+<tr>
+<td>xxxhdpi</td>
+<td>2160*3840</td>
+</tr>
+</tbody>
+</table>
+<p>######3.2 app logo 系统标准要求（尺寸规定严格）</p>
+<table>
+<thead>
+<tr>
+<th>DEBSITY</th>
+<th>SIZE</th>
+<th>RATIO</th>
+<th>SCREEN</th>
+<th>MARGIN</th>
+<th>CONTENT</th>
+<th>Padding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XXXHDPI</td>
+<td>192*192</td>
+<td>4</td>
+<td>640DPI</td>
+<td>12-16</td>
+<td>170*170</td>
+<td>16</td>
+</tr>
+<tr>
+<td>XXHDPI</td>
+<td>144*144</td>
+<td>3</td>
+<td>480DPI</td>
+<td>8-12</td>
+<td>128*128</td>
+<td>8</td>
+</tr>
+<tr>
+<td>XHDPI</td>
+<td>96*96</td>
+<td>2</td>
+<td>320DPI</td>
+<td>6-8</td>
+<td>88*88</td>
+<td>4</td>
+</tr>
+<tr>
+<td>HDPI</td>
+<td>72*72</td>
+<td>1.5</td>
+<td>240DPI</td>
+<td>4-6</td>
+<td>68*68</td>
+<td>2</td>
+</tr>
+<tr>
+<td>MDPI</td>
+<td>48*48</td>
+<td>1</td>
+<td>160DPI</td>
+<td>3-4</td>
+<td>46*46</td>
+<td>1</td>
+</tr>
+<tr>
+<td>N/A</td>
+<td>512*512</td>
+<td>Google play</td>
+<td>NA</td>
+<td>NA</td>
+<td>As Required</td>
+</tr>
+</tbody>
+</table>
+<p>安卓建议：<br><code>提供MDPI~XXXHDPI, 图标有正常和圆角两种</code><br>若圆角为android切，须UI产品确认最终样式</p>
+<p>######3.3 应用市场提交logo<br>应用市场logo</p>
+<table>
+<thead>
+<tr>
+<th>应用市场</th>
+<th>图片尺寸</th>
+<th>体积</th>
+<th>格式</th>
+<th>特别建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>应用宝</td>
+<td>16*16</td>
+<td>20k以内</td>
+<td>png</td>
+<td></td>
+</tr>
+<tr>
+<td>应用宝</td>
+<td>512*512</td>
+<td>200K以内</td>
+<td>png</td>
+<td>直角图标</td>
+</tr>
+<tr>
+<td>华为</td>
+<td>216*216</td>
+<td></td>
+<td>Png</td>
+<td>正方形图片 圆角32px</td>
+</tr>
+<tr>
+<td>VIVO</td>
+<td>512*512</td>
+<td>小于50K</td>
+<td>png</td>
+<td>正方形图片，直角图标</td>
+</tr>
+<tr>
+<td>阿里分发平台</td>
+<td>512*512</td>
+<td></td>
+<td>Png</td>
+<td>背景透明带圆角</td>
+</tr>
+<tr>
+<td>小米</td>
+<td>216*216</td>
+<td></td>
+<td>png</td>
+<td>正方形图片</td>
+</tr>
+</tbody>
+</table>
+<p>######3.4 应用市场提交截图</p>
+<table>
+<thead>
+<tr>
+<th>市场</th>
+<th>截图要求</th>
+<th>特殊要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>应用宝</td>
+<td>480*800 4张 1M PNG</td>
+<td></td>
+</tr>
+<tr>
+<td>阿里分发平台</td>
+<td>480*800 4张 1M PNG</td>
+<td>不可上传ios截图</td>
+</tr>
+<tr>
+<td>百度</td>
+<td>480*800 4张 1M PNG</td>
+<td>通知栏不含有与app自身无关的应用图标</td>
+</tr>
+<tr>
+<td>华为</td>
+<td>450*800 4张 1M PNG</td>
+<td></td>
+</tr>
+<tr>
+<td>小米</td>
+<td>720*1280 4张 1M PNG</td>
+<td>若截图含有手机外观，必须使用小米手机外观素材</td>
+</tr>
+<tr>
+<td>OPPO</td>
+<td>1080*1920 4张 1M PNG</td>
+<td>去除顶部通知栏，不得使用其他品牌手机作为边框或宣传图</td>
+</tr>
+<tr>
+<td>VIVO</td>
+<td>480*800 4张 1M PNG</td>
+</tr>
+</tbody>
+</table>
+<p>######3.5 应用截图要求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">体积 小于1M 4 张 png</span><br><span class="line">尺寸</span><br><span class="line">480*800</span><br><span class="line">450*800</span><br><span class="line">720*1280</span><br><span class="line">1080*1920 </span><br><span class="line">特别要求：</span><br><span class="line">1、无ios截图</span><br><span class="line">2、无通知栏</span><br><span class="line">3、无手机外观</span><br></pre></td></tr></table></figure></p>
+<p>######3.6 闪屏页图片要求<br>app冷启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一整张图片 1080*1920 jpg</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/热修复技术/" rel="next" title="热修复技术">
+                <i class="fa fa-chevron-left"></i> 热修复技术
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/Android相关/安卓拍照支持适配7-0-takePhoto/" rel="prev" title="安卓拍照支持适配7-0-takePhoto">
+                安卓拍照支持适配7-0-takePhoto <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

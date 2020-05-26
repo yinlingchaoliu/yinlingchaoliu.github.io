@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="####温故知新将好的用法记录下来流水账式记录 kotlin哲学实用、精简、安全 原则：(DRY)Don`t Repeat Yourself  表达主体1fun max(a:Int, b:Int):Int = if(a&amp;gt;b) a else b var 变量val 不变量 类和属性1class Person(val name:String) 任意对象使用when，用when代替复杂if is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kotlin重新复习">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/kotlin/kotlin重新复习/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="####温故知新将好的用法记录下来流水账式记录 kotlin哲学实用、精简、安全 原则：(DRY)Don`t Repeat Yourself  表达主体1fun max(a:Int, b:Int):Int = if(a&amp;gt;b) a else b var 变量val 不变量 类和属性1class Person(val name:String) 任意对象使用when，用when代替复杂if is">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-3e5584d21dab45f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.993Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kotlin重新复习">
+<meta name="twitter:description" content="####温故知新将好的用法记录下来流水账式记录 kotlin哲学实用、精简、安全 原则：(DRY)Don`t Repeat Yourself  表达主体1fun max(a:Int, b:Int):Int = if(a&amp;gt;b) a else b var 变量val 不变量 类和属性1class Person(val name:String) 任意对象使用when，用when代替复杂if is">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5526061-3e5584d21dab45f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/kotlin/kotlin重新复习/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kotlin重新复习 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin重新复习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kotlin重新复习
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>####温故知新<br>将好的用法记录下来<br>流水账式记录</p>
+<p>kotlin哲学<br>实用、精简、安全</p>
+<p>原则：(DRY)<br>Don`t Repeat Yourself </p>
+<p>表达主体<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fun max(a:Int, b:Int):Int = if(a&gt;b) a else b</span><br></pre></td></tr></table></figure></p>
+<p>var 变量<br>val 不变量</p>
+<p>类和属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class Person(val name:String)</span><br></pre></td></tr></table></figure></p>
+<p>任意对象使用when，用when代替复杂if</p>
+<p>is 类型监测，智能类型转换</p>
+<p>ranges<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">val oneToTen = 1..10</span><br></pre></td></tr></table></figure></p>
+<p>kotlin遍历几种写法</p>
+<p>in 检查范围</p>
+<p>异常处理 ：try作为表达式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fun readNum(reader:BufferedReader)&#123;</span><br><span class="line">    var number  = try&#123;</span><br><span class="line">        Interger.parseInt(reader.readLine())</span><br><span class="line">    &#125;catch(e:Exception)&#123;</span><br><span class="line">        return null</span><br><span class="line">    &#125;</span><br><span class="line">    printlin(number)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>list函数<br>last()<br>max()</p>
+<p>类扩展 :顶层属性扩展<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> strings</span><br><span class="line"><span class="function"><span class="keyword">fun</span> String.<span class="title">lastChar</span><span class="params">()</span></span>:<span class="built_in">Char</span> = <span class="keyword">get</span>(length-<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>kotlin调用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var c = &quot;abc&quot;.lastChar()</span><br></pre></td></tr></table></figure></p>
+<p>java调用扩展函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">char c = StringUtilKt.lastChar(&quot;abc&quot;)</span><br></pre></td></tr></table></figure></p>
+<p>多态在kotlin中失效的</p>
+<p>可变参数<br>vararg</p>
+<p>元组 pairs</p>
+<p>split<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;12.345-6.A&quot;.spilt(&quot;.&quot;.toRegex())</span><br></pre></td></tr></table></figure></p>
+<p>kotlin接口： 带有默认实现方法</p>
+<p>open final abstract修饰符，默认final类型</p>
+<p>可见性<br>public默认<br>internal 模块内可见<br>protected 子类可见<br>private 类内部可见 </p>
+<p>初始化类：主构造器和初始化器</p>
+<p>constructor<br>init{</p>
+<p>}</p>
+<p>次构造器</p>
+<p>super(ctx)=&gt;this(ctx)<br>get()<br>set(value:String)</p>
+<p>数据类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data class Client(val name:String , val code :Int)</span><br></pre></td></tr></table></figure></p>
+<p>copy 拷贝数据</p>
+<p>by类委托  减少大量不必要实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class DelegateCollection&lt;T&gt;(</span><br><span class="line">    innerList:Conllection&lt;T&gt; = ArrayList&lt;T&gt;()</span><br><span class="line">):Conllection&lt;T&gt; by innerList&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>object 单例类<br>无构造函数</p>
+<p>伴生对象：访问静态函数，静态成员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line"></span><br><span class="line">    companion object&#123;</span><br><span class="line">          fun bar()&#123;</span><br><span class="line">          println(&quot;hello&quot;)</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">A.bar</span><br></pre></td></tr></table></figure>
+<p>匿名内部类<br>1、对象表达式<br>object : Clickable{</p>
+<p>}</p>
+<p>2、 lambda</p>
+<p>lambda 应用<br>1、集合<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var list =listOf(Person(&quot;a&quot;,12), Person(&quot;b&quot;,14))</span><br><span class="line">list.maxBy&#123; it.age &#125;</span><br></pre></td></tr></table></figure></p>
+<p>2、语法表达式<br><img src="https://upload-images.jianshu.io/upload_images/5526061-3e5584d21dab45f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="语法表达式"></p>
+<p>成员引用<br>people::age</p>
+<p>filter  移除不想要函数<br>map  对合集每个元素应用给定函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var people = listOf(Person(&quot;Alice&quot;,20),Person(&quot;Bob&quot;,31))</span><br><span class="line">people.filter&#123;it.age &gt; 30&#125;</span><br><span class="line">output=&gt;[Person(&quot;Bob&quot;,31)]</span><br><span class="line"></span><br><span class="line">var list = listOf(1,2,3,4)</span><br><span class="line">list.map&#123; it * it &#125;</span><br><span class="line">[1,4,9,16]</span><br></pre></td></tr></table></figure>
+<p>对集合应用预言，条件判定<br>all 所有<br>any 任意<br>count 符合数量<br>find 返回符合第一个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var people = listOf(Person(&quot;Alice&quot;,20),Person(&quot;Bob&quot;,31))</span><br><span class="line"></span><br><span class="line">var canBe27 =&#123;p:Person-&gt;p.age &lt;=27&#125;</span><br><span class="line"></span><br><span class="line">people.all(canBe27)</span><br><span class="line">people.any(canBe27)</span><br><span class="line">people.count(canBe27)</span><br><span class="line">people.find(canBe27)</span><br></pre></td></tr></table></figure>
+<p>groupBy 一个将列表转化为多组映射</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var people = listOf(Person(&quot;Alice&quot;,20),Person(&quot;Bob&quot;,31),</span><br><span class="line">Person(&quot;Carol&quot;,31))</span><br><span class="line"></span><br><span class="line">//分组</span><br><span class="line">people.groupBy&#123;it.age&#125;</span><br></pre></td></tr></table></figure>
+<p>flatMap  数据变换重新排列<br>函数变换，多个列表合并一个集合<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val strings = listOf(&quot;abcc&quot;,&quot;deffggrr&quot;)</span><br><span class="line">println(strings.flatMap&#123;it.toList()&#125;)</span><br><span class="line"></span><br><span class="line">[a, b, c, c, d, e, f, f, g, g, r, r]</span><br></pre></td></tr></table></figure></p>
+<p>//转换为序列，数据量大时，会更高效<br>sequence<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">people.asSequence()  //转换为序列</span><br><span class="line">            .map(Person::name)</span><br><span class="line">            .filter&#123; it.startsWith(&quot;A&quot;)&#125;</span><br><span class="line">            .toList() //序列转换成列表</span><br></pre></td></tr></table></figure></p>
+<p>优化，先用filter,后map</p>
+<p>with函数   建造者<br>apply函数 </p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/kotlin/kotlin非空延时赋值/" rel="next" title="kotlin非空延时赋值">
+                <i class="fa fa-chevron-left"></i> kotlin非空延时赋值
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/kotlin/kotlin相关资料/" rel="prev" title="kotlin相关资料">
+                kotlin相关资料 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

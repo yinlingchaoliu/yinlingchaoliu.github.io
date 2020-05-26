@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="如题，让博客666起来 1、创建github仓库 1、创建仓库 github.iohttps://yinlingchaoliu.github.io  2、新建仓库 hexogit@github.com:yinlingchaoliu/hexo.git   建站Hexo + 中文文档https://hexo.io/zh-cn/docs/ 2、Hexo 建站123456npm  install  -g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建github个人博客(git-pages)+-hexo建站+gitalk评论">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/git相关/搭建github个人博客(git-pages)+-hexo建站+gitalk评论/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="如题，让博客666起来 1、创建github仓库 1、创建仓库 github.iohttps://yinlingchaoliu.github.io  2、新建仓库 hexogit@github.com:yinlingchaoliu/hexo.git   建站Hexo + 中文文档https://hexo.io/zh-cn/docs/ 2、Hexo 建站123456npm  install  -g">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-06febc87b87889b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-de1bd0c5520c61b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-05-26T02:55:49.808Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建github个人博客(git-pages)+-hexo建站+gitalk评论">
+<meta name="twitter:description" content="如题，让博客666起来 1、创建github仓库 1、创建仓库 github.iohttps://yinlingchaoliu.github.io  2、新建仓库 hexogit@github.com:yinlingchaoliu/hexo.git   建站Hexo + 中文文档https://hexo.io/zh-cn/docs/ 2、Hexo 建站123456npm  install  -g">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5526061-06febc87b87889b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/git相关/搭建github个人博客(git-pages)+-hexo建站+gitalk评论/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>搭建github个人博客(git-pages)+-hexo建站+gitalk评论 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/git相关/搭建github个人博客(git-pages)+-hexo建站+gitalk评论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建github个人博客(git-pages)+-hexo建站+gitalk评论
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git相关/" itemprop="url" rel="index"><span itemprop="name">git相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如题，让博客666起来</p>
+<h4 id="1、创建github仓库"><a href="#1、创建github仓库" class="headerlink" title="1、创建github仓库"></a>1、创建github仓库</h4><ul>
+<li><p>1、创建仓库 github.io<br><img src="https://upload-images.jianshu.io/upload_images/5526061-06febc87b87889b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br><a href="https://yinlingchaoliu.github.io" target="_blank" rel="noopener">https://yinlingchaoliu.github.io</a></p>
+</li>
+<li><p>2、新建仓库 hexo<br><a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:yinlingchaoliu/hexo.git</p>
+</li>
+</ul>
+<p>建站Hexo + 中文文档<br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></p>
+<h4 id="2、Hexo-建站"><a href="#2、Hexo-建站" class="headerlink" title="2、Hexo 建站"></a>2、Hexo 建站</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npm  install  -g hexo-cli  //下载hexo插件</span><br><span class="line">hexo init hexo  //创建博客目录是hexo</span><br><span class="line">cd hexo </span><br><span class="line">git clone https://github.com/theme-next/hexo-theme-next themes/next  //下载next主题</span><br><span class="line">//采用next指定模板 v5.1.3</span><br><span class="line">git checkout  v5.1.3</span><br></pre></td></tr></table></figure>
+<p>修改根目录下_config.yml文件<br>repo 是 github.io 仓库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br><span class="line">//配置Deployment</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:yinlingchaoliu/yinlingchaoliu.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure></p>
+<p>新建页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;page title&quot;  //新建页面</span><br></pre></td></tr></table></figure></p>
+<p>在指定md文件下一通狂写<br><img src="https://upload-images.jianshu.io/upload_images/5526061-de1bd0c5520c61b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>本地部署<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure></p>
+<p>地址：<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p>
+<p>远程部署 与gitpage关联<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//安装插件</span><br><span class="line">sudo npm install --save hexo-deployer-git</span><br><span class="line">//远程部署</span><br><span class="line">hexo clean</span><br><span class="line">hexo d  g  //部署并发布</span><br></pre></td></tr></table></figure></p>
+<p><code>代码自动部署github.io仓库</code></p>
+<p>此时可以查看远程地址<br><a href="https://yinlingchaoliu.github.io/" target="_blank" rel="noopener">https://yinlingchaoliu.github.io/</a></p>
+<h4 id="3、上传hexo源码至仓库"><a href="#3、上传hexo源码至仓库" class="headerlink" title="3、上传hexo源码至仓库"></a>3、上传hexo源码至仓库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cd hexo</span><br><span class="line">git init </span><br><span class="line">git add * </span><br><span class="line">//删除 theme/next git仓库文件</span><br><span class="line">rm -rf theme/next/.git</span><br><span class="line">git add  * </span><br><span class="line">git  commit  -m &quot;first commit&quot;</span><br><span class="line">//添加远程依赖</span><br><span class="line">git remote add origin  git@github.com:yinlingchaoliu/hexo.git</span><br><span class="line">git push --set-upstream origin master //推送至远程</span><br></pre></td></tr></table></figure>
+<p>说明：我们只是操作hexo.git 仓库，部署时候，生成页面会自动同步到github.io 仓库<br>hexo.git 仓库内容记得也要上传</p>
+<h4 id="添加gitalk评论"><a href="#添加gitalk评论" class="headerlink" title="添加gitalk评论"></a>添加gitalk评论</h4><p><a href="https://github.com/gitalk/gitalk" target="_blank" rel="noopener">https://github.com/gitalk/gitalk</a></p>
+<p>1、<code>申请Github Application</code>，如果没有 <a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">点击这里申请</a><br>Authorization callback URL 填写你主页地址<br>eg: <a href="https://yinlingchaoliu.github.io" target="_blank" rel="noopener">https://yinlingchaoliu.github.io</a></p>
+<h4 id="备注-Mac-按照端口杀进程"><a href="#备注-Mac-按照端口杀进程" class="headerlink" title="备注 Mac 按照端口杀进程"></a>备注 Mac 按照端口杀进程</h4><p>lsof -i :port<br>kill -9 pid<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ lsof  -i :4000</span><br><span class="line">COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME</span><br><span class="line">node    79748 chentong   40u  IPv4 0xc0817c4a2f69df89      0t0  TCP *:terabase (LISTEN)</span><br><span class="line">$ kill -9  79748</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/git相关/git撤销与回滚/" rel="next" title="git撤销与回滚">
+                <i class="fa fa-chevron-left"></i> git撤销与回滚
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/git相关/git常用命令(标签，分支，私钥，异常处理，gitignore配置)/" rel="prev" title="git常用命令(标签，分支，私钥，异常处理，gitignore配置)">
+                git常用命令(标签，分支，私钥，异常处理，gitignore配置) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、创建github仓库"><span class="nav-number">1.</span> <span class="nav-text">1、创建github仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、Hexo-建站"><span class="nav-number">2.</span> <span class="nav-text">2、Hexo 建站</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、上传hexo源码至仓库"><span class="nav-number">3.</span> <span class="nav-text">3、上传hexo源码至仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加gitalk评论"><span class="nav-number">4.</span> <span class="nav-text">添加gitalk评论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#备注-Mac-按照端口杀进程"><span class="nav-number">5.</span> <span class="nav-text">备注 Mac 按照端口杀进程</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

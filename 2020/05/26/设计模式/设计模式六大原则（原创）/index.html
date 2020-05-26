@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="#####本文意义六大原则是理解是透彻理解23种设计模式核心，要定义清晰才能理解精准、简单更能实战 #####SOLID原则Bob大叔（Robert C Martin）把 单一职责，开闭原则，里氏替换、接口隔离，及依赖倒置5个原则定义为SOLID原则 一句话速记：S(Single==单身) O(Open 开放==开发)L(里氏==是)I(接口==借口)D(倒置==导致) SOD(最少知道)1单身开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式六大原则（原创）">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/设计模式/设计模式六大原则（原创）/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="#####本文意义六大原则是理解是透彻理解23种设计模式核心，要定义清晰才能理解精准、简单更能实战 #####SOLID原则Bob大叔（Robert C Martin）把 单一职责，开闭原则，里氏替换、接口隔离，及依赖倒置5个原则定义为SOLID原则 一句话速记：S(Single==单身) O(Open 开放==开发)L(里氏==是)I(接口==借口)D(倒置==导致) SOD(最少知道)1单身开">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:50.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式六大原则（原创）">
+<meta name="twitter:description" content="#####本文意义六大原则是理解是透彻理解23种设计模式核心，要定义清晰才能理解精准、简单更能实战 #####SOLID原则Bob大叔（Robert C Martin）把 单一职责，开闭原则，里氏替换、接口隔离，及依赖倒置5个原则定义为SOLID原则 一句话速记：S(Single==单身) O(Open 开放==开发)L(里氏==是)I(接口==借口)D(倒置==导致) SOD(最少知道)1单身开">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/设计模式/设计模式六大原则（原创）/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>设计模式六大原则（原创） | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/设计模式/设计模式六大原则（原创）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">设计模式六大原则（原创）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#####本文意义<br>六大原则是理解是透彻理解23种设计模式核心，要定义清晰才能理解精准、简单更能实战</p>
+<p>#####SOLID原则<br>Bob大叔（Robert C Martin）把 单一职责，开闭原则，里氏替换、接口隔离，及依赖倒置5个原则定义为<strong><em>SOLID原则</em></strong></p>
+<p>一句话速记：<br>S(Single<code>==</code>单身) O(Open 开放<code>==</code>开发)L(里氏<code>==</code>是)I(接口<code>==</code>借口)D(倒置<code>==</code>导致) SOD(最少知道)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">单身开发是借口导致,只与直接朋友通信</span><br></pre></td></tr></table></figure></p>
+<p>#####六大原则的目标<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">高内聚，低耦合</span><br></pre></td></tr></table></figure></p>
+<p>#####六大原则理解关键词<br>关键词：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">抽象（面向接口），单一职责，最小化</span><br></pre></td></tr></table></figure></p>
+<p>理解：<br>1、  高层模块不应依赖底层模块，两者都应依赖抽象<br>2、 类的职责单一，通用性越强<br>3、 最小化说明接口尽量小，类间彼此知道尽量小</p>
+<h5 id="单一职责原则（SRP）"><a href="#单一职责原则（SRP）" class="headerlink" title="单一职责原则（SRP）"></a>单一职责原则（SRP）</h5><p>定义：就一个类而言，应该仅有一个引起它变化的原因<br>一句话理解：一个类，只做一件事<br>判断方法：一个对象逻辑关系，是”has-a”,还是“is-a”</p>
+<h5 id="开闭原则（OCP）"><a href="#开闭原则（OCP）" class="headerlink" title="开闭原则（OCP）"></a>开闭原则（OCP）</h5><p>定义：软件实体应该对扩展开放，对修改关闭<br>一句话理解：遵循开闭原则重要手段是通过<strong>抽象</strong><br>使用方式：<br>1、抽象约束<br>2、参数配置控制行为模式<br>3、指定项目章程，约定优于配置<br>4、封装变化</p>
+<h5 id="里氏替换原则（LSP）"><a href="#里氏替换原则（LSP）" class="headerlink" title="里氏替换原则（LSP）"></a>里氏替换原则（LSP）</h5><p>定义：所有引用基类地方必须透明地使用子类对象<br>一句话理解：子类无影响替换父类，用父类对象定义，运行时用子类替换<br>说明：里氏替换依赖继承，多态两大特性，核心原理是<strong>抽象</strong><br>抽象优点：<br>1、代码公共逻辑重用<br>2、子类继承基础上，还可以增加差异<br>3、提高代码的扩展性<br>缺点：<br>1、继承是侵入性的<br>2、子类灵活性降低</p>
+<p>#####接口隔离原则（ISP）<br>定义：类间依赖关系应建立在最小接口上<br>一句话理解：接口的单一职责<br>使用方式：<br>1、接口尽量小<br>2、接口高内聚<br>3、定制服务<br>4、接口设计有限度的</p>
+<p>#####依赖倒置原则（DIP）<br>定义：<br>1、高层模块不应依赖底层模块，两者都应依赖抽象<br>2、抽象不应该依赖细节，细节应该依赖抽象</p>
+<p>说明：模块间依赖通过抽象发生，实现类之间不发生直接依赖关系，其依赖关系是通过接口或者抽象类产生</p>
+<p>一句话理解：<strong>面向接口编程</strong><br>使用方式：<br>1、核心类尽量有接口和抽象类<br>2、变量数据类型建议是接口或抽象类<br>3、任何类都不应该从具体类派生</p>
+<p>依赖三种方式<br>1、构造函数传递依赖<br>2、setter方法传递<br>3、接口声明依赖对象 （接口注入）</p>
+<h5 id="迪米特原则（LOD）"><a href="#迪米特原则（LOD）" class="headerlink" title="迪米特原则（LOD）"></a>迪米特原则（LOD）</h5><p>定义：一个对象应该对其他对象有最少了解<br>说明：只与直接朋友通信<br>一句话理解：访问对方，又要减少耦合</p>
+<p>实现方式：<br>1、访问权限控制，最少暴露外界接口实现<br>2、避免与非直接类通讯，用“中介”这种方式<br>3、多用组合，少用继承</p>
+<p>#####参考<br>《Android源码设计模式解析与实战》<br>《Android开发进阶从小工到专家》第10章<br>《设计模式之禅》第一部分</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/软件框架设计艺术/第11章-API具体运行时的一些内容/" rel="next" title="第11章-API具体运行时的一些内容">
+                <i class="fa fa-chevron-left"></i> 第11章-API具体运行时的一些内容
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/设计模式/设计模式-行为型-责任链模式/" rel="prev" title="设计模式-行为型-责任链模式">
+                设计模式-行为型-责任链模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#单一职责原则（SRP）"><span class="nav-number">1.</span> <span class="nav-text">单一职责原则（SRP）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#开闭原则（OCP）"><span class="nav-number">2.</span> <span class="nav-text">开闭原则（OCP）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#里氏替换原则（LSP）"><span class="nav-number">3.</span> <span class="nav-text">里氏替换原则（LSP）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#迪米特原则（LOD）"><span class="nav-number">4.</span> <span class="nav-text">迪米特原则（LOD）</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

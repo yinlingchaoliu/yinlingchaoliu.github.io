@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1、快速搭建light并运行demo按照命令顺序执行12345678910111213141516171819202122232425262728293031323334353637383940##不容许中文路径#1 、安装light$ npm install -gd lighting  #安装light$ light -h #查看版本#2、创建项目APP （注意此处操作!!!）$ light c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="light框架开发--light-sdk-技术方案">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/weex专题/light框架开发--light-sdk-技术方案/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="1、快速搭建light并运行demo按照命令顺序执行12345678910111213141516171819202122232425262728293031323334353637383940##不容许中文路径#1 、安装light$ npm install -gd lighting  #安装light$ light -h #查看版本#2、创建项目APP （注意此处操作!!!）$ light c">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-898002df25e347bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-442086b9518e39b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-d6f4fc884f147d90.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-8c3d7ea3c2dcfc35.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-05-26T02:55:50.058Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="light框架开发--light-sdk-技术方案">
+<meta name="twitter:description" content="1、快速搭建light并运行demo按照命令顺序执行12345678910111213141516171819202122232425262728293031323334353637383940##不容许中文路径#1 、安装light$ npm install -gd lighting  #安装light$ light -h #查看版本#2、创建项目APP （注意此处操作!!!）$ light c">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5526061-898002df25e347bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/weex专题/light框架开发--light-sdk-技术方案/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>light框架开发--light-sdk-技术方案 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/light框架开发--light-sdk-技术方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">light框架开发--light-sdk-技术方案
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="1、快速搭建light并运行demo"><a href="#1、快速搭建light并运行demo" class="headerlink" title="1、快速搭建light并运行demo"></a>1、快速搭建light并运行demo</h4><p>按照命令顺序执行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##不容许中文路径</span></span><br><span class="line"><span class="comment">#1 、安装light</span></span><br><span class="line">$ npm install -gd lighting  <span class="comment">#安装light</span></span><br><span class="line">$ light -h <span class="comment">#查看版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2、创建项目APP （注意此处操作!!!）</span></span><br><span class="line">$ light create -t app &lt;folder&gt;  <span class="comment"># app类型项目</span></span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#3、安装light-sdk</span></span><br><span class="line">$ <span class="built_in">cd</span> lib</span><br><span class="line">$ npm install -d –save light-sdk</span><br><span class="line"></span><br><span class="line">对 lib 目录下的 package.json 文件进行设置，引入依赖：</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"light-sdk"</span>: <span class="string">"*"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">然后在 lib 目录下执行 npm install 完成安装。</span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4、本地运行基础模板</span></span><br><span class="line">$ light release -wb</span><br><span class="line"><span class="comment">#自动唤起http://172.20.16.111:3000/#/index/home</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5、安装imagemagick</span></span><br><span class="line">brew install ghostscript</span><br><span class="line">sudo chown -R `whoami`:admin /usr/<span class="built_in">local</span>/share</span><br><span class="line">brew link --overwrite ghostscript</span><br><span class="line">监测安装</span><br><span class="line">gs -v</span><br><span class="line"></span><br><span class="line">brew install imagemagick</span><br><span class="line">brew link libpng</span><br><span class="line"></span><br><span class="line"><span class="comment">#打包部署发布</span></span><br><span class="line">light release -p </span><br><span class="line"></span><br><span class="line">将生成的压缩包 解压改名为www，拷贝到项目中asset中</span><br></pre></td></tr></table></figure></p>
+<p>客户端工具<br>win64<br><a href="https://res.lightyy.com/lightview-pc/lightview-win32-x64.zip" target="_blank" rel="noopener">LightViewPC-beta3-win32-x64</a><br>mac<br><a href="https://res.lightyy.com/lightview-pc/lightview-darwin-x64.zip" target="_blank" rel="noopener">LightViewPC-beta3-MAC</a></p>
+<p>设备助手LightView</p>
+<p>lightView是一个APP，支持开发者在不需要证书、不需要安装的前提下，使用设备进行APP测试、问题反馈。</p>
+<p>下载地址</p>
+<ul>
+<li>IOS系统：App Store直接搜索“lightView”下载</li>
+<li><a href="https://app.lightyy.com/appDist/ShowSoloApp?appName=com.hundsun.light.lightIn.appstore" target="_blank" rel="noopener">安卓系统点击打开链接扫码下载</a></li>
+</ul>
+<p>####2、操作过程具体细节</p>
+<ul>
+<li><p>安装恒生lighting</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -gd lighting</span><br><span class="line"># OR </span><br><span class="line">npm install -gd lighting --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看 当前工具版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ light -h</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"> _  _         _      _    _               </span><br><span class="line">| |(_)       | |    | |  (_)              </span><br><span class="line">| | _   __ _ | |__  | |_  _  _ __    __ _ </span><br><span class="line">| || | / _` || &apos;_ \ | __|| || &apos;_ \  / _` |</span><br><span class="line">| || || (_| || | | || |_ | || | | || (_| |</span><br><span class="line">|_||_| \__, ||_| |_| \__||_||_| |_| \__, |</span><br><span class="line">        __/ |                        __/ |</span><br><span class="line">       |___/                        |___/      CLI 1.15.5</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Usage: </span><br><span class="line"></span><br><span class="line">$ light &lt;command&gt; [options]  [-h]</span><br><span class="line"></span><br><span class="line">    create...........................生成工程的基本目录结构和模板文件</span><br><span class="line">    gen..............................代码生成</span><br><span class="line">    install..........................安装项目依赖和插件       </span><br><span class="line">    release..........................代码的集成打包</span><br><span class="line">    server...........................内置HTTP服务器</span><br><span class="line">    plugin...........................插件的安装卸载更新</span><br><span class="line">    login............................登录账户链接light平台的账户系统以进行应用管理</span><br><span class="line"></span><br><span class="line">Project Commands:</span><br><span class="line">    </span><br><span class="line">    You are not in a project directory</span><br></pre></td></tr></table></figure>
+<p>客户端工具<br>win64<br><a href="https://res.lightyy.com/lightview-pc/lightview-win32-x64.zip" target="_blank" rel="noopener">LightViewPC-beta3-win32-x64</a><br>mac<br><a href="https://res.lightyy.com/lightview-pc/lightview-darwin-x64.zip" target="_blank" rel="noopener">LightViewPC-beta3-MAC</a></p>
+<p>常用命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">light release -wb //编译并开启浏览器预览，监听变化</span><br><span class="line"> </span><br><span class="line">light release -ucsp //打包，压缩混淆代码，添加反缓存后缀，合并请求</span><br><span class="line"></span><br><span class="line">light server --debug //开启调试模式</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>web 项目创建（此处是web项目创建）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//创建H5项目</span><br><span class="line">$ light create &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br></pre></td></tr></table></figure>
+<p>生成项目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── app.js</span><br><span class="line">├── app.less</span><br><span class="line">├── css</span><br><span class="line">│   ├── reset.css</span><br><span class="line">│   └── style.less</span><br><span class="line">├── images</span><br><span class="line">│   ├── about-active.png</span><br><span class="line">│   ├── about.png</span><br><span class="line">│   ├── contact-active.png</span><br><span class="line">│   ├── contact.png</span><br><span class="line">│   ├── home-active.png</span><br><span class="line">│   ├── home.png</span><br><span class="line">│   ├── more.png</span><br><span class="line">│   └── scan.png</span><br><span class="line">├── index.html</span><br><span class="line">├── lib</span><br><span class="line">│   ├── package.json</span><br><span class="line">│   └── px2rem.js</span><br><span class="line">├── project.json</span><br><span class="line">├── ui</span><br><span class="line">│   └── ui.vue</span><br><span class="line">└── view</span><br><span class="line">    ├── index</span><br><span class="line">    │   ├── about.vue</span><br><span class="line">    │   ├── contact.vue</span><br><span class="line">    │   └── home.vue</span><br><span class="line">    └── index.vue</span><br></pre></td></tr></table></figure></p>
+<p>运行基础模板<br>light release -wb</p>
+<p>自动唤起<code>http://172.20.16.111:3000/#/index/home</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">启动不同环境</span><br><span class="line">light release -wb --env product </span><br><span class="line">或者 </span><br><span class="line">light release -wb --env uat</span><br></pre></td></tr></table></figure>
+<p>打包部署<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">light release -p --product</span><br></pre></td></tr></table></figure></p>
+<p>目录规范<br><img src="https://upload-images.jianshu.io/upload_images/5526061-898002df25e347bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>project.json<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;project&quot;:&quot;lightProject&quot;,</span><br><span class="line">  &quot;version&quot;:&quot;0.0.1&quot;,</span><br><span class="line">  &quot;desc&quot;:&quot;Just For Fun&quot;,</span><br><span class="line">  &quot;type&quot;:&quot;vue&quot;,</span><br><span class="line">  &quot;link_id&quot;:&quot;&quot;,</span><br><span class="line">  &quot;plugins&quot;:[],</span><br><span class="line">  &quot;pluginConfig&quot;:&#123;</span><br><span class="line">    &quot;proxy&quot;:&#123;&#125;,</span><br><span class="line">    &quot;native&quot;:&#123;&#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;env&quot;:&#123;</span><br><span class="line">    &quot;default&quot;:&#123;</span><br><span class="line">      &quot;log_level&quot;:&quot;debug&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;product&quot;:&#123;</span><br><span class="line">      &quot;log_level&quot;:&quot;error&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>工程类型 project.json<br>APP配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">project.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;type&quot;:&quot;vue&quot;,</span><br><span class="line">  &quot;plugins&quot;:[&quot;native&quot;],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>JSNative工程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">project.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;type&quot;:&quot;vue&quot;,</span><br><span class="line">  &quot;plugins&quot;:[&quot;jsnative&quot;],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>H5模块<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;type&quot;:&quot;vue&quot;,</span><br><span class="line">  &quot;plugins&quot;:[],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Light生命周期<br><img src="https://upload-images.jianshu.io/upload_images/5526061-442086b9518e39b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="light生命周期"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-d6f4fc884f147d90.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="light视图生命周期"></p>
+<p>应用启动入口 app.js 注册全局监听、事件、拦截器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import App from &quot;light&quot;</span><br><span class="line"></span><br><span class="line">App.filter(&quot;start&quot;,function (next) &#123;</span><br><span class="line">    //启动拦截器</span><br><span class="line">    App.log(&quot;app started...&quot;);</span><br><span class="line">    next();</span><br><span class="line">&#125;).filter(&quot;route&quot;,function (from, to, next) &#123;</span><br><span class="line">    //视图拦截器</span><br><span class="line">    App.log(`view changed:$&#123;from.path&#125;--$&#123;to.path&#125;`);</span><br><span class="line">    next()</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure></p>
+<p>逻辑模块化<br>声明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// common.js</span><br><span class="line">function sayHello(name) &#123;</span><br><span class="line">  console.log(`Hello $&#123;name&#125; !`)</span><br><span class="line">&#125;</span><br><span class="line">function sayGoodbye(name) &#123;</span><br><span class="line">  console.log(`Goodbye $&#123;name&#125; !`)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module.exports.sayHello = sayHello</span><br><span class="line">exports.sayGoodbye = sayGoodbye</span><br></pre></td></tr></table></figure></p>
+<p>引入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const common = require(&apos;common.js&apos;)</span><br><span class="line">common.sayHello(&apos;MINA&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>宿主环境<br><img src="https://upload-images.jianshu.io/upload_images/5526061-8c3d7ea3c2dcfc35.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>LightAPP开发<br>配置native/config.js </p>
+<p>First<br>安装 imagemagick<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">brew install ghostscript</span><br><span class="line">sudo chown -R `whoami`:admin /usr/local/share</span><br><span class="line">brew link --overwrite ghostscript</span><br><span class="line">监测安装</span><br><span class="line">gs -v</span><br><span class="line"></span><br><span class="line">brew install imagemagick</span><br><span class="line">brew link libpng</span><br><span class="line">测试</span><br><span class="line">convert -density 72 a.pdf a.png</span><br></pre></td></tr></table></figure></p>
+<p><strong><em>特别注意：ImageMagick不能安装到中文路径下</em></strong></p>
+<p>###第一步：创建做包工程</p>
+<p>使用指令<code>light create -t app</code>创建做包工程。</p>
+<p>###第二步：编辑菜单及配置文件</p>
+<p>编辑<code>native</code>目录下的资源文件，如<code>native/config.js</code>定义整包配置项目。</p>
+<h3 id="第三步：打包及上传"><a href="#第三步：打包及上传" class="headerlink" title="第三步：打包及上传"></a>第三步：打包及上传</h3><p>使用<code>light release -p</code>指令做打包操作，将打包zip包上传到平台对应应用的条目内。</p>
+<p>###第四步：在平台集成出安装包</p>
+<p>使用平台的<code>在线构建编译</code>能力输出可安装的安装包。</p>
+<h4 id="编写简单测试demo"><a href="#编写简单测试demo" class="headerlink" title="编写简单测试demo"></a>编写简单测试demo</h4><ul>
+<li>1、light平台注册账号</li>
+<li>2、快速引导<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//创建demo程序</span><br><span class="line">light create -t app  demo</span><br><span class="line">//本地调试运行</span><br><span class="line">light release -wb</span><br><span class="line">//发布zip包</span><br><span class="line">light release -p</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p>npm下载地址<br><a href="https://www.npmjs.com/package/light-sdk" target="_blank" rel="noopener">https://www.npmjs.com/package/light-sdk</a></p>
+<p>恒生light框架<br><a href="http://document.lightyy.com/zh-cn/docs" target="_blank" rel="noopener">http://document.lightyy.com/zh-cn/docs</a></p>
+<p>恒生npm开发者主页<br><a href="https://www.npmjs.com/~hslight" target="_blank" rel="noopener">https://www.npmjs.com/~hslight</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/weex专题/vue-组件+路由+自定义指令/" rel="next" title="vue-组件+路由+自定义指令">
+                <i class="fa fa-chevron-left"></i> vue-组件+路由+自定义指令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/weex专题/vue基础语法/" rel="prev" title="vue基础语法">
+                vue基础语法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、快速搭建light并运行demo"><span class="nav-number">1.</span> <span class="nav-text">1、快速搭建light并运行demo</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：打包及上传"><span class="nav-number"></span> <span class="nav-text">第三步：打包及上传</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编写简单测试demo"><span class="nav-number">1.</span> <span class="nav-text">编写简单测试demo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考链接"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li></ol></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

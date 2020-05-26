@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="####导航MVPArmsHelper 网络代码自动生成插件MVPArmsHelper插件编写环境配置（一）MVPArmsHelper插件编写代码编写（二） #####一、环境配置1、IntelliJ IDE开发https://www.jetbrains.com/idea/download/建议下载 Community 免费版2、groovy下载https://groovy.apache.org/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVPArmsHelper插件编写环境配置（一）">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/框架编写分析/MVPArmsHelper插件编写环境配置（一）/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="####导航MVPArmsHelper 网络代码自动生成插件MVPArmsHelper插件编写环境配置（一）MVPArmsHelper插件编写代码编写（二） #####一、环境配置1、IntelliJ IDE开发https://www.jetbrains.com/idea/download/建议下载 Community 免费版2、groovy下载https://groovy.apache.org/">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-d025d879a494a9d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-76433321391c3c7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-d7f75f6b81d8df66.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-d212fa65e344adbd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5526061-2fb2dae91f08a263.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-05-26T02:55:51.432Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MVPArmsHelper插件编写环境配置（一）">
+<meta name="twitter:description" content="####导航MVPArmsHelper 网络代码自动生成插件MVPArmsHelper插件编写环境配置（一）MVPArmsHelper插件编写代码编写（二） #####一、环境配置1、IntelliJ IDE开发https://www.jetbrains.com/idea/download/建议下载 Community 免费版2、groovy下载https://groovy.apache.org/">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5526061-d025d879a494a9d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/框架编写分析/MVPArmsHelper插件编写环境配置（一）/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>MVPArmsHelper插件编写环境配置（一） | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/MVPArmsHelper插件编写环境配置（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MVPArmsHelper插件编写环境配置（一）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>####导航<br><a href="https://www.jianshu.com/p/13006b034211" target="_blank" rel="noopener">MVPArmsHelper 网络代码自动生成插件</a><br><a href="https://www.jianshu.com/p/35d40e172a63" target="_blank" rel="noopener">MVPArmsHelper插件编写环境配置（一）</a><br><a href="https://www.jianshu.com/p/cd0bd74f800b" target="_blank" rel="noopener">MVPArmsHelper插件编写代码编写（二）</a></p>
+<p>#####一、环境配置<br>1、IntelliJ IDE开发<br><a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noopener">https://www.jetbrains.com/idea/download/</a><br>建议下载 Community 免费版<br>2、groovy下载<br><a href="https://groovy.apache.org/download.html" target="_blank" rel="noopener">https://groovy.apache.org/download.html</a><br>配置<br>.bash_profile文件添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/Users/chentong/Android/groovy-2.5.6/bin</span><br><span class="line">$ source .bash_profile</span><br></pre></td></tr></table></figure></p>
+<p>新建插件项目<br>选择IntelliJ Platform Plugin<img src="https://upload-images.jianshu.io/upload_images/5526061-d025d879a494a9d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>配置jdk<img src="https://upload-images.jianshu.io/upload_images/5526061-76433321391c3c7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>运行项目报错<br>One of the two will be used. Which one is undefined.<br>解决方案：<a href="https://www.jianshu.com/p/26cefcc04fec" target="_blank" rel="noopener">https://www.jianshu.com/p/26cefcc04fec</a></p>
+<p>#####二、目录结构<br><img src="https://upload-images.jianshu.io/upload_images/5526061-d7f75f6b81d8df66.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<ul>
+<li>.idea: idea的一些配置信息。</li>
+<li>out: 编译生成文件，</li>
+<li>resources/META-INF/plugin.xml: 插件的一些描述信息</li>
+<li>src: 这里就是我们要写代码的地方啦。</li>
+<li>.iml: 项目的一些自动配置信息</li>
+</ul>
+<p>####配置插件信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&lt;idea-plugin&gt;</span><br><span class="line">  &lt;id&gt;com.network.helper.mvparmshelper&lt;/id&gt;</span><br><span class="line">  &lt;name&gt;ArmMVPHelper&lt;/name&gt;</span><br><span class="line">  &lt;version&gt;1.0&lt;/version&gt;</span><br><span class="line">  &lt;vendor email=&quot;704514698@qq.com&quot; url=&quot;https://www.jianshu.com/u/bdcce32c05dd&quot;&gt;陈桐&lt;/vendor&gt;</span><br><span class="line"></span><br><span class="line">  &lt;description&gt;ArmMVP框架 网络代码自动生成工具&lt;/description&gt;</span><br><span class="line"></span><br><span class="line">  &lt;change-notes&gt;第一版&lt;/change-notes&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description --&gt;</span><br><span class="line">  &lt;idea-version since-build=&quot;173.0&quot;/&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html</span><br><span class="line">       on how to target different products --&gt;</span><br><span class="line">  &lt;!-- uncomment to enable plugin in all products</span><br><span class="line">  &lt;depends&gt;com.intellij.modules.lang&lt;/depends&gt;</span><br><span class="line">  --&gt;</span><br><span class="line"></span><br><span class="line">  &lt;extensions defaultExtensionNs=&quot;com.intellij&quot;&gt;</span><br><span class="line">    &lt;!-- Add your extensions here --&gt;</span><br><span class="line">  &lt;/extensions&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  &lt;!-- 类似android manifiest --&gt;</span><br><span class="line">  &lt;actions&gt;</span><br><span class="line">    &lt;!-- Add your actions here --&gt;</span><br><span class="line">    &lt;!--&lt;action class=&quot;com.network.helper.armmvp&quot;/&gt;--&gt;</span><br><span class="line">      &lt;action id=&quot;armnetwork&quot; class=&quot;com.network.helper.NetworkHelper&quot; text=&quot;ArmMVP Network Helper&quot; description=&quot;Arm MVP 网络代码自动生成工具&quot;&gt;</span><br><span class="line">          &lt;add-to-group group-id=&quot;GenerateGroup&quot; anchor=&quot;last&quot;/&gt;</span><br><span class="line">      &lt;/action&gt;</span><br><span class="line">  &lt;/actions&gt;</span><br><span class="line"></span><br><span class="line">&lt;/idea-plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>id： 插件唯一的id。</li>
+<li>name： 插件显示的名字。</li>
+<li>version： 插件版本</li>
+<li>vendor： 里面分别是你的邮箱，公司网站或个人网站，公司名。</li>
+<li>description： 插件的描述。</li>
+<li>change-notes： 更新文档。</li>
+<li>extensions defaultExtensionNs： 默认依赖的库。</li>
+<li>actions： 注册动作Action类。</li>
+</ul>
+<p>####配置Action<br>新建Action<br><img src="https://upload-images.jianshu.io/upload_images/5526061-d212fa65e344adbd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-2fb2dae91f08a263.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class NetworkHelper extends AnAction &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void actionPerformed(AnActionEvent anActionEvent) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>提供两个方法<br>1、获得光标下单词<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static PsiElement getPsiElement(Editor editor, PsiFile psiFile) &#123;</span><br><span class="line">        if (editor == null || psiFile == null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        CaretModel caret = editor.getCaretModel();</span><br><span class="line">        PsiElement psiElement = psiFile.findElementAt(caret.getOffset());</span><br><span class="line">        return psiElement;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">psiElement.getText();</span><br></pre></td></tr></table></figure></p>
+<p>2、获得当前复制内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static String getSelectedText(Editor editor) &#123;</span><br><span class="line">        if (editor == null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        return editor.getSelectionModel().getSelectedText();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>####github 代码<br><a href="https://github.com/yinlingchaoliu/MVPArmsNetworkHelper" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/MVPArmsNetworkHelper</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/框架编写分析/RESTMock/" rel="next" title="RESTMock">
+                <i class="fa fa-chevron-left"></i> RESTMock
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/框架编写分析/MVPArmsHelper插件编写代码编写（二）/" rel="prev" title="MVPArmsHelper插件编写代码编写（二）">
+                MVPArmsHelper插件编写代码编写（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

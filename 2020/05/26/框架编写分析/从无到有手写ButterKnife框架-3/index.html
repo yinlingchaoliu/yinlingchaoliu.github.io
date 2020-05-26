@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="#####导航一、代码的演进二、butterKnife反射调用三、javapoet自动生成模板代码四、apt与注解五、注解支持多层继承六、apt调试七、javapoet语法 #####1、前言Annotation Processing Tool (apt)是编译期处理注解的工具 注解有三种【SOURCE，RUNTIME, CLASS】源码，运行时，编译，其中编译期效率最高的。 解决问题：通过注解，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从无到有手写ButterKnife框架-3">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-3/index.html">
+<meta property="og:site_name" content="引领潮流">
+<meta property="og:description" content="#####导航一、代码的演进二、butterKnife反射调用三、javapoet自动生成模板代码四、apt与注解五、注解支持多层继承六、apt调试七、javapoet语法 #####1、前言Annotation Processing Tool (apt)是编译期处理注解的工具 注解有三种【SOURCE，RUNTIME, CLASS】源码，运行时，编译，其中编译期效率最高的。 解决问题：通过注解，">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-26T02:55:51.809Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从无到有手写ButterKnife框架-3">
+<meta name="twitter:description" content="#####导航一、代码的演进二、butterKnife反射调用三、javapoet自动生成模板代码四、apt与注解五、注解支持多层继承六、apt调试七、javapoet语法 #####1、前言Annotation Processing Tool (apt)是编译期处理注解的工具 注解有三种【SOURCE，RUNTIME, CLASS】源码，运行时，编译，其中编译期效率最高的。 解决问题：通过注解，">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-3/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>从无到有手写ButterKnife框架-3 | 引领潮流</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">引领潮流</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从无到有手写ButterKnife框架-3
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#####导航<br>一、<a href="https://www.jianshu.com/p/a96de1aa4e29" target="_blank" rel="noopener">代码的演进</a><br>二、<a href="https://www.jianshu.com/p/f8856e913224" target="_blank" rel="noopener">butterKnife反射调用</a><br>三、<a href="https://www.jianshu.com/p/cdf417e52cab" target="_blank" rel="noopener">javapoet自动生成模板代码</a><br>四、<a href="https://www.jianshu.com/p/43eb69b2beeb" target="_blank" rel="noopener">apt与注解</a><br>五、<a href="https://www.jianshu.com/p/a91cbfb8b1a1" target="_blank" rel="noopener">注解支持多层继承</a><br>六、<a href="https://www.jianshu.com/p/8418ef144b29" target="_blank" rel="noopener">apt调试</a><br>七、<a href="https://www.jianshu.com/p/2da1ca9d8ffa" target="_blank" rel="noopener">javapoet语法</a></p>
+<p>#####1、前言<br><a href="https://docs.oracle.com/javase/6/docs/technotes/guides/apt/index.html" target="_blank" rel="noopener">Annotation Processing Tool (apt)</a>是编译期处理注解的工具</p>
+<p>注解有三种【SOURCE，RUNTIME, CLASS】源码，运行时，编译，其中编译期效率最高的。</p>
+<p>解决问题：通过注解，动态生成模板代码</p>
+<p>#####apt与javapoet联动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、抽象模板关键参数（只关注参数）</span><br><span class="line">2、定义注解传入关键参数</span><br><span class="line">3、引入apt</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>1、抽象模板参数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * DO NOT EDIT THIS FILE!!! IT WAS GENERATED BY CHENTONG.</span><br><span class="line"> */</span><br><span class="line">public class FirstActivity_ViewBinding implements Unbinder &#123;</span><br><span class="line">  private FirstActivity target;</span><br><span class="line"></span><br><span class="line">  @UiThread</span><br><span class="line">  public FirstActivity_ViewBinding(FirstActivity target, View source) &#123;</span><br><span class="line">    this.target = target;</span><br><span class="line">    target.helloTv = source.findViewById( R.id.helloTv );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  public void unbind() &#123;</span><br><span class="line">    target.helloTv = null;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这个类中核心的一句话<br>target.helloTv = source.findViewById( R.id.helloTv );<br>因为获得注解的同时，就会获得当前元素(Type,Field,Method),所以helloTv,这个field不用关注<br>关键参数就是元素ResId。</p>
+<ul>
+<li>2 定义注解<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eg： @ViewId(R.id.helloTv)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>1、新建module 选择选择java library ，工程名poet-annotation<br>2、新建注解 ViewId<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Retention(CLASS) @Target(FIELD)</span><br><span class="line">public @interface ViewId &#123;</span><br><span class="line">    /** View ID to which the field will be bound. */</span><br><span class="line">    @IdRes int value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>3、apt<br>新建module 命名为poet-compiler<br>其中编写的时候，要注意包<br>javax.annotation.processing<br>javax.lang.model<br>方法用法</li>
+</ul>
+<p>base类 方便后续开发<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseProcessor extends AbstractProcessor &#123;</span><br><span class="line"></span><br><span class="line">    protected Filer mFiler; //输出位置</span><br><span class="line">    protected Logger logger;</span><br><span class="line">    protected Types types;</span><br><span class="line">    protected Elements elementUtils;</span><br><span class="line"></span><br><span class="line">    // Module name, maybe its &apos;app&apos; or others</span><br><span class="line">    protected String moduleName = null;</span><br><span class="line">    protected Map&lt;String, String&gt; options = null;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public synchronized void init(ProcessingEnvironment processingEnv) &#123;</span><br><span class="line">        super.init( processingEnv );</span><br><span class="line">        mFiler = processingEnv.getFiler();</span><br><span class="line">        types = processingEnv.getTypeUtils();</span><br><span class="line">        elementUtils = processingEnv.getElementUtils();</span><br><span class="line">        logger = new Logger( processingEnv.getMessager() );</span><br><span class="line">        options = processingEnv.getOptions();</span><br><span class="line">        if (MapUtils.isNotEmpty( options )) &#123;</span><br><span class="line">            moduleName = options.get( KEY_MODULE_NAME );</span><br><span class="line">        &#125;</span><br><span class="line">        if (StringUtils.isNotEmpty( moduleName )) &#123;</span><br><span class="line">            logger.info( &quot;The user has configuration the module name, it was [&quot; + moduleName + &quot;]&quot; );</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            logger.error( NO_MODULE_NAME_TIPS );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //判断当前是不是activity类</span><br><span class="line">    public boolean isActivity(TypeElement typeElement)&#123;</span><br><span class="line">        TypeMirror activityTm = elementUtils.getTypeElement(Consts.ACTIVITY).asType();</span><br><span class="line">        if (types.isSubtype(typeElement.asType(),activityTm )) return true;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //判断当前类是fragment</span><br><span class="line">    public boolean isFragment(TypeElement typeElement)&#123;</span><br><span class="line">        TypeMirror fragmentTm = elementUtils.getTypeElement(Consts.FRAGMENT).asType();</span><br><span class="line">        TypeMirror fragmentTmV4 = elementUtils.getTypeElement(Consts.FRAGMENT_V4).asType();</span><br><span class="line">        if (types.isSubtype(typeElement.asType(),fragmentTm )</span><br><span class="line">                || types.isSubtype(typeElement.asType(),fragmentTmV4 ))&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Set&lt;String&gt; getSupportedOptions() &#123;</span><br><span class="line">        return new HashSet&lt;String&gt;() &#123;&#123;</span><br><span class="line">            this.add( KEY_MODULE_NAME );</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public SourceVersion getSupportedSourceVersion() &#123;</span><br><span class="line">        return SourceVersion.latestSupported();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注解生成代码类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br></pre></td><td class="code"><pre><span class="line">@AutoService(Processor.class)</span><br><span class="line">public class ViewIdProcessor extends BaseProcessor &#123;</span><br><span class="line"></span><br><span class="line">    private Map&lt;TypeElement, List&lt;Element&gt;&gt; parentAndChild = new HashMap&lt;&gt;();  //包含父类的注解</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public synchronized void init(ProcessingEnvironment processingEnv) &#123;</span><br><span class="line">        super.init( processingEnv );</span><br><span class="line">        logger.info(&quot;&gt;&gt;&gt; ViewIdProcessor init. &lt;&lt;&lt;&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) &#123;</span><br><span class="line"></span><br><span class="line">        if (CollectionUtils.isNotEmpty( annotations ))&#123;</span><br><span class="line"></span><br><span class="line">            Set&lt;? extends Element&gt; viewIdElements = roundEnv.getElementsAnnotatedWith(ViewId.class);</span><br><span class="line">            try &#123;</span><br><span class="line">                categories( viewIdElements );</span><br><span class="line"></span><br><span class="line">                //支持多层注解 field字段去重  不需要注释掉即可</span><br><span class="line">                supportSuperAnnotation();</span><br><span class="line"></span><br><span class="line">                gennerateHelper();</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">                logger.error( e );</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //自动生成代码</span><br><span class="line">    private void gennerateHelper() throws IOException &#123;</span><br><span class="line">        //根据类路径获得类型</span><br><span class="line">        TypeElement type_unbinder = elementUtils.getTypeElement(Consts.UNBINDER);</span><br><span class="line"></span><br><span class="line">        //用于判断当前类类型</span><br><span class="line">        TypeMirror viewTm =  elementUtils.getTypeElement( Consts.VIEW ).asType();</span><br><span class="line"></span><br><span class="line">        TypeElement uiThreadType =  elementUtils.getTypeElement( Consts.UI_THREAD );</span><br><span class="line"></span><br><span class="line">        if (MapUtils.isNotEmpty( parentAndChild ))&#123;</span><br><span class="line"></span><br><span class="line">            for (Map.Entry&lt;TypeElement, List&lt;Element&gt;&gt; entry : parentAndChild.entrySet())&#123;</span><br><span class="line">                TypeElement typeElement = entry.getKey();</span><br><span class="line">                List&lt;Element&gt; elementList = entry.getValue();</span><br><span class="line"></span><br><span class="line">                //类全路径</span><br><span class="line">                String qualifiedName = typeElement.getQualifiedName().toString();</span><br><span class="line">                //包名</span><br><span class="line">                String packageName = qualifiedName.substring(0, qualifiedName.lastIndexOf(&quot;.&quot;));</span><br><span class="line">                //类文件</span><br><span class="line">                String fileName = typeElement.getSimpleName() + SUFFIX;</span><br><span class="line"></span><br><span class="line">                //新建类Target_ViewBinding</span><br><span class="line">                TypeSpec.Builder targetClassType = TypeSpec.classBuilder( fileName )</span><br><span class="line">                        .addModifiers( Modifier.PUBLIC)</span><br><span class="line">                        .addJavadoc( WARNING_TIPS )</span><br><span class="line">                        .addSuperinterface( ClassName.get(type_unbinder.asType()) ); //实现接口</span><br><span class="line"></span><br><span class="line">                //新建field target字段</span><br><span class="line">                FieldSpec targetField = FieldSpec.builder(TypeName.get( typeElement.asType() ),&quot;target&quot;,Modifier.PRIVATE)</span><br><span class="line">                        .build();</span><br><span class="line"></span><br><span class="line">                //target类增加一行field</span><br><span class="line">                targetClassType.addField( targetField );</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                //新建构造方法Target_ViewBinding(Target target,View source)</span><br><span class="line">                MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()</span><br><span class="line">                        .addAnnotation( ClassName.get( uiThreadType ) )</span><br><span class="line">                        .addModifiers( Modifier.PUBLIC )</span><br><span class="line">                        .addParameter( TypeName.get( typeElement.asType() ),&quot;target&quot; )</span><br><span class="line">                        .addParameter( TypeName.get( viewTm ),&quot;source&quot; )</span><br><span class="line">                        .addStatement( &quot;this.target = target&quot; );</span><br><span class="line"></span><br><span class="line">                for (Element element :elementList)&#123;</span><br><span class="line"></span><br><span class="line">                    //获取控件ID</span><br><span class="line">                    ViewId viewIdAnnotation = element.getAnnotation( ViewId.class );</span><br><span class="line">                    int viewId = viewIdAnnotation.value();</span><br><span class="line"></span><br><span class="line">                    //获取当前field字段</span><br><span class="line">                    String fieldName = element.getSimpleName().toString();</span><br><span class="line">                    constructorBuilder.addStatement( &quot;target.&quot;+fieldName + &quot; = source.findViewById( $L )&quot; ,viewId);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                //创建构造方法</span><br><span class="line">                MethodSpec  constructor = constructorBuilder.build();</span><br><span class="line"></span><br><span class="line">                //target类增加构造方法</span><br><span class="line">                targetClassType.addMethod( constructor );</span><br><span class="line"></span><br><span class="line">                //新建方法 unbind</span><br><span class="line">                MethodSpec.Builder unbindBuilder = MethodSpec.methodBuilder(&quot;unbind&quot;)</span><br><span class="line">                        .addAnnotation( Override.class )</span><br><span class="line">                        .addModifiers( Modifier.PUBLIC )</span><br><span class="line">                        .returns( void.class );</span><br><span class="line"></span><br><span class="line">                for (Element element :elementList)&#123;</span><br><span class="line">                    String fieldName = element.getSimpleName().toString();</span><br><span class="line">                    unbindBuilder.addStatement( &quot;target.&quot;+fieldName+&quot; = null&quot; );</span><br><span class="line">                &#125;</span><br><span class="line">                //创建释放方法</span><br><span class="line">                MethodSpec unbinder = unbindBuilder.build();</span><br><span class="line"></span><br><span class="line">                //target类增加释放方法</span><br><span class="line">                targetClassType.addMethod( unbinder );</span><br><span class="line"></span><br><span class="line">                //创建target类</span><br><span class="line">                TypeSpec targetType = targetClassType.build();</span><br><span class="line"></span><br><span class="line">                //写类</span><br><span class="line">                JavaFile.builder(packageName, targetType).build().writeTo(mFiler);</span><br><span class="line">                //打印</span><br><span class="line">                JavaFile.builder(packageName, targetType).build().writeTo(System.out);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     *</span><br><span class="line">     * @param elements</span><br><span class="line">     * @throws IllegalAccessException</span><br><span class="line">     *  当前类type元素和当前类元素的列表</span><br><span class="line">     */</span><br><span class="line">    private void categories(Set&lt;? extends Element&gt; elements) throws IllegalAccessException &#123;</span><br><span class="line">        if (CollectionUtils.isNotEmpty(elements)) &#123;</span><br><span class="line">            for (Element element : elements) &#123;</span><br><span class="line">                //获得当前元素的TypeElement</span><br><span class="line">                TypeElement enclosingElement = (TypeElement) element.getEnclosingElement();</span><br><span class="line"></span><br><span class="line">                if (element.getModifiers().contains(Modifier.PRIVATE)) &#123;</span><br><span class="line">                    throw new IllegalAccessException(&quot;The inject fields CAN NOT BE &apos;private&apos;!!! please check field [&quot;</span><br><span class="line">                            + element.getSimpleName() + &quot;] in class [&quot; + enclosingElement.getQualifiedName() + &quot;]&quot;);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (parentAndChild.containsKey(enclosingElement)) &#123; // Has categries</span><br><span class="line">                    parentAndChild.get(enclosingElement).add(element);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    List&lt;Element&gt; childs = new ArrayList&lt;&gt;();</span><br><span class="line">                    childs.add(element);</span><br><span class="line">                    parentAndChild.put(enclosingElement, childs);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            logger.info(&quot;categories finished.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Field元素 注解支持多层继承</span><br><span class="line">     * 未做算法优化，仅做测试</span><br><span class="line">     */</span><br><span class="line">    private void supportSuperAnnotation()&#123;</span><br><span class="line">        TreeUtils tree = new TreeUtils( );</span><br><span class="line">        parentAndChild = tree.supportSuperAnnotation( parentAndChild );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //建议这种写法,减少改字符串</span><br><span class="line">    @Override</span><br><span class="line">    public Set&lt;String&gt; getSupportedAnnotationTypes() &#123;</span><br><span class="line">        return new HashSet&lt;String&gt;() &#123;&#123;</span><br><span class="line">            this.add( ViewId.class.getName() );</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>#####从无到有手写butterKnife框架<br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo</a></p>
+<p>具体参考<br><a href="https://cloud.tencent.com/developer/article/1006210" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1006210</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/算法/第1章-面试的流程/" rel="next" title="第1章-面试的流程">
+                <i class="fa fa-chevron-left"></i> 第1章-面试的流程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/架构相关/软件架构/" rel="prev" title="软件架构">
+                软件架构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">CHEN TONG</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CHEN TONG</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

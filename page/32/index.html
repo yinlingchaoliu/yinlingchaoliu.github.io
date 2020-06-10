@@ -288,7 +288,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/重构-改善代码设计/重新组织数据/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/重构-改善代码设计/重构实战/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -308,7 +308,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/重构-改善代码设计/重新组织数据/" class="post-title-link" itemprop="url">重新组织数据</a>
+                <a href="/2020/05/26/重构-改善代码设计/重构实战/" class="post-title-link" itemprop="url">重构实战</a>
               
             
           </h1>
@@ -392,7 +392,174 @@
       
         
           
-            <p>原则：数据清晰，含义明确<br>1）自封装字段<br>要点：get set 取数据<br>2）以对象取代数据值<br>要点：你有一个数据项，需要与其他数据和行为一起使用才有意义<br>3）将值对象改为引用对象 （单例）<br>要点：你从一个类衍生许多彼此相等的实例，希望将他们替换成同一个对象<br>4）以对象取代数据<br>要点：你有一个数组，其中各个元素各自代表不同的东西<br>5）复制“被监视数据”<br>要点：观察者同步数据 为了做分层 mvc模式<br>6）将单项关联改为双向关联（反向指针）<br>要点：两个类都需要使用对方特性，但其间有一个单项链接<br>7）将双向关联变为单项<br>要点：去掉不必要关联<br>8）以字面常亮取代魔法数（常量）<br>要点：你有一个字面数值，带有特别含义<br>9）封装字段<br>要点：你的类存在一个public字段<br>10）封装集合<br>要点：有个函数返回集合（set,map）<br>方案：增加操作集合的函数，不直接处理<br>11）以类取代类型码<br>要点：方便数据类型校验<br>12）以子类取代类型码<br>要点：子类集成 重写增加灵活性<br>13）以State/Strategy取代类型码<br>要点：你有一个类型码，它会影响类的行为，但你无法通过继承手法消除它<br>方案：策略模式，状态模式，以状态对象取代类型码<br>14）以字段取代子类<br>要点：你的各个子类的唯一差别只在“返回常量数据”的函数身上<br>方案：修改这些函数，使它们返回超类中的某个（新增）字段，然后销毁子类</p>
+            <p>#####重构实战：<br>1、本文把常用坏味道，重构手法列出，用于解决工作日常80%问题<br>2、降低重构带来的开销<br><a href="https://www.jianshu.com/p/3327d42ca1c0" target="_blank" rel="noopener">影响项目重构现实因素及解决方案</a></p>
+<p>#####1、原则<br>1、无重复代码<br>2、单一职责<br>3、测试驱动</p>
+<p>#####2、重构的时机<br>1、添加功能，<br>2、修补错误(bug)，<br>3、复审代码</p>
+<p>#####3、”坏味道”的代码<br>1、重复代码<br>2、过长函数<br>3、过大的类（class）<br>4、过长参数列表<br>5、一个类需多处修改<br>6、一个变化多个类修改<br>7、一个函数过多依赖其他类<br>8、一团功能相似变量<br>9、switch 代码段<br>10、平行继承<br>11、冗余类，删除<br>12、过度设计、值得才设计<br>13、临时字段多<br>14、函数链过长<br>15、委托（类）函数过度<br>16、两个类关系过于紧密，用代理解决<br>17、相同功能函数<br>18、类库复用即可，不必完美<br>19、采用EntityClass<br>20、被拒绝的遗赠<br>21、过多注释，代码是最好的注释！</p>
+<p>#####4、常用重构手法<br>1、提取子函数<br>2、上移函数到父类<br>3、下移函数到子类<br>4、封装固定调用逻辑<br>5、使用泛型去除重复逻辑<br>6、使用对象避免过多参数<br>7、转移函数–单一职责<br>8、将类型码转为状态模式<br>9、NullObject模式<br>10、分解胖型类</p>
+<p><strong>详见</strong><br>1、<a href="https://www.jianshu.com/p/ac755f20f080" target="_blank" rel="noopener">重新组织函数</a><br>2、<a href="https://www.jianshu.com/p/041c7fdef067" target="_blank" rel="noopener">在对象之间搬移特性</a><br>3、<a href="https://www.jianshu.com/p/18a78b08bf3c" target="_blank" rel="noopener">重新组织数据</a><br>4、<a href="https://www.jianshu.com/p/3e58c6f79364" target="_blank" rel="noopener">简化条件表达式</a><br>5、<a href="https://www.jianshu.com/p/a1fe76808aae" target="_blank" rel="noopener">处理继承关系</a><br>6、<a href="https://www.jianshu.com/p/a86972c48c8f" target="_blank" rel="noopener">大型重构</a></p>
+<p>#####5、重构修改清单<br>1）记录命名，建造重构词汇表，统一名称规范<br>2）记录重构手法与情景映射，关联<br>3）记录重构原因：为什么（why）<br>4）记录修改清单<br>5）重构和修改功能是两件事，一件事做完，再处理另一件事</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/重构-改善代码设计/简化函数调用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/重构-改善代码设计/简化函数调用/" class="post-title-link" itemprop="url">简化函数调用</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/重构-改善代码设计/" itemprop="url" rel="index"><span itemprop="name">重构-改善代码设计</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>原则：接口简洁易用，只做一件事<br>1）函数改名<br>要点：函数的名称未能揭示函数的用途<br>2）添加参数<br>要点：某个函数需要从调用端得到更多信息<br>3）移除参数<br>要点：函数本体不再需要某个参数<br>4）将查询函数和修改函数分离<br>要点：某个函数既返回对象状态值，又修改对象状态<br>方案：建立两个不同函数，其中一个负责查询，另一个负责修改<br>规则：任何有返回值的函数，都不应该有看得到的副作用<br>5）令函数携带参数<br>要点：若干函数做了类似的工作，但在函数本体中却包含了不同的值<br>方案：建立单一函数，以参数表达那些不同的值（父类）<br>6）以明确函数取代参数<br>要点：针对该参数的每一个可能值，建立一个独立函数<br>方案：一个参数，一个函数，清晰明确<br>7）保持对象完整<br>要点：你从某个对象中取出若干值，将它们作为某一次函数调用的参数<br>方案：改为传递整个对象<br>8）以函数取代参数<br>要点：两行代码合并一行，语义更清晰<br>方案：让参数接受者取出该项参数，并直接调用前一个函数<br>9）引入参数对象<br>要点：某些参数总是很自然地同时出现<br>方案：以一个对象取代这些参数<br>10）移除设值函数<br>要点：类中某个字段应该在对象创建时被设值，然后就不在改变。<br>11）隐藏函数<br>要点：有一个函数，从来没有被其他任何类用到<br>12）以工厂函数取代构造函数<br>要点：不止是构建，还要创建对象<br>13）以异常取代错误码<br>要点：某个函数返回一个特定的代码，用来表示某种错误<br>14）以测试取代异常<br>要点：修改调用者，使它在调用函数之前先做检查</p>
 
           
         
@@ -777,167 +944,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/项目管理/SMART原则/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/项目管理/SMART原则/" class="post-title-link" itemprop="url">SMART原则</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/项目管理/" itemprop="url" rel="index"><span itemprop="name">项目管理</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>所谓SMART原则，即：<br>1、目标是具体的（Specific）<br>2、目标必须是可以衡量的（Measurable）<br>3、目标必须是可达到的（Attainable）<br>4、目标必须和其他目标具有相关性（Relevant）<br>5、目标必须就有明确的截止期限（Time-based）</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/项目管理/如何向上报告/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1111,7 +1117,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/项目管理/项目风险监控/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/项目管理/SMART原则/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1131,7 +1137,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/项目管理/项目风险监控/" class="post-title-link" itemprop="url">项目风险监控</a>
+                <a href="/2020/05/26/项目管理/SMART原则/" class="post-title-link" itemprop="url">SMART原则</a>
               
             
           </h1>
@@ -1215,191 +1221,7 @@
       
         
           
-            <h1 id="项目风险监控"><a href="#项目风险监控" class="headerlink" title="项目风险监控"></a>项目风险监控</h1><p>#####一、近期思考<br>最近去医院听课，高级专家大夫定义高危产妇，凡是出现几种指标特征，存在可能，均为高危。延展这个思路，定义几个指标，来监控项目风险，起到治未病效果</p>
-<p>#####二、关键指标</p>
-<ul>
-<li>1、项目中组长，责任心不强，做事主动性不强，意味着在某一天在该环节出现风险</li>
-<li>2、组员提升为组长，表现问题，只管个人，不管组责任</li>
-<li>3、凡事讲流程的人，遇见突发情况也会出现风险</li>
-<li>4、做事顺序是按照前后顺序做的，前期顺利，后期有突发情况导致加班。</li>
-<li>5、做事经常是苦劳的，领导不认可的</li>
-<li>6、项目经理或组长平时管理不严格的</li>
-<li>7、产品评审环节，不重视的，事后返工的</li>
-<li>8、项目经理过于身先士卒，与组员沟通过多的，理解信息局部不全</li>
-<li>9、过多根据能力和态度判断一个人，应根据按时交付结果作为客观判断依据</li>
-<li>10、项目排期出现重大不协调的，各个组搭配不好的</li>
-<li>11、关键时间点，没有严格守卫住的</li>
-<li>12、项目负责人内心对目标不坚定的，内心经常动摇的</li>
-<li>13、人员组合搭配不当，过于关注某些缺点，并放大的。</li>
-</ul>
-<p>#####三、顺向逻辑<br>前置资源准备 eg:UI提前询问<br>预知风险，提前做好监测<br>流程：<br>1、需求评审<br>2、关键时间点<br>3、排期细化<br>4、资源冲突，顺序安排<br>5、排期评审<br>6、项目关键路径<br>7、定期会议同步进度，问题，风险<br>8、资源协调与沟通<br>9、项目运行中所处当前位置，在整体流程状态</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/重构-改善代码设计/重构实战/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/重构-改善代码设计/重构实战/" class="post-title-link" itemprop="url">重构实战</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/重构-改善代码设计/" itemprop="url" rel="index"><span itemprop="name">重构-改善代码设计</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>#####重构实战：<br>1、本文把常用坏味道，重构手法列出，用于解决工作日常80%问题<br>2、降低重构带来的开销<br><a href="https://www.jianshu.com/p/3327d42ca1c0" target="_blank" rel="noopener">影响项目重构现实因素及解决方案</a></p>
-<p>#####1、原则<br>1、无重复代码<br>2、单一职责<br>3、测试驱动</p>
-<p>#####2、重构的时机<br>1、添加功能，<br>2、修补错误(bug)，<br>3、复审代码</p>
-<p>#####3、”坏味道”的代码<br>1、重复代码<br>2、过长函数<br>3、过大的类（class）<br>4、过长参数列表<br>5、一个类需多处修改<br>6、一个变化多个类修改<br>7、一个函数过多依赖其他类<br>8、一团功能相似变量<br>9、switch 代码段<br>10、平行继承<br>11、冗余类，删除<br>12、过度设计、值得才设计<br>13、临时字段多<br>14、函数链过长<br>15、委托（类）函数过度<br>16、两个类关系过于紧密，用代理解决<br>17、相同功能函数<br>18、类库复用即可，不必完美<br>19、采用EntityClass<br>20、被拒绝的遗赠<br>21、过多注释，代码是最好的注释！</p>
-<p>#####4、常用重构手法<br>1、提取子函数<br>2、上移函数到父类<br>3、下移函数到子类<br>4、封装固定调用逻辑<br>5、使用泛型去除重复逻辑<br>6、使用对象避免过多参数<br>7、转移函数–单一职责<br>8、将类型码转为状态模式<br>9、NullObject模式<br>10、分解胖型类</p>
-<p><strong>详见</strong><br>1、<a href="https://www.jianshu.com/p/ac755f20f080" target="_blank" rel="noopener">重新组织函数</a><br>2、<a href="https://www.jianshu.com/p/041c7fdef067" target="_blank" rel="noopener">在对象之间搬移特性</a><br>3、<a href="https://www.jianshu.com/p/18a78b08bf3c" target="_blank" rel="noopener">重新组织数据</a><br>4、<a href="https://www.jianshu.com/p/3e58c6f79364" target="_blank" rel="noopener">简化条件表达式</a><br>5、<a href="https://www.jianshu.com/p/a1fe76808aae" target="_blank" rel="noopener">处理继承关系</a><br>6、<a href="https://www.jianshu.com/p/a86972c48c8f" target="_blank" rel="noopener">大型重构</a></p>
-<p>#####5、重构修改清单<br>1）记录命名，建造重构词汇表，统一名称规范<br>2）记录重构手法与情景映射，关联<br>3）记录重构原因：为什么（why）<br>4）记录修改清单<br>5）重构和修改功能是两件事，一件事做完，再处理另一件事</p>
+            <p>所谓SMART原则，即：<br>1、目标是具体的（Specific）<br>2、目标必须是可以衡量的（Measurable）<br>3、目标必须是可达到的（Attainable）<br>4、目标必须和其他目标具有相关性（Relevant）<br>5、目标必须就有明确的截止期限（Time-based）</p>
 
           
         
@@ -1811,6 +1633,184 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/项目管理/项目风险监控/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/项目管理/项目风险监控/" class="post-title-link" itemprop="url">项目风险监控</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/项目管理/" itemprop="url" rel="index"><span itemprop="name">项目管理</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="项目风险监控"><a href="#项目风险监控" class="headerlink" title="项目风险监控"></a>项目风险监控</h1><p>#####一、近期思考<br>最近去医院听课，高级专家大夫定义高危产妇，凡是出现几种指标特征，存在可能，均为高危。延展这个思路，定义几个指标，来监控项目风险，起到治未病效果</p>
+<p>#####二、关键指标</p>
+<ul>
+<li>1、项目中组长，责任心不强，做事主动性不强，意味着在某一天在该环节出现风险</li>
+<li>2、组员提升为组长，表现问题，只管个人，不管组责任</li>
+<li>3、凡事讲流程的人，遇见突发情况也会出现风险</li>
+<li>4、做事顺序是按照前后顺序做的，前期顺利，后期有突发情况导致加班。</li>
+<li>5、做事经常是苦劳的，领导不认可的</li>
+<li>6、项目经理或组长平时管理不严格的</li>
+<li>7、产品评审环节，不重视的，事后返工的</li>
+<li>8、项目经理过于身先士卒，与组员沟通过多的，理解信息局部不全</li>
+<li>9、过多根据能力和态度判断一个人，应根据按时交付结果作为客观判断依据</li>
+<li>10、项目排期出现重大不协调的，各个组搭配不好的</li>
+<li>11、关键时间点，没有严格守卫住的</li>
+<li>12、项目负责人内心对目标不坚定的，内心经常动摇的</li>
+<li>13、人员组合搭配不当，过于关注某些缺点，并放大的。</li>
+</ul>
+<p>#####三、顺向逻辑<br>前置资源准备 eg:UI提前询问<br>预知风险，提前做好监测<br>流程：<br>1、需求评审<br>2、关键时间点<br>3、排期细化<br>4、资源冲突，顺序安排<br>5、排期评审<br>6、项目关键路径<br>7、定期会议同步进度，问题，风险<br>8、资源协调与沟通<br>9、项目运行中所处当前位置，在整体流程状态</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/Android-SpanLite-让SpannableStringBuilder更简单-用法so-easy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2044,7 +2044,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-count">334</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2109,9 +2109,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

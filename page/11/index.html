@@ -288,7 +288,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/java并发核心机制和内存模型/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/Single-Threaded-Exectution模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -308,7 +308,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/java高并发编程/java并发核心机制和内存模型/" class="post-title-link" itemprop="url">java并发核心机制和内存模型</a>
+                <a href="/2020/05/26/java高并发编程/Single-Threaded-Exectution模式/" class="post-title-link" itemprop="url">Single-Threaded-Exectution模式</a>
               
             
           </h1>
@@ -392,62 +392,181 @@
       
         
           
-            <p>####1、java并发挑战<br>上下文切换、死锁、硬件和软件资源限制</p>
-<p>#####上下文切换<br>任务状态从保存到再加载的过程是一次上下文切换<br>线程创建和上下文切换的会影响效率</p>
-<p>检查工具<br>Lmbench3(性能分析工具)   测量上下文切换时长<br>vmstat（linux命令）  切换次数（cs）</p>
-<p>解决方案：</p>
-<ul>
-<li>减少上下文切换：<br>  1）无锁并发编程：减少使用锁，将数据分段，每个线程处理一段<br>  2）CAS算法：atomic  数值原子操作</li>
-<li><p>减少线程<br>  1）使用最少线程：避免创建不需要线程</p>
-<p>实战，减少大量WAITING状态线程</p>
-</li>
-</ul>
-<p>1、jstack pid &gt; txt , dump线程信息<br>2、统计线程状态<br>grep  “java.lang.Thread.State”  文件 | awk <code>{print $2$3$4$5}</code> |sort| uniq -c </p>
-<p>#####死锁定义·<br>如果一组进程中的每一个进程都在等待仅由该组进程中的其他进程才能引发的事件，那么该组进程是死锁的。</p>
-<p>一句话解析：多个锁之间关系要同一层级对应，死锁原因锁之间关系是越层级等待</p>
-<p>如何避免：<br>1、避免一个线程同时获取多个锁<br>2、避免一个线程内锁内同时只有多个资源<br>3、尝试定时锁 lock.tryLock(time)</p>
-<p>#####资源限制定义<br>进行并发编程时，程序的执行速度受限于计算机硬件资源或者软件资源</p>
-<p>资源限制引发问题<br>并行代码，受到资源限制，串行执行，那么上下文切换与资源调度极大浪费时间。</p>
-<p>解决方案：<br>1、硬件资源，集群并行执行（带宽和硬盘）<br>2、资源池复用（连接数）</p>
-<p>####2、java并发机制和原理<br>线程安全：如果一个对象可以安全被多个线程同时使用，那么它就是线程安全的</p>
-<p>#####并发三个特性</p>
-<ul>
-<li>原子性：是指一个操作或多个操作要么全部执行，且执行的过程不会被任何因素打断，要么就都不执行。</li>
-</ul>
-<p>关键词：原子</p>
-<ul>
-<li>可见性：当一个线程修改共享变量的值，其他线程能够立即得知这个修改</li>
-</ul>
-<p>关键词：volatile </p>
-<ul>
-<li>有序性：即程序执行的顺序按照代码的先后顺序执行</li>
-</ul>
-<p>关键词：先后顺序</p>
-<p>#####volatile<br>实现原理<br>1、将当前处理器缓存行的数据写回到系统内存<br>2、这个写回内存的操作会使在其他cpu里缓存该内存地址的数据无效</p>
-<p>#####synchronized<br>原理：jvm基于进入和退出Monitor对象来实现方法同步和代码块同步的</p>
-<p>synchronized 重量锁<br>1、对于普通同步方法，锁是当前实例对象<br>2、对于静态同步方法，锁是当前类的Class对象<br>3、对于同步方法块，锁是synchonized括号里的配置对象</p>
-<p>锁的级别，只可以升级，不能降级<br>从低到高：无状态锁、偏向锁、轻量级锁、重量级锁</p>
-<p>#####原子操作<br>不可中断的一个或一系列操作</p>
-<p>原理：<br>通过总线锁保证原子性<br>使用缓存锁保证原子性 </p>
-<h4 id="3、java内存模型（JMM）"><a href="#3、java内存模型（JMM）" class="headerlink" title="3、java内存模型（JMM）"></a>3、java内存模型（JMM）</h4><p>并发编程关键问题：<br>1）共享内存<br>2）消息传递  </p>
-<p>#####指令重排：<br>在执行程序时，为提高性能，编译器和处理器会对指令重新排序</p>
-<p><strong><em>插入内存屏障，来禁止指令重排序</em></strong></p>
-<p>#####volatile修饰含义：<br>1、使用同一个锁对这些单个读/写操作做了同步<br>2、修饰变量指令禁止重排<br>3、多个volatile复合操作，不具有原子性。eg:volatile++</p>
-<p>进阶：<br><a href="https://www.cnblogs.com/huichuan/archive/2013/06/14/3136033.html" target="_blank" rel="noopener">《java理论与实践 正确使用Volatile变量》</a></p>
-<p>#####锁的内存语义：<br>锁可以让临界区互斥执行<br>从内存读取共享变量，而不是缓存</p>
-<p>#####final域内存语义<br>1、在构造函数内对一个final域写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序</p>
-<p>2、初次读一个包含final域的对象引用，与随后初次读这个final域，这两个操作之间不能重排序</p>
-<p>3、final引用不能从构造函数内“逸出” obj=this</p>
-<p>4、被构造对象的引用在构造函数中没有“逸出”。<br>那么不需要使用同步就可以保证任意线程都能看到这个初始值</p>
-<p>happens-before原则</p>
-<p>JMM设计<br>偏好：<br>程序员： 强内存模型来编写代码<br>编译器：基于优化弱内存模型</p>
-<p>原则<br>1、会改变程序执行结果的禁止重排序<br>2、不会改变程序结果的重排序</p>
-<p>#####双重检查锁定错误<br>double-checked lock(双重锁定是错误的)<br>问题：当instance !=null 时，实例初始化未完成</p>
-<p>问题根源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">instance = new Singleton()</span><br><span class="line">memory = allocate() //1、分配内存空间</span><br><span class="line">ctorInstance(memory)//2、初始化对象</span><br><span class="line">instance = memory// 3、设置instance指向内存分配地址</span><br><span class="line"></span><br><span class="line">第2、3步可能重排序</span><br></pre></td></tr></table></figure></p>
-<p>解决方案<br>1、禁止重排序<br>2、允许重排序，不容许其他线程“看到”</p>
-<p>#####实战</p>
-<p>######1、基于volatile解决方案 (禁止重排序)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class SafeDoubleCheckedLocking&#123;</span><br><span class="line">    private volatile static Instance instance;</span><br><span class="line">    public static Instance getInstance()&#123;</span><br><span class="line">        if(instance == null)&#123;</span><br><span class="line">            synchronized(SafeDoubleCheckedLocking.class)&#123;</span><br><span class="line">                if(instance == null)&#123;</span><br><span class="line">                    instance = new Instance();</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>######2、基于类初始化的解决方案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class SingleFactory&#123;</span><br><span class="line">    private static class InstanceHolder&#123;</span><br><span class="line">        public static final Instance instance = new Instance();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Instance getInstance()&#123;</span><br><span class="line">        return InstanceHolder.instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+            <p>一次只有一个线程通过</p>
+<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public  class Gate&#123;</span><br><span class="line">  private volatile int count = 0;</span><br><span class="line">  public synchionized void pass()&#123;</span><br><span class="line">    //逻辑</span><br><span class="line">    count++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用场景：<br>多线程访问非线程安全方法，解决方案：使用单线程执行模式。</p>
+<p>线程安全方法：<br>synchronizedCollection方法<br>synchronizedList方法<br>synchronizedMap方法<br>synchronizedSet方法<br>synchronizedSortedMap方法<br>synchronizedSortedSet方法</p>
+<p>java.util.concurrent方法(JUC方法)<br>ConcurrentHashMap分段锁存储key-value</p>
+<p>详细介绍<br><a href="http://www.importnew.com/28263.html" target="_blank" rel="noopener">Java7/8 中的 HashMap 和 ConcurrentHashMap 全解析</a></p>
+<p><a href="http://www.importnew.com/22007.html" target="_blank" rel="noopener">ConcurrentHashMap总结</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin常用函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/kotlin/kotlin常用函数/" class="post-title-link" itemprop="url">kotlin常用函数</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>####repeat</p>
+<p>代码块重复执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">repeat(3) &#123;</span><br><span class="line">        println(&quot;Hello world&quot;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>####with<br>对当前类操作，内部操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">with(ArrayList&lt;String&gt;()) &#123;</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        println(&quot;this = &quot; + this)</span><br><span class="line">    &#125;.let&#123;</span><br><span class="line">    println(it)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>####let<br>相当于return小函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">url?.let&#123;</span><br><span class="line">    println(it)</span><br><span class="line">    return 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">相当于</span><br><span class="line">fun test(url :String) :Int&#123;</span><br><span class="line">    var it = url</span><br><span class="line">    println(it)</span><br><span class="line">   return 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####apply<br>fun <t> T.apply(f: T.() -&gt; Unit): T { f(); return this }<br>返回当前对象</t></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;String&gt;().apply &#123;</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        println(&quot;this = &quot; + this)</span><br><span class="line">    &#125;.let &#123; println(it) &#125;</span><br></pre></td></tr></table></figure>
+<p>####run<br>返回最后一个函数值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   &quot;testRun&quot;.run &#123;</span><br><span class="line">       println(&quot;this = &quot; + this)</span><br><span class="line">       test()</span><br><span class="line">   &#125;.let &#123; println(it) &#125;</span><br><span class="line"></span><br><span class="line">fun test() = 1</span><br></pre></td></tr></table></figure></p>
+<p>####also<br>执行block 返回this<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public inline fun &lt;T&gt; T.also(block: (T) -&gt; Unit): T &#123;</span><br><span class="line">    block(this)</span><br><span class="line">    return this</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
           
         
@@ -675,853 +794,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/多线程程序评价标准/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/java高并发编程/多线程程序评价标准/" class="post-title-link" itemprop="url">多线程程序评价标准</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java高并发编程/" itemprop="url" rel="index"><span itemprop="name">java高并发编程</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####标准</p>
-<ul>
-<li>安全性：不损坏对象</li>
-<li>生存性：必要处理能够被执行</li>
-<li>可复用性：类可重复利用</li>
-<li>性能：能快速、大批量地执行处理<br>  1）吞吐量<br>  2）响应性<br>  3）容量<br>  4）效率、可伸缩性、降级</li>
-</ul>
-<p>####总结</p>
-<ul>
-<li>安全性和生存性：必要条件（必须遵守标准）</li>
-<li>可复用性和性能：提高质量</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin-获得泛型类及泛型实例化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/kotlin/kotlin-获得泛型类及泛型实例化/" class="post-title-link" itemprop="url">kotlin-获得泛型类及泛型实例化</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>kotlin 这个体验也太好了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 获得T.class</span><br><span class="line">inline fun &lt;reified T&gt; classOf()  = T::class.java</span><br><span class="line"></span><br><span class="line">//获得 T object</span><br><span class="line">inline fun &lt;reified T&gt; instanceOf()  = T::class.java.newInstance()</span><br><span class="line"></span><br><span class="line">fun main() &#123;</span><br><span class="line">    var clazz = classOf&lt;String&gt;()</span><br><span class="line">    var str = instanceOf&lt;String&gt;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin常用函数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/kotlin/kotlin常用函数/" class="post-title-link" itemprop="url">kotlin常用函数</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####repeat</p>
-<p>代码块重复执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">repeat(3) &#123;</span><br><span class="line">        println(&quot;Hello world&quot;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>####with<br>对当前类操作，内部操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">with(ArrayList&lt;String&gt;()) &#123;</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        println(&quot;this = &quot; + this)</span><br><span class="line">    &#125;.let&#123;</span><br><span class="line">    println(it)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>####let<br>相当于return小函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">url?.let&#123;</span><br><span class="line">    println(it)</span><br><span class="line">    return 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">相当于</span><br><span class="line">fun test(url :String) :Int&#123;</span><br><span class="line">    var it = url</span><br><span class="line">    println(it)</span><br><span class="line">   return 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####apply<br>fun <t> T.apply(f: T.() -&gt; Unit): T { f(); return this }<br>返回当前对象</t></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;String&gt;().apply &#123;</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        println(&quot;this = &quot; + this)</span><br><span class="line">    &#125;.let &#123; println(it) &#125;</span><br></pre></td></tr></table></figure>
-<p>####run<br>返回最后一个函数值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   &quot;testRun&quot;.run &#123;</span><br><span class="line">       println(&quot;this = &quot; + this)</span><br><span class="line">       test()</span><br><span class="line">   &#125;.let &#123; println(it) &#125;</span><br><span class="line"></span><br><span class="line">fun test() = 1</span><br></pre></td></tr></table></figure></p>
-<p>####also<br>执行block 返回this<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public inline fun &lt;T&gt; T.also(block: (T) -&gt; Unit): T &#123;</span><br><span class="line">    block(this)</span><br><span class="line">    return this</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin中文文档/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/kotlin/kotlin中文文档/" class="post-title-link" itemprop="url">kotlin中文文档</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####学习kotlin反思<br>快速阅读kotlin，语法大概掌握，但是细节地方，不能串联一起<br>解决方案：kotlin-docs.pdf手敲一遍，看书只是懂，不能直接性掌握</p>
-<p>自己练习题<br><a href="https://github.com/yinlingchaoliu/KotlinExample" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/KotlinExample</a><br>example 章节例题<br>common 拆出通用性写法，便于后续复用</p>
-<p>已经将kotlin示例，可以愉快开发了</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin定位/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/kotlin/kotlin定位/" class="post-title-link" itemprop="url">kotlin定位</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####第一性原理<br>提高开发效率</p>
-<p>拆解需求：<br>1、语义简洁，代码清晰<br>2、开发速度快<br>3、可复用性<br>4、生产具有稳定性</p>
-<p>####引入kotlin语境</p>
-<p>#####优缺点</p>
-<p>######1）优点：<br>1.简洁<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. lambda表达式</span><br><span class="line">2. android省略findviewbyid</span><br><span class="line">3. 实体类创建简单pojo</span><br><span class="line">4. 遍历操作比较简单</span><br></pre></td></tr></table></figure></p>
-<ol start="2">
-<li>安全</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 空指针校验</span><br><span class="line">2. 空类型保护操作</span><br><span class="line">3. 自动数据类型转换</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>工具友好，JVM支持友好</li>
-</ol>
-<p>致命缺点</p>
-<ol>
-<li>过于追求语法简洁，特定语法不够清晰</li>
-<li>kotlin新出，高级特性，稳定性有待商榷</li>
-</ol>
-<p>现阶段实战解决处理方案<br>1）Android界面，采用kotlin，使用特有语法糖，提高效率<br>2）基础业务库采用java，保证核心基础库稳定<br>3）制定kotlin开发规范，精选一些含义清晰，代码简洁语法，保证开发效率</p>
-<p>语法糖清单(持续性增加)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. lambda表达式</span><br><span class="line">2. android省略findviewbyid</span><br><span class="line">3. 简单pojo</span><br><span class="line">4. 遍历</span><br><span class="line">5. 空指针校验</span><br></pre></td></tr></table></figure></p>
-<p><strong>涉及语法糖重点使用，未涉及不采用kotlin</strong></p>
-<p>####kotlin定位<br>Android UI界面（即MVP中View层）</p>
-<p>####</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin相关资料/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1629,6 +901,242 @@
             <p>kotlin 实战<br><a href="https://panxl6.gitbooks.io/kotlin-in-action-in-chinese/content/welcome.html" target="_blank" rel="noopener">https://panxl6.gitbooks.io/kotlin-in-action-in-chinese/content/welcome.html</a></p>
 <p>kotlin中文网<br><a href="https://www.kotlincn.net/docs" target="_blank" rel="noopener">https://www.kotlincn.net/docs</a></p>
 <p>介绍相关博客<br><a href="https://juejin.im/post/5aba47ca5188255c56687783" target="_blank" rel="noopener">https://juejin.im/post/5aba47ca5188255c56687783</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/java临时笔记并发基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/java高并发编程/java临时笔记并发基础/" class="post-title-link" itemprop="url">java临时笔记并发基础</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java高并发编程/" itemprop="url" rel="index"><span itemprop="name">java高并发编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>####临时笔记<br><a href="http://ifeve.com/concurrentlinkedqueue/" target="_blank" rel="noopener">http://ifeve.com/concurrentlinkedqueue/</a></p>
+<p>#java并发编程基础<br>线程优先级<br>Priority</p>
+<p>jstack工具查看状态<br>jps 查看列表<br>jstack pid</p>
+<p>线程状态<br>初始(NEW)：    新创建了一个线程对象，但还没有调用start()方法。<br>运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的成为“运行”。<br>阻塞(BLOCKED)：表线程阻塞于锁。<br>等待(WAITING)：进入该状态的线程需要等待其他线程做出一些特定动作（通知或中断）。<br>超时等待(TIME_WAITING)：该状态不同于WAITING，它可以在指定的时间内自行返回。<br>终止(TERMINATED)：表示该线程已经执行完毕。<br>[图片上传失败…(image-dbcd3-1535531273194)]</p>
+<p><a href="https://img-blog.csdn.net/2018070117435683?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BhbmdlMTk5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" target="_blank" rel="noopener">线程状态图</a></p>
+<p>Daemon进程<br>精灵进程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thread.setDaemeon(true)</span><br></pre></td></tr></table></figure></p>
+<p>在进程启动之前设置</p>
+<p>线程初始化<br>1、daemon<br>2、priority<br>3、name<br>4、本地数据<br>5、线程ID</p>
+<p>最好自定义线程名字</p>
+<p>理解中断<br>线程的一个标识位属性，<br>interrupt()中断<br>interrupted() 复位</p>
+<p>Thread.isInterrupted()<br>sleep() 方法不能被中断</p>
+<p>过期方法 suspend(暂停) 、resume(恢复)、stop(停止)<br>死锁、不会释放资源</p>
+<p>安全终止线程<br>中断状态是线程的一个标识位，而中断操作是一种渐变的线程间交互方式<br>1、interrupt() 中断<br>2、boolean值变量来控制是否需要停止任务并且终止<br>flag &amp;&amp; Tread.currentThread().isInterrupted()</p>
+<p>推荐第二种：清理资源</p>
+<p>线程间通讯<br><strong>1、</strong>volatile、synchronized<br><strong>2、</strong>wait/notify<br>[图片上传失败…(image-5475ff-1535531273194)]</p>
+<p>生产者-消费者</p>
+<p>等待方-通知方<br>1、获取对象的锁<br>2、条件不满足等待（wait），被通知后仍要检查条件<br>3、条件满足执行</p>
+<p>1、等待方<br>synchrionized(对象){<br>    while(条件不满足){<br>        对象.wait();<br>    }<br>    处理逻辑<br>}<br>2、通知方<br>1、获得对象的锁<br>2、改变条件<br>3、通知所有等待对象上的线程<br>synchionized(对象){<br>    改变条件<br>    对象.notifyAll()<br>}</p>
+<p>3、<strong>管道输入/输出流</strong><br>线程之间数据传入<br>PipedReader / PipedWriter<br>PipedOutputStream / PipedInputStream<br>需要connect()绑定<br>out.connect(in)</p>
+<p>4、Thread.join()<br>当前线程，等待上一个终止后再开始</p>
+<p>5、ThreadLocal使用 线程变量</p>
+<p>实战用法<br>等待超时模式</p>
+<p>synchrionized void get(){<br>long future = System.currentTimeMills()+mills;<br>long remaining = mills;<br>    while(result == null &amp;&amp; remaining &gt; 0){<br>        对象.wait(remaining);<br>        remaining = future - System.currentTimeMills();<br>    }<br>    处理逻辑<br>}</p>
+<p>增加超时控制</p>
+<p>countDownLatch 预备-同时</p>
+<p>线程池<br>一个线程安全工作队列连接工作者线程和客户端线程<br>生产者-消费者</p>
+<p>#java中的锁<br>juc<br>使用和实现两个方面</p>
+<p>lock接口<br>锁是用来解决多个线程访问共享资源的方式</p>
+<p>synchionized 隐式调用</p>
+<p>Lock lock = new ReentrantLock();<br>lock.lock();<br>try{<br>    doSomething()<br>}finally{<br>    lock.unlock();<br>}</p>
+<p>队列同步器 AbstractQueuedSynchrionizer<br>getState()<br>setState(int status)<br>compareAndSetStatus(int expect,int update) 设置cas状态</p>
+<p>独占锁（互斥锁）<br>Mutex</p>
+<p>重入锁（条件锁）<br>支持一个线程对资源重复加锁<br>ReentrantLock</p>
+<p>公平锁与非公平锁问题<br>时间(FIFO先进先出原则)，条件</p>
+<p>排他锁</p>
+<p>读写锁<br>读写（锁）分离<br>ReentrantReadWriteLock<br>使用场景：读多于写的<br>3个特性：<br>公平性选择（加条件）<br>重进入<br>锁降级:写锁降级为读锁</p>
+<p>readLock()<br>writeLock()</p>
+<p>写法：<br>锁降级: 需要再确认一下<br>readLock.lock()<br>try{<br>    //先释放<br>    readLock.unlock()<br>    //写锁<br>    writeLock.lock()<br>    try{</p>
+<pre><code>    readLock.lock()
+}finally{
+    writeLock.unlock()
+}
+</code></pre><p>}finally{<br>    readLock.unlock();<br>}</p>
+<p>LockSupport工具<br>阻塞或唤醒线程</p>
+<p>Condition接口 (条件)</p>
+<p>Lock lock = new ReentrantLock()<br>Condition condition = lock.newCondition();</p>
+<p>public void conWait(){<br>    lock.lock();<br>    try{<br>        condition.await();<br>    }finally{<br>        lock.unlock();<br>    }<br>}</p>
+<p>public void conSigal(){<br>    lock.lock();<br>    try{<br>        condition.sigal();<br>    }finally{<br>        lock.unlock();<br>    }<br>}</p>
+<p>#并发容器和框架</p>
+<p>####1、ConcurrentHashMap 是线程安全且高效的HashMap<br>锁分段技术<br>1、线程不安全Hashmap，陷入死循环<br>2、效率低下的HashTable<br>锁分段技术<br>首先将数据分成一段一段的存储，并给每段数据配一把锁<br>当一个线程占用锁访问其中一段数据时，其他段数据也能被其他线程访问</p>
+<p>####ConcurrentLinkedQueue<br>线程安全队列<br>阻塞和非阻塞算法</p>
+<p>####Java阻塞队列</p>
+<p>重点看</p>
+<p>线程池的使用</p>
+<p>*简单线程池实现</p>
+<p>Executor 工作单元与执行单元分离</p>
+<p>#java并发实践</p>
+<p>生产者–消费者</p>
+<p>mark 阻塞队列用来给生产者与消费者解耦</p>
+<p>LinkedBlockingQueue</p>
+<p>一个生产者–多个消费者</p>
+<p>线程池与生产消费者模式</p>
+<p>线上问题定位<br>top命令<br>top  1<br>top H</p>
+<p>CPU占用率高，top前10</p>
+<p>jstat -gcuutil pid  1000  5<br>把线程dump下来<br>jstack pid  &gt; txt</p>
+<p>nid线程</p>
+<p>10进制转16进制<br>printf “x<br>“ nid</p>
+<p>性能测试<br>响应时间（RT）<br>吞吐量（TPS）  反比关系<br>并发数 承载多少用户操作<br>QPS 每秒查询数</p>
+<p>QPS必须是峰值</p>
+<p>netatat -nat | grep  port -c </p>
+<p>ps -eLf | grep java -c </p>
+<p>增加 线程数、CPU、机器</p>
+<p>1、查看网络流量<br>cat /proc/net/dev<br>查看平均负载<br>cat /proc/loadavg<br>查看系统内存情况<br>cat /proc/meminfo</p>
+<p>查看cpu利用率<br>cat /proc/stat</p>
+<p>异步线程池<br>场景：集群环境，解决线程池重启问题</p>
+<p>任务池–多线程池<br>任务状态<br>创建（NEW）<br>执行（EXECUTING）<br>重试(RETRY)<br>挂起（SUSPEND）<br>中止（TERMNER）<br>执行完成（FINISH）</p>
 
           
         
@@ -2044,6 +1552,518 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/ECMAScript-6-入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/weex专题/ECMAScript-6-入门/" class="post-title-link" itemprop="url">ECMAScript-6-入门</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>阮一峰<br><a href="http://es6.ruanyifeng.com" target="_blank" rel="noopener">http://es6.ruanyifeng.com</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/kotlin/kotlin定位/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/kotlin/kotlin定位/" class="post-title-link" itemprop="url">kotlin定位</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>####第一性原理<br>提高开发效率</p>
+<p>拆解需求：<br>1、语义简洁，代码清晰<br>2、开发速度快<br>3、可复用性<br>4、生产具有稳定性</p>
+<p>####引入kotlin语境</p>
+<p>#####优缺点</p>
+<p>######1）优点：<br>1.简洁<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. lambda表达式</span><br><span class="line">2. android省略findviewbyid</span><br><span class="line">3. 实体类创建简单pojo</span><br><span class="line">4. 遍历操作比较简单</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>安全</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 空指针校验</span><br><span class="line">2. 空类型保护操作</span><br><span class="line">3. 自动数据类型转换</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>工具友好，JVM支持友好</li>
+</ol>
+<p>致命缺点</p>
+<ol>
+<li>过于追求语法简洁，特定语法不够清晰</li>
+<li>kotlin新出，高级特性，稳定性有待商榷</li>
+</ol>
+<p>现阶段实战解决处理方案<br>1）Android界面，采用kotlin，使用特有语法糖，提高效率<br>2）基础业务库采用java，保证核心基础库稳定<br>3）制定kotlin开发规范，精选一些含义清晰，代码简洁语法，保证开发效率</p>
+<p>语法糖清单(持续性增加)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. lambda表达式</span><br><span class="line">2. android省略findviewbyid</span><br><span class="line">3. 简单pojo</span><br><span class="line">4. 遍历</span><br><span class="line">5. 空指针校验</span><br></pre></td></tr></table></figure></p>
+<p><strong>涉及语法糖重点使用，未涉及不采用kotlin</strong></p>
+<p>####kotlin定位<br>Android UI界面（即MVP中View层）</p>
+<p>####</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/light框架-vue语法惯用法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/weex专题/light框架-vue语法惯用法/" class="post-title-link" itemprop="url">light框架-vue语法惯用法</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><p>好的惯用法，可以让写法更地道<br>这些好的方法套路中，提供不错的复用方案</p>
+<h6 id="1、组件循环，实现从上到下线性布局，提高复用性，items限制"><a href="#1、组件循环，实现从上到下线性布局，提高复用性，items限制" class="headerlink" title="1、组件循环，实现从上到下线性布局，提高复用性，items限制"></a>1、组件循环，实现从上到下线性布局，提高复用性，items限制</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;flex-1&quot;&gt;</span><br><span class="line">    &lt;scroller :style=&quot;&#123;height: scrollerHeight + &apos;px&apos;&#125;&quot;&gt;</span><br><span class="line">      &lt;refresher :refreshing.sync=&quot;refreshing&quot; :top=&quot;200&quot; :showOwnLoading=&quot;false&quot;&gt;&lt;/refresher&gt;</span><br><span class="line">      &lt;component v-bind:is=&quot;item.name&quot; :param=&quot;item.data&quot; v-for=&quot;(item) in items&quot; :key=&quot;item.name&quot; :refreshing.sync=&quot;refreshing&quot;&gt;&lt;/component&gt;</span><br><span class="line">      &lt;div class=&quot;h300&quot;&gt;&lt;/div&gt;</span><br><span class="line">    &lt;/scroller&gt;</span><br><span class="line">    &lt;bottombar-index :activeIndex=&quot;3&quot;&gt;&lt;/bottombar-index&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  import navbar from &apos;@/components/ui/navbar&apos;;</span><br><span class="line">  import bottombarIndex from &apos;@/components/ui/bottombar-index&apos;;</span><br><span class="line">  import sMineheader1 from &apos;@/market/s-mineheader1/s-mineheader1&apos;;</span><br><span class="line">  import sMinecenter1 from &apos;@/market/s-minecenter1/s-minecenter1&apos;;</span><br><span class="line">  import sMinebottom1 from &apos;@/market/s-minebottom1/s-minebottom1&apos;;</span><br><span class="line">export default &#123;</span><br><span class="line">    components: &#123;</span><br><span class="line">      bottombarIndex,</span><br><span class="line">      navbar,</span><br><span class="line">      refresher,</span><br><span class="line">      sMineheader1,</span><br><span class="line">      sMinecenter1,</span><br><span class="line">      sMinebottom1</span><br><span class="line">    &#125;,</span><br><span class="line">   data()&#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      items: [</span><br><span class="line">          &#123;</span><br><span class="line">            name: &quot;sMineheader1&quot;,  //组件名</span><br><span class="line">            data: &#123;&#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            name: &quot;s-minecenter1&quot;, //组件网页名</span><br><span class="line">            data: &#123;&#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            name: &quot;sMinebottom1&quot;,</span><br><span class="line">            data: &#123;&#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>分析<br>无论是何种布局，都可以抽象理解为从上至下排布的线性布局，无非是粒度大小，界面中布局代码被迁移到不同组件中，极大提升复用</li>
+</ul>
+<p>######2、组件循环，以components为准<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;div class=&quot;flex-1&quot;&gt;</span><br><span class="line">	  &lt;scroller @scroll=&quot;scrollHandler&quot; :style=&quot;&#123;height: scrollerHeight + &apos;px&apos;&#125;&quot; class=&quot;flex-1&quot;&gt;</span><br><span class="line">	    &lt;refresher :refreshing.sync=&quot;refreshing&quot;&gt;&lt;/refresher&gt;</span><br><span class="line">	    &lt;s-pop-adv :param=&quot;popAdvParam&quot; v-if=&quot;popAdvParam&quot;&gt;&lt;/s-pop-adv&gt;</span><br><span class="line">	    &lt;component v-bind:is=&quot;item.type&quot; :param=&quot;item&quot; v-for=&quot;(item, index) in components&quot; :key=&quot;index&quot;&gt;&lt;/component&gt;</span><br><span class="line">	  &lt;/scroller&gt;</span><br><span class="line">	  &lt;bottombar-index :activeIndex=&quot;0&quot;&gt;&lt;/bottombar-index&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  components: &#123;</span><br><span class="line">    bottombarIndex,</span><br><span class="line">    refresher,</span><br><span class="line">    banner,</span><br><span class="line">    shortcuts,</span><br><span class="line">    cashs,</span><br><span class="line">    themeRecommMatrix,</span><br><span class="line">    themeRecommMatrix2,</span><br><span class="line">    viceBanner,</span><br><span class="line">    recommProds,</span><br><span class="line">    sPopAdv,</span><br><span class="line">    textContents,</span><br><span class="line">    cmsNewsList,</span><br><span class="line">    marqueeView</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>解耦更加直接，以componet为单位，复用性更强</p>
+<h6 id="3、导航栏navbar"><a href="#3、导航栏navbar" class="headerlink" title="3、导航栏navbar"></a>3、导航栏navbar</h6><p>项目中，不推荐隐式调用形式，只有显示声明才能代码拥有良好可阅读性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;navbar title=&quot;产品列表&quot; theme=&quot;dark&quot; :bottomLineShow=&quot;false&quot; :leftBtnShow=&quot;false&quot; :statusbar=&quot;isApp&quot;&gt;</span><br><span class="line">      &lt;div slot=&quot;rightBtn1&quot; class=&quot;p20 ml30&quot; @click=&quot;jump(&apos;search&apos;)&quot;&gt;</span><br><span class="line">        &lt;image class=&quot;top-right-img&quot; :src=&quot;imageOfTheme(&apos;search&apos;)&quot;&gt;&lt;/image&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    &lt;/navbar&gt;</span><br></pre></td></tr></table></figure></p>
+<p>🚫禁止 header中含有navbar，这样写法具有迷惑性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">components: &#123;</span><br><span class="line">      navbar,</span><br><span class="line">      refresher,</span><br><span class="line">      sMineheader1,          </span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2090,7 +2110,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-count">334</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2155,9 +2175,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

@@ -288,7 +288,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/java-io-IOException--Cleartext-HTTP-traffic-to-xxx-xxx-xxx-xxx-not-per/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/app请求公共参数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -308,7 +308,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android相关/java-io-IOException--Cleartext-HTTP-traffic-to-xxx-xxx-xxx-xxx-not-per/" class="post-title-link" itemprop="url">java-io-IOException--Cleartext-HTTP-traffic-to-xxx-xxx-xxx-xxx-not-per</a>
+                <a href="/2020/05/26/Android相关/app请求公共参数/" class="post-title-link" itemprop="url">app请求公共参数</a>
               
             
           </h1>
@@ -392,10 +392,60 @@
       
         
           
-            <p>Android9.0 默认是禁止所有的http请求的，</p>
-<p>需要在代码中设置如下代码才可以正常进行网络请求： android:usesCleartextTraffic=”true”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">        android:usesCleartextTraffic=&quot;true&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>更高得编译版本中 ，需要添加配置文件（network_security_config.xml）如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;application </span><br><span class="line">android:networkSecurityConfig=&quot;@xml/network_security_config&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>network_security_config文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;network-security-config&gt;</span><br><span class="line">    &lt;base-config cleartextTrafficPermitted=&quot;true&quot;/&gt;</span><br><span class="line">&lt;/network-security-config&gt;</span><br></pre></td></tr></table></figure></p>
+            <table>
+<thead>
+<tr>
+<th>平台标识 （权限控制）</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>platform</td>
+<td>平台来源  (数据来源 某app)</td>
+</tr>
+<tr>
+<td>downloadChannel</td>
+<td>注册渠道（vivo appstore hawei,yingyongbao）</td>
+</tr>
+<tr>
+<td>versionName</td>
+<td>版本名（识别访问app，接口版本）</td>
+</tr>
+<tr>
+<td>token</td>
+<td>用户访问令牌</td>
+</tr>
+<tr>
+<td>设备信息（信息存储）</td>
+<td></td>
+</tr>
+<tr>
+<td>jpushToken</td>
+<td>极光推送唯一标识</td>
+</tr>
+<tr>
+<td>deviceId</td>
+<td>手机唯一标识(不准确，非必传)</td>
+</tr>
+<tr>
+<td>deviceType</td>
+<td>设备类型  android/ios</td>
+</tr>
+<tr>
+<td>osVersion</td>
+<td>手机系统版本号</td>
+</tr>
+<tr>
+<td>osBranch</td>
+<td>iphone7 iphone8 华为，小米</td>
+</tr>
+<tr>
+<td>androidId</td>
+<td>安卓专属，ios传空字符串</td>
+</tr>
+</tbody>
+</table>
 
           
         
@@ -452,7 +502,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter实践学习/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/Keep混淆/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -472,7 +522,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android相关/flutter实践学习/" class="post-title-link" itemprop="url">flutter实践学习</a>
+                <a href="/2020/05/26/Android相关/Keep混淆/" class="post-title-link" itemprop="url">Keep混淆</a>
               
             
           </h1>
@@ -556,40 +606,842 @@
       
         
           
-            <p>#####导航<br>1、flutter学习思路<br>flutter简易启动框架<br>flutter开发工具<br>and so on…</p>
-<h4 id="1、flutter学习思路"><a href="#1、flutter学习思路" class="headerlink" title="1、flutter学习思路"></a>1、flutter学习思路</h4><p>学习一门新语言，很难通过一步一步学习，快速接入项目，原因是<br><code>1、商业项目一般是多个技术点的综合运用</code><br><code>2、学习到技术也符合28定律，真正运用到实践技术不多</code><br><code>3、实际中项目学习，一般是先有，后优化关系</code><br>综上，我采取思路是，</p>
+            <p>keep注解 支持变量、方法、构造方法、类、注解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Retention(RetentionPolicy.CLASS)</span><br><span class="line">@Target(&#123;ElementType.PACKAGE, ElementType.TYPE, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD&#125;)</span><br><span class="line">public @interface Keep &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>混淆文件proguard-rules.pro<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Understand the @Keep support annotation.</span><br><span class="line">-dontwarn android.support.**</span><br><span class="line">-keep class android.support.annotation.Keep</span><br><span class="line"></span><br><span class="line">-keep @android.support.annotation.Keep class * &#123;*;&#125;</span><br><span class="line"></span><br><span class="line">-keepclasseswithmembers class * &#123;</span><br><span class="line">    @android.support.annotation.Keep &lt;methods&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclasseswithmembers class * &#123;</span><br><span class="line">    @android.support.annotation.Keep &lt;fields&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclasseswithmembers class * &#123;</span><br><span class="line">    @android.support.annotation.Keep &lt;init&gt;(...);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>android代码，哪些类不需要混淆，就@Keep即可</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/charels-https抓包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/charels-https抓包/" class="post-title-link" itemprop="url">charels-https抓包</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>charels Mac<br><a href="https://www.cnblogs.com/chenlogin/p/5849471.html" target="_blank" rel="noopener">https://www.cnblogs.com/chenlogin/p/5849471.html</a></p>
+<p>fidder<br><a href="https://www.cnblogs.com/aqxss/p/7480014.html" target="_blank" rel="noopener">https://www.cnblogs.com/aqxss/p/7480014.html</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter-redux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/flutter-redux/" class="post-title-link" itemprop="url">flutter-redux</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近学习flutter-redux<br>思想是flux<br>action-&gt;dispatch–&gt;store-&gt;view<br>数据是单向流动</p>
+<p>阮一峰<br><a href="https://www.cnblogs.com/fliu/articles/5245923.html" target="_blank" rel="noopener">https://www.cnblogs.com/fliu/articles/5245923.html</a></p>
+<p>如果能使用简单可以省心不少<br><img src="http://upload-images.jianshu.io/upload_images/5526061-5ba2b0632f4ae553.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<p>fish-redux 存在一个问题，类文件膨胀</p>
+<p>redux这个框架本意复用mvp中的p<br>尽量少些</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter-widget布局开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/flutter-widget布局开发/" class="post-title-link" itemprop="url">flutter-widget布局开发</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>widget开发思路</p>
+<p>widget 相当于View<br>开发flutter布局，并不是那么直观<br>我们用constraintLayout 写法是一层，<br>对于使用者来言，更直观。<br>最好的方式就是一层。</p>
+<p>最好采用mvp<br>把逻辑和视图分离<br>或者类似android-flux效果<br>这些写起布局清爽，也不用考虑与布局无关的逻辑，<br>太多widget内私有方法，或者全局变量会导致程序不易读</p>
+<p>以往开发baseTemplete效果，<br>公共titlebar ,公共 theme 公共 frame<br>公共list列表 可以解决布局大部分需求</p>
+<p>理念就是用模板</p>
+<p>而不是重复的语法，重复写，项目四处都是</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful/" class="post-title-link" itemprop="url">flutter-SmartRefreshBloc页面快速开发模板，支持列表，支持stateful</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>项目地址：<a href="https://github.com/yinlingchaoliu/SmartRefreshBloc" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc</a></p>
+<p>#####编写项目的思路<br>flutter处处体现widget，我们开发过程中，核心放在的是业务层面逻辑，减少不必要的widget编写，减少不必要重复劳动，减少不必要代码层级，作为提高效率的切入点</p>
 <ul>
-<li>1、采用已开源代码成熟代码整合出一个新项目。关系就是先有鸡，后有蛋</li>
-<li>2、不考虑新语言音速，新开发一个APP，我需要什么？需要什么样子一个技术框图</li>
+<li>解决问题方式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、用View与Logic解耦方式，增加代码清晰度</span><br><span class="line">2、用模板的方式，给提供统一开发规范方案（普通页面和列表页面）</span><br><span class="line">3、用快捷键方式，一键式快速开发</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-b6bfc9652aa5e72a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="flutter学习思路"></p>
-<p>站在我需要什么，而不是flutter有什么技术<br>站在使用者角度，不考虑原理，先出基本效果，再后续优化，That’s all.</p>
-<p>本文支持学习项目：<br><a href="https://github.com/yinlingchaoliu/flutter-easy.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/flutter-easy.git</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//已写好工具</span><br><span class="line">SpUtil 支持本地存储 </span><br><span class="line">HttpManager 基于dio支持网络请求任意灵活配置</span><br><span class="line">Fluttertoast 第三方工具</span><br></pre></td></tr></table></figure></p>
-<p>基于GSYGithubAppFlutter项目重构</p>
-<p>json to dart<br><a href="https://javiercbk.github.io/json_to_dart/" target="_blank" rel="noopener">https://javiercbk.github.io/json_to_dart/</a></p>
-<p>星期八的文章<br><a href="https://www.cnblogs.com/hupo376787/default.html?page=2" target="_blank" rel="noopener">https://www.cnblogs.com/hupo376787/default.html?page=2</a></p>
-<p>网络框架<br><a href="https://github.com/flutterchina/dio" target="_blank" rel="noopener">https://github.com/flutterchina/dio</a></p>
-<p>json to dart<br><a href="https://javiercbk.github.io/json_to_dart/" target="_blank" rel="noopener">https://javiercbk.github.io/json_to_dart/</a></p>
-<p>future<br><a href="http://www.ccc5.cc/2462.html" target="_blank" rel="noopener">http://www.ccc5.cc/2462.html</a></p>
-<p>开源项目<br><a href="https://github.com/yinlingchaoliu/flutter-easy.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/flutter-easy.git</a></p>
-<p>临时笔记<br>打包<br>flutter build apk</p>
-<p>参考资料</p>
-<p>官方教程<br><a href="https://flutter.cn/" target="_blank" rel="noopener">https://flutter.cn/</a></p>
-<p>flutter实战<br><a href="https://book.flutterchina.club" target="_blank" rel="noopener">https://book.flutterchina.club</a></p>
-<p>任玉刚<br><a href="https://mp.weixin.qq.com/s/4G6hWW6GxnmV_j6d2rVBpA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/4G6hWW6GxnmV_j6d2rVBpA</a></p>
-<p>系统学习<br><a href="https://github.com/AweiLoveAndroid/Flutter-learning" target="_blank" rel="noopener">https://github.com/AweiLoveAndroid/Flutter-learning</a></p>
-<p>优秀开源<br><a href="https://github.com/alibaba/flutter-go" target="_blank" rel="noopener">https://github.com/alibaba/flutter-go</a></p>
-<p>flutter weex rn kotlin四种实现<br><a href="https://github.com/CarGuo/GSYGithubAppFlutter" target="_blank" rel="noopener">https://github.com/CarGuo/GSYGithubAppFlutter</a></p>
-<p>native插件集成<br><a href="https://github.com/alibaba/flutter_boost" target="_blank" rel="noopener">https://github.com/alibaba/flutter_boost</a></p>
-<p>路由解决方案<br><a href="https://github.com/alibaba-flutter/annotation_route" target="_blank" rel="noopener">https://github.com/alibaba-flutter/annotation_route</a></p>
-<p>框架方案 redux<br><a href="https://github.com/alibaba/fish-redux" target="_blank" rel="noopener">https://github.com/alibaba/fish-redux</a></p>
-<p>setting 模板<br><a href="https://www.jianshu.com/p/4184745d6983" target="_blank" rel="noopener">https://www.jianshu.com/p/4184745d6983</a></p>
-<p>感受布局的基本语法<br><a href="https://www.jianshu.com/p/7511cb18a05e" target="_blank" rel="noopener">https://www.jianshu.com/p/7511cb18a05e</a></p>
-<p>闲鱼开源<br><a href="https://github.com/MissYoung/Flutter_shop" target="_blank" rel="noopener">https://github.com/MissYoung/Flutter_shop</a></p>
-<p>技术点收集<br><a href="https://github.com/Sky24n/flutter_wanandroid" target="_blank" rel="noopener">https://github.com/Sky24n/flutter_wanandroid</a></p>
-<p>临时存储<br><a href="https://www.jianshu.com/p/806219fd4d0b" target="_blank" rel="noopener">https://www.jianshu.com/p/806219fd4d0b</a></p>
-<p>参考文章<br>dio网络<br><a href="https://github.com/flutterchina/dio/blob/flutter/README-ZH.md#features-and-bugs" target="_blank" rel="noopener">https://github.com/flutterchina/dio/blob/flutter/README-ZH.md#features-and-bugs</a></p>
-<p>异步<br><a href="https://segmentfault.com/a/1190000014396421" target="_blank" rel="noopener">https://segmentfault.com/a/1190000014396421</a></p>
+<p>#####1、先实现View与logic解耦<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line"></span><br><span class="line">/// Created by chentong</span><br><span class="line">///</span><br><span class="line">/// 相当于MVP</span><br><span class="line">///</span><br><span class="line">class BlocProvider&lt;T extends BlocBase&gt; extends StatefulWidget &#123;</span><br><span class="line">  BlocProvider(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required this.child, //View</span><br><span class="line">    @required this.bloc, //logic</span><br><span class="line">  &#125;) : super(key: key);</span><br><span class="line"></span><br><span class="line">  final T bloc;</span><br><span class="line">  final Widget child;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  _BlocProviderState&lt;T&gt; createState() =&gt; _BlocProviderState&lt;T&gt;();</span><br><span class="line">///核心代码</span><br><span class="line">  static T of&lt;T extends BlocBase&gt;(BuildContext context) &#123;</span><br><span class="line">    final type = _typeOf&lt;BlocProvider&lt;T&gt;&gt;();</span><br><span class="line">    BlocProvider&lt;T&gt; provider = context.ancestorWidgetOfExactType(type);</span><br><span class="line">    return provider.bloc;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  static Type _typeOf&lt;T&gt;() =&gt; T;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class _BlocProviderState&lt;T&gt; extends State&lt;BlocProvider&lt;BlocBase&gt;&gt; &#123;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void initState() &#123;</span><br><span class="line">    super.initState();</span><br><span class="line">    widget.bloc.initState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return widget.child;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;</span><br><span class="line">    widget.bloc.dispose();</span><br><span class="line">    super.dispose();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">abstract class BlocBase &#123;</span><br><span class="line">  void initState();</span><br><span class="line"></span><br><span class="line">  void dispose();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个是核心模板，可以解耦当前flutter页面中Widget与业务逻辑混合在一起的问题。</p>
+<p>现在开发一个页面范例，将逻辑层迁移到DefaultBloc当中，而DefaultPage 专注于写widget，减少不必要的耦合。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/cupertino.dart&apos;;</span><br><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;base_bloc.dart&apos;;</span><br><span class="line"></span><br><span class="line">///@author: chentong</span><br><span class="line">///2019-4-9</span><br><span class="line">///视图层</span><br><span class="line">class DefaultPage extends StatefulWidget &#123;</span><br><span class="line">  ///路由跳转</span><br><span class="line">  static void pushDefaultPage(BuildContext context) &#123;</span><br><span class="line">    Navigator.push(</span><br><span class="line">        context,</span><br><span class="line">        new CupertinoPageRoute&lt;void&gt;(</span><br><span class="line">            builder: (ctx) =&gt; new BlocProvider&lt;DefaultBloc&gt;(</span><br><span class="line">                  child: new DefaultPage(),</span><br><span class="line">                  bloc: new DefaultBloc(),</span><br><span class="line">                )));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///获得当前页面实例</span><br><span class="line">  static StatefulWidget newInstance() &#123;</span><br><span class="line">    return new BlocProvider&lt;DefaultBloc&gt;(</span><br><span class="line">      child: new DefaultPage(),</span><br><span class="line">      bloc: new DefaultBloc(),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  _DefaultPageState createState() =&gt; new _DefaultPageState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">///</span><br><span class="line">/// 页面实现</span><br><span class="line">///</span><br><span class="line">class _DefaultPageState extends State&lt;DefaultPage&gt; &#123;</span><br><span class="line">  @override</span><br><span class="line">  void initState() &#123;</span><br><span class="line">    super.initState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    final DefaultBloc bloc = BlocProvider.of&lt;DefaultBloc&gt;(context);</span><br><span class="line"></span><br><span class="line">    return new Scaffold(</span><br><span class="line">      appBar: new AppBar(</span><br><span class="line">        title: new Text(&apos;demo&apos;),</span><br><span class="line">        centerTitle: true,</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;</span><br><span class="line">    super.dispose();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">///</span><br><span class="line">///逻辑层</span><br><span class="line">///todo:此处逻辑建议迁移出去 分离开解耦</span><br><span class="line">///</span><br><span class="line">class DefaultBloc extends BlocBase &#123;</span><br><span class="line">  @override</span><br><span class="line">  void initState() &#123;&#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####2、增加高频适配模板</p>
+<p><code>因为listview列表在APP中是高频使用的存在，基于pull_to_refresh编写列表页面，便于快速开发</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/cupertino.dart&apos;;</span><br><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line">import &apos;package:flutter/scheduler.dart&apos;;</span><br><span class="line">import &apos;package:pull_to_refresh/pull_to_refresh.dart&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;base_bloc.dart&apos;;</span><br><span class="line"></span><br><span class="line">///</span><br><span class="line">///list列表</span><br><span class="line">///author:chentong</span><br><span class="line">///</span><br><span class="line">abstract class SmartRefreshBloc extends PullToRefreshBloc &#123;</span><br><span class="line">  RefreshController refreshController;</span><br><span class="line">  ScrollController scrollController;</span><br><span class="line"></span><br><span class="line">  ///初始化</span><br><span class="line">  void initState() &#123;</span><br><span class="line">    scrollController = new ScrollController();</span><br><span class="line">    refreshController = new RefreshController();</span><br><span class="line">    SchedulerBinding.instance.addPostFrameCallback((_) &#123;</span><br><span class="line">      refreshController.requestRefresh(true);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void scrollTop() &#123;</span><br><span class="line">    scrollController.animateTo(0.0,</span><br><span class="line">        duration: new Duration(microseconds: 1000), curve: ElasticInCurve());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void onRefreshCallBack(bool up) &#123;</span><br><span class="line">    if (up) &#123;</span><br><span class="line">      onRefresh();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      onLoadMore();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///默认方法</span><br><span class="line">  void onOffsetCallback(bool isUp, double offset) &#123;</span><br><span class="line">    // if you want change some widgets state ,you should rewrite the callback</span><br><span class="line">    if (isUp) &#123;</span><br><span class="line">    &#125; else &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///请求</span><br><span class="line">  void refreshRequest(&#123;bool up = true&#125;) &#123;</span><br><span class="line">    refreshController.requestRefresh(up);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///完成</span><br><span class="line">  void refreshCompleted() &#123;</span><br><span class="line">    refreshController.sendBack(true, RefreshStatus.completed);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///空闲</span><br><span class="line">  void refreshIdle() &#123;</span><br><span class="line">    refreshController.sendBack(false, RefreshStatus.idle);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///失败</span><br><span class="line">  void refreshFailed() &#123;</span><br><span class="line">    refreshController.sendBack(false, RefreshStatus.failed);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///自定义头部</span><br><span class="line">  Widget headerCreate(BuildContext context, RefreshStatus mode) &#123;</span><br><span class="line">    return new ClassicIndicator(mode: mode);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ///自定义脚部</span><br><span class="line">  Widget footerCreate(BuildContext context, RefreshStatus mode) &#123;</span><br><span class="line">    return new ClassicIndicator(mode: mode);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">///下拉刷新Bloc</span><br><span class="line">abstract class PullToRefreshBloc extends BlocBase &#123;</span><br><span class="line">  ///加载数据</span><br><span class="line">  Future getData(&#123;String labelId, int page&#125;);</span><br><span class="line"></span><br><span class="line">  ///刷新</span><br><span class="line">  Future onRefresh(&#123;String labelId&#125;);</span><br><span class="line"></span><br><span class="line">  ///更多</span><br><span class="line">  Future onLoadMore(&#123;String labelId, int page&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####3、快捷键一键式开发<br>导入livesettings.jar<br>地址：<a href="https://github.com/yinlingchaoliu/SmartRefreshBloc/blob/master/livesettings.jar" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc/blob/master/livesettings.jar</a></p>
+<p>快捷命令<br>fstatefulmvp 快速构建stateful页面<br>flistviewmvp 快速构建listview列表页面</p>
+<p>快速实现一键化开发</p>
+<p>其中还有flutter其他快捷命令<br>均是f开头,可以快捷名利可以快速唤起<br><img src="https://upload-images.jianshu.io/upload_images/5526061-763dfb4138b77da5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>####项目中示例<br>核心模板代码在此路径<br><a href="https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/base" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/base</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">///核心模板两个文件</span><br><span class="line">base_bloc.dart</span><br><span class="line">pulltofresh_bloc.dart</span><br><span class="line"></span><br><span class="line">///一键化生成代码示例，帮助你快速开发</span><br><span class="line">default_bloc.dart</span><br><span class="line">default_list_bloc.dart</span><br></pre></td></tr></table></figure></p>
+<p>项目中重构实战示例在<br><a href="https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/ui" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/SmartRefreshBloc/tree/master/example/lib/ui</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TestExample.dart</span><br><span class="line">TestExample1.dart</span><br><span class="line">TestExample2.dart</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter业务层编写思路/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/flutter业务层编写思路/" class="post-title-link" itemprop="url">flutter业务层编写思路</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>底层库，有网络，和sp可以简单应付大部分场景</p>
+<p>flutter上层UI编写，basetemplete<br>闪屏页，登录页，主页4个tab，加上list页面，基本覆盖APP大多数UI场景</p>
 
           
         
@@ -996,7 +1848,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/kotlin常用函数/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/flutter-提供View的-gone-visible-invisible/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1016,7 +1868,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android相关/kotlin常用函数/" class="post-title-link" itemprop="url">kotlin常用函数</a>
+                <a href="/2020/05/26/Android相关/flutter-提供View的-gone-visible-invisible/" class="post-title-link" itemprop="url">flutter-提供View的-gone-visible-invisible</a>
               
             
           </h1>
@@ -1100,852 +1952,8 @@
       
         
           
-            <p>####repeat</p>
-<p>代码块重复执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">repeat(3) &#123;</span><br><span class="line">        println(&quot;Hello world&quot;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>####with<br>对当前类操作，内部操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">with(ArrayList&lt;String&gt;()) &#123;</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        add(&quot;testWith&quot;)</span><br><span class="line">        println(&quot;this = &quot; + this)</span><br><span class="line">    &#125;.let&#123;</span><br><span class="line">    println(it)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>####let<br>相当于return小函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">url?.let&#123;</span><br><span class="line">    println(it)</span><br><span class="line">    return 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">相当于</span><br><span class="line">fun test(url :String) :Int&#123;</span><br><span class="line">    var it = url</span><br><span class="line">    println(it)</span><br><span class="line">   return 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####apply<br>fun <t> T.apply(f: T.() -&gt; Unit): T { f(); return this }<br>返回当前对象</t></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;String&gt;().apply &#123;</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        add(&quot;testApply&quot;)</span><br><span class="line">        println(&quot;this = &quot; + this)</span><br><span class="line">    &#125;.let &#123; println(it) &#125;</span><br></pre></td></tr></table></figure>
-<p>####run<br>返回最后一个函数值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   &quot;testRun&quot;.run &#123;</span><br><span class="line">       println(&quot;this = &quot; + this)</span><br><span class="line">       test()</span><br><span class="line">   &#125;.let &#123; println(it) &#125;</span><br><span class="line"></span><br><span class="line">fun test() = 1</span><br></pre></td></tr></table></figure></p>
-<p>####also<br>执行block 返回this<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public inline fun &lt;T&gt; T.also(block: (T) -&gt; Unit): T &#123;</span><br><span class="line">    block(this)</span><br><span class="line">    return this</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/react-native/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/react-native/" class="post-title-link" itemprop="url">react-native</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>教程<br><a href="https://reactnative.cn" target="_blank" rel="noopener">https://reactnative.cn</a></p>
-<p>推荐开源项目<br><a href="https://github.com/CarGuo/GSYGithubApp" target="_blank" rel="noopener">https://github.com/CarGuo/GSYGithubApp</a></p>
-<p>从上到下执行命令<br>brew install node<br>brew install watchman //监视文件系统变更的工具</p>
-<p>官方不建议cnpm<br>注意：不要使用 cnpm！cnpm 安装的模块路径比较奇怪，packager 不能正常识别！</p>
-<p>npm config set registry <a href="https://registry.npm.taobao.org" target="_blank" rel="noopener">https://registry.npm.taobao.org</a> –global<br>npm config set disturl <a href="https://npm.taobao.org/dist" target="_blank" rel="noopener">https://npm.taobao.org/dist</a> –global</p>
-<p>npm install -g yarn react-native-cli</p>
-<p>yarn config set registry <a href="https://registry.npm.taobao.org" target="_blank" rel="noopener">https://registry.npm.taobao.org</a> –global<br>yarn config set disturl <a href="https://npm.taobao.org/dist" target="_blank" rel="noopener">https://npm.taobao.org/dist</a> –global</p>
-<p>npm install  ==yarn<br>npm install  plugin ==yarn add plugin</p>
-<p>npm install </p>
-<p>npm audit fix</p>
-<p>创建项目<br>react-native init AwesomeProject</p>
-<p><code>warning 需要手动开启模拟器 
-不能有耗时操作，比如下载gradle.zip 下载第三方库</code></p>
-<p>react-native run-ios<br>react-native run-android<br>react-native run-android –variant=release</p>
-<p>目录分析<br>package.json 依赖<br>index.js 首个js<br>app.json 应用名称</p>
-<p>App.js </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/npm安装卸载命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/npm安装卸载命令/" class="post-title-link" itemprop="url">npm安装卸载命令</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="npm安装模块"><a href="#npm安装模块" class="headerlink" title="npm安装模块"></a>npm安装模块</h2><ul>
-<li>【npm install xxx】利用 npm 安装xxx模块到当前命令行所在目录；</li>
-<li><p>【npm install -g xxx】利用npm安装全局模块xxx；</p>
-</li>
-<li><p>【npm install xxx】安装但不写入package.json；</p>
-</li>
-<li>【npm install xxx –save】 安装并写入package.json的”dependencies”中；</li>
-<li>【npm install xxx –save-dev】安装并写入package.json的”devDependencies”中。</li>
-</ul>
-<h2 id="npm-删除模块"><a href="#npm-删除模块" class="headerlink" title="npm 删除模块"></a>npm 删除模块</h2><ul>
-<li>【npm uninstall xxx】删除xxx模块； </li>
-<li>【npm uninstall -g xxx】删除全局模块xxx；</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/优秀开源项目/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/优秀开源项目/" class="post-title-link" itemprop="url">优秀开源项目</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://blog.csdn.net/u012982629/article/details/80650999" target="_blank" rel="noopener">https://blog.csdn.net/u012982629/article/details/80650999</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/前后端分离技术方案/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/前后端分离技术方案/" class="post-title-link" itemprop="url">前后端分离技术方案</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="https://upload-images.jianshu.io/upload_images/5526061-9d9e36e5edd244ef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="现有开发流程"></p>
-<p>现有开发流程瓶颈</p>
-<ul>
-<li>前端界面开发瓶颈一直卡后端联调</li>
-<li>接口文档频繁改动</li>
-<li></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/模块化与组件化区分/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/模块化与组件化区分/" class="post-title-link" itemprop="url">模块化与组件化区分</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://blog.csdn.net/blog_jihq/article/details/79191008" target="_blank" rel="noopener">辨析</a><br><a href="https://blog.csdn.net/dd864140130/article/details/53645290" target="_blank" rel="noopener">Android 开发:由模块化到组件化</a></p>
+            <p>安卓一般View有三种显示方式gone visible invisible<br>fultter也要提供相应的支持，这个是验证可用的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/widgets.dart&apos;;</span><br><span class="line">import &apos;package:meta/meta.dart&apos;;</span><br><span class="line"></span><br><span class="line">enum VisibilityFlag &#123;</span><br><span class="line">  visible,</span><br><span class="line">  invisible,</span><br><span class="line">  offscreen,</span><br><span class="line">  gone,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Visibility extends StatelessWidget &#123;</span><br><span class="line">  final VisibilityFlag visibility;</span><br><span class="line">  final Widget child;</span><br><span class="line">  final Widget removeChild;</span><br><span class="line"></span><br><span class="line">  Visibility(&#123;</span><br><span class="line">    @required this.child,</span><br><span class="line">    @required this.visibility,</span><br><span class="line">  &#125;) : this.removeChild = Container();</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    if (visibility == VisibilityFlag.visible) &#123;</span><br><span class="line">      return child;</span><br><span class="line">    &#125; else if (visibility == VisibilityFlag.invisible) &#123;</span><br><span class="line">      return new IgnorePointer(</span><br><span class="line">          ignoring: true, child: new Opacity(opacity: 0.0, child: child));</span><br><span class="line">    &#125; else if (visibility == VisibilityFlag.offscreen) &#123;</span><br><span class="line">      return new Offstage(offstage: true, child: child);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return removeChild;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
           
         
@@ -2033,7 +2041,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-count">334</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2098,9 +2106,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

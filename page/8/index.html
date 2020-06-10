@@ -14,8 +14,8 @@
   
 
 
-<html class="theme-next muse use-motion" lang>
-<head><meta name="generator" content="Hexo 3.8.0">
+<html class="theme-next muse use-motion" lang="">
+<head>
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -106,13 +106,13 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml"/>
 
 
 
   
   
-  <link rel="canonical" href="http://yoursite.com/page/8/">
+  <link rel="canonical" href="http://yoursite.com/page/8/"/>
 
 
 
@@ -219,7 +219,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Home</a>
 
   </li>
         
@@ -236,7 +236,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>Archives</a>
 
   </li>
 
@@ -288,16 +288,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/第3章-仿微信" -api"化-实现原理（下） ">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Caliburn随笔/家庭发展规划/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
+      <meta itemprop="name" content="引领潮流"/>
     </span>
 
     
@@ -308,7 +308,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android组件化/第3章-仿微信" -api"化-实现原理（下） " class="post-title-link" itemprop="url">第3章-仿微信"-api"化-实现原理（下）</a>
+                <a href="/2020/05/26/Caliburn随笔/家庭发展规划/" class="post-title-link" itemprop="url">家庭发展规划</a>
               
             
           </h1>
@@ -355,7 +355,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Caliburn随笔/" itemprop="url" rel="index"><span itemprop="name">Caliburn随笔</span></a></span>
 
                 
                 
@@ -392,22 +392,24 @@
       
         
           
-            <p>####导航<br><a href="https://www.jianshu.com/p/20108abc1dd6" target="_blank" rel="noopener">第3章 组件声明式编程 仿微信”.api”化(上)</a><br><a href="https://www.jianshu.com/p/b5b8afd008b3" target="_blank" rel="noopener">第3章 仿微信”.api”化 实现原理（下）</a></p>
-<p>#####1、思考路径<br>将原本下沉到base模块的通用性不高的代码，被重新申领到各个业务模块，运行时动态放入到base模块，在项目不断扩大时，避免了base在后期开发时急速膨胀，约束好代码边界</p>
-<p>反复参考<a href="https://mp.weixin.qq.com/s/6Q818XA5FaHd7jJMFBG60w" target="_blank" rel="noopener">微信Android模块化架构重构实践</a>思想，忽然有一个灵感，“.api”文件是java JVM不识别的，可不可以在编译之前，将这些”.api”文件变成系统可识别的。weixinapi，是这个插件由来的原因</p>
-<h5 id="2、代码实现的核心逻辑"><a href="#2、代码实现的核心逻辑" class="headerlink" title="2、代码实现的核心逻辑"></a>2、代码实现的核心逻辑</h5><p>1、将项目中所有module中”.api”文件拷贝至指定ApiModule<br>2、因为java jvm不识别”.api”文件，将ApiModule中“.api”文件后缀改为”.java”<br>3、同理，将原来所有module中”.api”文件编译时移除使用（exclude）<br>4、清理ApiModule中空文件夹，使该项目显得更加清晰</p>
-<h5 id="3、示例核心代码-gradle脚本编写"><a href="#3、示例核心代码-gradle脚本编写" class="headerlink" title="3、示例核心代码 gradle脚本编写"></a>3、示例核心代码 gradle脚本编写</h5><p>1、删除api_module中所有java代码 做项目初始化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task cleanApiLib() &#123;</span><br><span class="line">    delete project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>2、api文件拷贝指定api_module ,且文件后缀改为”.java”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">task copyApiForCommLib(type: Copy) &#123;</span><br><span class="line"></span><br><span class="line">    group &apos;api&apos;</span><br><span class="line">    //遍历所有项目 将api文件</span><br><span class="line">    for (Project mProject : project.rootProject.getAllprojects()) &#123;</span><br><span class="line">        println(mProject.projectDir.path + &quot;/src/main/java&quot;)</span><br><span class="line">        from(mProject.projectDir.path + &quot;/src/main/java&quot;) &#123;</span><br><span class="line">            include &apos;**/**.api&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    println(project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;)</span><br><span class="line">    into file(project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;)</span><br><span class="line"></span><br><span class="line">    //将&quot;.api&quot;改名为&quot;.java&quot;</span><br><span class="line">    rename &#123; String filename -&gt;</span><br><span class="line">        int index = filename.indexOf(&quot;.api&quot;)</span><br><span class="line">        String name = filename[0..index] + &quot;java&quot;</span><br><span class="line">        return name</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>3、api_module空文件夹清理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">task clearApiEmptyDir() &#123;</span><br><span class="line">    String filePath = project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;</span><br><span class="line">    println(&quot;show all filePath:&quot; + filePath)</span><br><span class="line">    clear(new File(filePath))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void clear(File dir) &#123;</span><br><span class="line">    File[] dirs = dir.listFiles()</span><br><span class="line">    for (File file : dirs) &#123;</span><br><span class="line">        if (file.isDirectory()) &#123;</span><br><span class="line">            clear(file)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (dir.isDirectory() &amp;&amp; dir.delete())</span><br><span class="line">        println(dir.name + &quot;清理成功&quot;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>4、项目编译时移除原有module中“.api”文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//删除api文件</span><br><span class="line">sourceSets &#123;</span><br><span class="line">    main &#123;</span><br><span class="line">        java &#123;</span><br><span class="line">            exclude(&apos;**/**.api&apos;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>#####4、 采用groovy编写weixinApi插件<br>本插件采用groovy编写，难点在中间的一些语法差异，和细节优化，请大家给我一个star，<br>主要考虑三点：</p>
+            <p>####规划原则<br>以发展为导向，务实确立经济基础决定上层建筑准则<br>参考《家庭生命周期理论》、《家庭财务生命周期》</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-887a4c19f9f98580.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="家庭生命周期理论"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-d4168968fb860f20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="家庭财务生命周期"></p>
+<p>现处于家庭成长期</p>
+<p>####理财规划<br>财产安全是一个家庭核心基础物质保障</p>
 <ul>
-<li>1、有利于开发者用户快速集成</li>
-<li>2、减少不必要gradle脚本，干扰到用户，重点在于业务</li>
-<li>3、增强weixinapi通用性</li>
+<li><p>1 指标监控<br><img src="https://upload-images.jianshu.io/upload_images/5526061-badfce4a4142d78b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="参考重要指标"></p>
+</li>
+<li><p>2 收入支出表<br><img src="https://upload-images.jianshu.io/upload_images/5526061-2880de9cdeaa6900.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="收入支出表"></p>
+</li>
+<li><p>3 资产配置表</p>
+</li>
 </ul>
-<p>groovy 编写其中有很多技术难点，想要学习的朋友，可以我写的插件源码component/weixinApi</p>
-<p>#####5、喜欢的朋友们记得给我的项目一个star<br><a href="https://github.com/yinlingchaoliu/AndroidComponent" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/AndroidComponent</a><br>具体代码位置去”.api”插件<br>component/weixinApi</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-a3726eca488ceab5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="资产配置表"></p>
+<ul>
+<li>4 预期效果分析<br>进行规划方案的预期效果分析：<br>（1）调整企业组织结构，降低家庭风险；<br>（2）储备100万作为备用金，防范突发事件；<br>（3）年投入50万，强化家庭风险管理，完善人身、财产等保障；<br>（4）以200万一次性投资加年定额投资65万，实现子女未来留学规划；<br>（5）以150万一次性投资加年定额投资80万，保障未来高品质退休生活；<br>（6）配置合理的投资性资产，达致资产保障、增值<br>（7）合理化消费结构，使财富使用有的放矢<br>（8）建立传承规划，构建和睦家庭</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-41de9cd994894828.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
 
           
         
@@ -464,16 +466,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/第4章-ThorComponent组件化框架(基于CC)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Caliburn随笔/曾国藩/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
+      <meta itemprop="name" content="引领潮流"/>
     </span>
 
     
@@ -484,7 +486,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android组件化/第4章-ThorComponent组件化框架(基于CC)/" class="post-title-link" itemprop="url">第4章-ThorComponent组件化框架(基于CC)</a>
+                <a href="/2020/05/26/Caliburn随笔/曾国藩/" class="post-title-link" itemprop="url">曾国藩</a>
               
             
           </h1>
@@ -531,7 +533,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Caliburn随笔/" itemprop="url" rel="index"><span itemprop="name">Caliburn随笔</span></a></span>
 
                 
                 
@@ -568,110 +570,92 @@
       
         
           
-            <p>####1、编写框架涉及技术</p>
-<table>
-<thead>
-<tr>
-<th>组件化涉及技术</th>
-<th>优点</th>
-<th>缺点</th>
-<th>是否选用</th>
-<th>理由</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>serviceload</td>
-<td>调用是接口形式，比较直观</td>
-<td>模块间调用解耦不易</td>
-<td>否</td>
-<td>java的serviceload并不完备，实现多采用反射与效率背道而驰</td>
-</tr>
-<tr>
-<td>weixinapi技术</td>
-<td>解决部分公用代码动态下沉到base</td>
-<td>编写.api要注意分包摆放</td>
-<td>是</td>
-<td>项目稳定后，一般不会有下沉base代码，可以将base抽象成公共库，本作者实现</td>
-</tr>
-<tr>
-<td>组件单独运行和集成发布thorAlone</td>
-<td>编写组件减少他们之间的依赖</td>
-<td>专用sourceSet.main.debug目录，sourceSet项目中用法过于负责慎用</td>
-<td>是</td>
-<td>module间代码隔离,与壳工程隔离</td>
-</tr>
-<tr>
-<td>P工程</td>
-<td>细粒度的解耦，减少module内过度依赖</td>
-<td>一般中小项目中，粒度过于细了</td>
-<td>否</td>
-<td>一般项目多P工程解耦成本太高</td>
-</tr>
-<tr>
-<td>asm</td>
-<td>动态生成字节码效率高</td>
-<td>底层技术编写过于复杂</td>
-<td>是</td>
-<td>参照cc-register，为了效率</td>
-</tr>
-<tr>
-<td>总线模式</td>
-<td>将服务扁平化</td>
-<td>改造CC过于复杂</td>
-<td>是</td>
-<td>本框架采用改造CC，实现扁平化</td>
-</tr>
-<tr>
-<td>RPC</td>
-<td>多进程间通讯快</td>
-<td>涉及远程调用场景不多</td>
-<td>否</td>
-<td>组件化间场景并不多，建议用专门库来实现这个功能</td>
-</tr>
-<tr>
-<td>apt注解</td>
-<td>编译时注解，减少编写过多模板代码</td>
-<td>编写有些复杂，如果不是强烈需要，建议不要</td>
-<td>是</td>
-<td>组件化框架目的就是为了使用者减少不必要代码编写</td>
-</tr>
-<tr>
-<td>反射</td>
-<td>可以hack代码，也可以动态化加载</td>
-<td>运行时效率低下，用户体验差</td>
-<td>否</td>
-<td>尽量少采用反射</td>
-</tr>
-<tr>
-<td>线程池</td>
-<td>避免new Thread方式过于浪费内存资源，复用</td>
-<td>实现有技术成本且慎用</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+            <p>曾国藩</p>
+<p>#####第一节 一条道走到黑<br>聪明人下笨功夫<br>尚拙、基扎实本功</p>
+<p>1、苦学、笨学、基础好<br>2、虚心、挫折教育、无投机取巧<br>3、做事不留死角</p>
+<p>#####第二节 读书不仅求官<br>1、考试成绩好，起点高，功名心强<br>2、人生以择友为第一事，热心助人<br>3、穆章阿</p>
+<p>#####第三节 平地长得万丈高<br>曾国藩理学修养进步</p>
+<p>1、浮躁<br>屁股上长刺，坐不住<br>2、傲慢<br>觉得自己了不起，修养不好，脾气暴躁<br>3、虚伪<br>夸夸其谈、吹捧、好色、幽默不正经<br>圣人：体悟天理，掌握规律，内圣外王</p>
+<p>曾国藩30岁转折<br>1、专心研究理学，学做圣人之志 脱胎换骨、重新做人</p>
+<p>让自己日趋完善<br>1、记日记、反省自己、订立学习计划<br>2、贵有恒<br>一个中人，可以通过陶冶变化成为一个超人</p>
+<p>#####第四节 不做驴马混日子</p>
+<p>曾国藩曾是热血青年，奏折批评咸丰《应诏陈言书》<br>1、小事精明、大事糊涂，谨慎于小，而反忽于大<br>2、面子工程，徒尚纹饰，不求实际<br>3、刚愎自用，出尔反尔，大权朕自持之，岂容臣下更参末议</p>
+<p>道光皇帝选择咸丰原因，更稳重，更老实，更听话，更有利于守成，风险更小，事实相反</p>
+<p>咸丰是一个自卑的人，更在意别人看得起他的</p>
+<p>#####第五节 一杆子打翻一船人</p>
+<p>两大耻辱<br>1、学台悬牌，责其文理之浅<br>2、画一图甚陋，九卿中无人不冷笑而薄之</p>
+<p>咸丰不听批评，军机大臣让咸丰夸奖曾国藩，为自己辩解，让曾国藩办日讲，画画不好看，被嘲笑</p>
+<p>大部分人想当老好人<br>1、得罪权贵<br>2、琦善：<br>赛尚阿：军机大臣</p>
+<p>《应诏陈言书》<br>京官办事通病有二，曰：退缩。曰：琐屑。<br>退缩者，同官互推，不肯任怨，动辄请旨，不肯任咎是也。<br>琐屑者，利折锱铢，不顾大体。察及秋毫，不见舆薪是也。<br>外官办事通病有二，曰：敷衍。曰：颟顸(man han)。<br>敷衍者，装头盖面，但计目前剜肉补创，不问明日是也。<br>颟顸者，外面完全，而中已溃烂，奏章粉饰，而语无归宿是也</p>
+<p>曾国藩打破官官相护的潜规则</p>
+<p>#####第六节 不靠做官发财</p>
+<p>曾国藩是出身晚晴小地主，一年到头吃饱糙米饭<br>曾国藩是典型凤凰男，通过读书改变命运<br>曾国藩不收取灰色收入（钱权交易），又要要维持一个官员尊严和体面，因此掏不起回家路费</p>
+<p>曾国藩收入支出<br>1、收入低，收入125两，支出608两<br>2、租房<br>3、交际、随份子钱<br>5、社交开支 随份子 70两 请客吃饭40两</p>
+<p>京官赔钱，结交方便<br>1、租房<br>2、社交支出（随份子钱，请客吃饭）<br>3、买衣服</p>
+<p>补亏空方式<br>1、从家中带钱<br>2、冰敬和炭敬：地方官孝敬<br>3、借钱：商人借钱<br>4、给地方官办事，收取灰色收入(曾无)</p>
+<p>#####第七节 打脱牙 和血吞</p>
+<p>失败了，不在人前示弱，屈辱谨记在心，日后东山再起<br>挽狂澜于既倒，扶大厦之将倾</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">乱世用重典</span><br></pre></td></tr></table></figure>
+<p>案子是钱，人情<br>一不要钱，而不要利，只想给国家办点事</p>
+<p>断了对方财路</p>
+<p>曾国藩团练大臣，一不要钱，而不要利</p>
+<p>冲突点：练兵</p>
+<p>经世致用，<br>赤地立新，有战斗力队伍，规模很大<br>湘军，政治教育，孔孟之道，</p>
+<p>杀土匪，练新军，曾国藩有钦命在身</p>
+<p>绿营兵杀到家门口，追着屁股打</p>
+<p>等待<br>打脱牙 和血吞</p>
+<p>解决方案：<br>杀鲍起豹，不如扳倒全省官员<br>离开长沙，不争一日之短长</p>
+<p>湘军精神，</p>
+<p>#####第八节 一雪前耻铸湘军</p>
+<p>文人练兵<br>第一、没有军事经验<br>第二、无制度保障<br>第三、无军饷来源</p>
+<p>困难在筹响</p>
+<p>咸丰<br>只要对太平天国有利，只要不拿钱就行<br>百炼精兵，首战必胜，不打无准备之仗</p>
+<p>兵不识兵，将不识将</p>
+<p>打仗亲兄弟，上阵父子兵</p>
+<p>先打弱敌，首战必胜</p>
+<p>曾国藩 大将塔齐步 湘潭大胜<br>靖港小败，湘潭大胜</p>
+<p>艰苦奋斗胜利者<br>取得第一次重大胜利</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">所谓好汉打脱牙 和血吞，</span><br><span class="line">真处逆境之良法也</span><br></pre></td></tr></table></figure>
+<p>#####第九节 水利万物而不争</p>
+<p>不意曾国藩一书生，乃能建此奇功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">曾国藩以侍郎在籍</span><br><span class="line">犹匹夫耳</span><br><span class="line">匹夫居闾里</span><br><span class="line">一呼蹶起</span><br><span class="line">从之者万余人</span><br><span class="line">恐非国家之福也</span><br></pre></td></tr></table></figure>
+<p>咸丰默然变色者久也</p>
+<p>能力再强，会受到猜忌</p>
+<p>咸丰态度，过河拆桥，慎用谨防，卸磨杀驴，防尾大不掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">不可不用</span><br><span class="line">不可重用</span><br><span class="line">四处救火</span><br><span class="line">南京收功</span><br></pre></td></tr></table></figure></p>
+<p>曾国藩问题，除表面皇帝小心眼，地方官小人外<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">太自以为是，</span><br><span class="line">太急于求成，</span><br><span class="line">一味蛮干，</span><br><span class="line">一味刚强</span><br></pre></td></tr></table></figure></p>
+<p>在这片土地上，行事过于刚强的人，表面上看起来是强者，实际上是弱者。在这片土地上，真正的强者，善于退让的人，所谓水利万物而不争，只有在必要的时候，和光同尘，海纳百川，兼收并蓄，才能调动各方面力量，达到胜利彼岸。以前我总认为自己有本事，看别人总看到别人缺点，自从两年大悔大悟之后，我才知道自己没什么本事，凡事都能看到别人的长处</p>
+<p>太平天国回光返照，咸丰发现离了曾国藩不行，复出山</p>
+<p>曾国藩研究黄老哲学</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">上善若水</span><br><span class="line">水利万物而不争</span><br><span class="line">以其不争</span><br><span class="line">故能天下莫能与之争</span><br></pre></td></tr></table></figure>
+<p>柔胜刚，弱胜强的处事原则<br>无所求方式<br>宽容 善良 圆通</p>
+<p>1、和气、谦虚、周到<br>礼仪排场、官样文章每信必复，庆典每请必去<br>和贪官搞好关系，体谅难处<br>2、对皇帝不再直言不讳，打太极拳<br>改变咸丰桀骜不驯，难以驾驭的印象，面对乱指挥，找借口软处理</p>
+<p>咸丰<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">汝此次奉命即行</span><br><span class="line">忠勇可尚</span><br></pre></td></tr></table></figure></p>
+<p>当上两江总督原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.实在找不到别人</span><br><span class="line">2.对曾国藩印象变好</span><br></pre></td></tr></table></figure></p>
+<p>#####第十节 清官非典型生存<br>特点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">外圆内方处事方式，遵守官场明规则、潜规则</span><br><span class="line">不争虚名而处实祸</span><br><span class="line">不占清名，使人为难</span><br><span class="line">非典型清官，处清官之实，不享清官之名</span><br><span class="line">和光同尘、不争虚名</span><br></pre></td></tr></table></figure></p>
+<p>行为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">天天拜客</span><br><span class="line">日日戏酒</span><br><span class="line">年年送礼</span><br><span class="line">建小金库</span><br><span class="line"></span><br><span class="line">1、吃请</span><br><span class="line">2、送礼，冰敬、炭敬、别敬</span><br><span class="line">3、遵从官场潜规则</span><br><span class="line">4、给户部送礼办事</span><br></pre></td></tr></table></figure></p>
+<p>勤则兴 懒则败</p>
+<p>#####第十一节 另类相面人才</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">曾是迷信的人</span><br><span class="line">相信托梦</span><br><span class="line">信关公</span><br><span class="line">精通相面术</span><br></pre></td></tr></table></figure>
+<p>曾国藩《冰鉴》是伪书</p>
+<p>1、曾国藩识人高人一筹<br>2、曾国藩确实会相面</p>
+<p>相面相精神，相气质，相行动<br>端庄厚重是贵相，谦卑含容是贵相<br>事有归着是富相，心存济物是福相</p>
+<p>功名看器宇<br>事业看精神<br>若要看条理<br>全在语言中</p>
+<p>精神气质<br>气场、精神力量，条理</p>
+<p>打仗算卦占卜吉凶<br>康熙喜欢算卦<br>不由人者，归乎天</p>
+<p>曾国藩会算卦，五次通读易经<br>易经解释宇宙起源，阴阳二气</p>
+<p>曾国藩穷尽一生所能接受精神资源<br>思维开阔，无所不读，好学深思<br>风水也很有研究</p>
+<p>易经崇拜<br>程朱理学</p>
+<p>事情是人办的<br>人才是唯一决定因素</p>
+<p>#####第十二节 绝佳风水是风范</p>
+<p>曾国藩看重风水<br>几次搬家因风水</p>
+<p>曾国藩搬住绳匠胡同（菜市口胡同）<br>原因：旺气，出主考</p>
+<p>曾国藩扶乩<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">乩初到</span><br><span class="line">即判定败字</span><br><span class="line">余方讶败字不知何指</span><br><span class="line">乩判曰</span><br><span class="line">为天下</span><br><span class="line">即为曾宅言之</span><br></pre></td></tr></table></figure></p>
+<p>扶乩占败，关系曾宅</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">由今观之</span><br><span class="line">三河之挫</span><br><span class="line">六弟之变</span><br><span class="line">正与不可喜也</span><br><span class="line">四字相符</span><br><span class="line">岂非数皆前定也</span><br></pre></td></tr></table></figure>
+<p>天道忌巧<br>谦退不争</p>
+<p>不损害他人利益，<br>人力所能谋<br>只能求免<br>水 蚁  凶煞三事<br>断不能求富贵利达<br>不求富贵，只求平安</p>
+<p>内圣：内心成为圣贤，对自己严格要求<br>外王：和光同尘，团结一切力量，一起干成事业</p>
+<p>文：经天纬地<br>正：辅世长民</p>
 
           
         
@@ -728,16 +712,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/第3章-组件声明式编程-仿微信" -api"化 ">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Caliburn随笔/摘要/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
+      <meta itemprop="name" content="引领潮流"/>
     </span>
 
     
@@ -748,7 +732,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android组件化/第3章-组件声明式编程-仿微信" -api"化 " class="post-title-link" itemprop="url">第3章-组件声明式编程-仿微信"-api"化</a>
+                <a href="/2020/05/26/Caliburn随笔/摘要/" class="post-title-link" itemprop="url">摘要</a>
               
             
           </h1>
@@ -795,529 +779,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>今天终于方案研究出来了，双击666</p>
-<p>####导航<br><a href="https://www.jianshu.com/p/20108abc1dd6" target="_blank" rel="noopener">第3章 组件声明式编程 仿微信”.api”化(上)</a><br><a href="https://www.jianshu.com/p/b5b8afd008b3" target="_blank" rel="noopener">第3章 仿微信”.api”化 实现原理（下）</a></p>
-<p>#####1、背景<br><a href="https://mp.weixin.qq.com/s/6Q818XA5FaHd7jJMFBG60w" target="_blank" rel="noopener">微信Android模块化架构重构实践</a>，在腾讯文章中提到“.api”解决方案<br>原文介绍位置，建议读此文读者反复读这个位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--重塑模块化</span><br><span class="line">    --改变通信方式</span><br><span class="line">        --接口暴露</span><br></pre></td></tr></table></figure></p>
-<p>难点：技术难点卡在如何创造这两个函数上来支持这个功能<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">include_with_api(<span class="string">project:</span><span class="string">":plugin-messenger-foundation"</span>)<span class="comment">//初始化项目</span></span><br><span class="line">dependencies&#123;</span><br><span class="line">      compileApi(<span class="string">":plugin-messenger-foundation"</span>)<span class="comment">//引入项目依赖</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>“.api”化的功能，强大在于，在编译的时候，子组件将公用接口下沉到基础库，供其他module使用，而不会导致base module急剧增大，分工职责更加明确化<br>效果==&gt;使用效果前<img src="https://upload-images.jianshu.io/upload_images/5526061-b13f7f51bbacc388.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>使用效果后==&gt;<img src="https://upload-images.jianshu.io/upload_images/5526061-bc174451c7fe01bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>其中“.api”立下承担50%效果</p>
-<p>#####2、编写的思想<br>声明式编程：将模块中代码拆分为“声明+实现”，其他模块只需要引用声明即可。<br>微信的方案，只留了一个遐想空间“自动生成一个sdk工程，拷贝.api后缀文件到工程当中，后面其他工程依赖编译的只是这个生成工程，简单好用”<br>解决方案是那两个函数include_with_api，compileApi，此时感受到一万点暴击</p>
-<p>经过了一周的钻研已经攻克了，先从使用教程，再到原理分析</p>
-<p>#####3使用教程</p>
-<p>在根目录下build.gradle<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">buildscript&#123;</span><br><span class="line">  dependencies &#123;</span><br><span class="line">    <span class="comment">//本插件代码已上传jcenter ，下载记得翻墙</span></span><br><span class="line">    classpath <span class="string">'com.chaoliu:weixinApi:1.0.0'</span> </span><br><span class="line">  &#125;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//gradle 脚本尾部</span></span><br><span class="line">apply <span class="string">plugin:</span> <span class="string">'weixinApi'</span></span><br></pre></td></tr></table></figure></p>
-<p>gradle.properties 声明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">##支持声明api式编程</span><br><span class="line">##引用的moudle</span><br><span class="line">ApiModule=&apos;:module_api&apos;</span><br><span class="line">##是否每次都执行 未配置此属性 默认为true </span><br><span class="line">isRunAlways=true</span><br></pre></td></tr></table></figure></p>
-<p>支持weixinapi脚本自动触发，且有良心提示</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-dbbfc90ed27021d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="组名weixinapi，且有良心提示"></p>
-<p>settings.gradle  正常写法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//api testmodule 为lib库</span><br><span class="line">include &apos;:module_api&apos;</span><br></pre></td></tr></table></figure></p>
-<p>若有module采用”.api”方式开发<br>引入公共ApiModule即可</p>
-<p><code>特别提供addComponent 函数，只有在assemble任务才引入依赖</code><br>开发中避免本moudle引入过多其他module声明</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//和正常开发无任何变化</span><br><span class="line">implementation project(&apos;:module_api&apos;)</span><br><span class="line"></span><br><span class="line">// addComponent(&apos;:module_api&apos;)</span><br></pre></td></tr></table></figure>
-<p>如果想编辑.api后缀的java文件，为了能让Android Studio继续高亮该怎么办？可以在File Type中把.api作为java文件类型。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-8db9432c8a99af18.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="设置File Types"></p>
-<p>#####4、喜欢的朋友们记得给我的项目一个star<br><a href="https://github.com/yinlingchaoliu/AndroidComponent" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/AndroidComponent</a><br>具体代码位置去”.api”插件<br>component/weixinApi</p>
-<p>示例module<br>module_main ,module_girls</p>
-<p>下一篇进行原理分析，如何进行操作，解决这个问题</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/第一章：组件化基础/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android组件化/第一章：组件化基础/" class="post-title-link" itemprop="url">第一章：组件化基础</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我来洒洒水</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/组件化相关文章/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android组件化/组件化相关文章/" class="post-title-link" itemprop="url">组件化相关文章</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>是时候总结一波组件化文章</p>
-<p>总结一波组件化的实现方案优缺点<br><a href="https://juejin.im/entry/5aa1240b6fb9a028dc409a34" target="_blank" rel="noopener">https://juejin.im/entry/5aa1240b6fb9a028dc409a34</a></p>
-<p>美团猫眼电影android模块化实战<br><a href="https://www.jianshu.com/p/d372cc6802e5" target="_blank" rel="noopener">https://www.jianshu.com/p/d372cc6802e5</a></p>
-<p>Android彻底组件化demo发布<br><a href="https://www.jianshu.com/p/59822a7b2fad" target="_blank" rel="noopener">https://www.jianshu.com/p/59822a7b2fad</a><br><a href="https://github.com/mqzhangw/JIMU" target="_blank" rel="noopener">https://github.com/mqzhangw/JIMU</a></p>
-<p>CC组件化<br><a href="https://www.wanandroid.com/blog/show/2072" target="_blank" rel="noopener">https://www.wanandroid.com/blog/show/2072</a><br><a href="https://github.com/luckybilly/CC" target="_blank" rel="noopener">https://github.com/luckybilly/CC</a><br><a href="https://qibilly.com/CC-website/" target="_blank" rel="noopener">https://qibilly.com/CC-website/</a></p>
-<p>MVPArms<br><a href="https://www.jianshu.com/p/f671dd76868f" target="_blank" rel="noopener">https://www.jianshu.com/p/f671dd76868f</a></p>
-<p>Arouter</p>
-<p>美团WMRouter<br><a href="https://tech.meituan.com/2018/08/23/meituan-waimai-android-open-source-routing-framework.html" target="_blank" rel="noopener">https://tech.meituan.com/2018/08/23/meituan-waimai-android-open-source-routing-framework.html</a><br><a href="https://github.com/meituan/WMRouter" target="_blank" rel="noopener">https://github.com/meituan/WMRouter</a></p>
-<p>相关技术</p>
-<p>美团热修复Robust源码庖丁解牛<br><a href="https://blog.csdn.net/xiatiandefeiyu/article/details/79020527" target="_blank" rel="noopener">https://blog.csdn.net/xiatiandefeiyu/article/details/79020527</a></p>
-<p>Java ServiceLoader使用和解析<br><a href="https://blog.csdn.net/shi2huang/article/details/80308531" target="_blank" rel="noopener">https://blog.csdn.net/shi2huang/article/details/80308531</a></p>
-<p>SPI<br><a href="https://www.jianshu.com/p/46b42f7f593c" target="_blank" rel="noopener">https://www.jianshu.com/p/46b42f7f593c</a></p>
-<p>依赖注入（Spring）</p>
-<p>springcloud<br><a href="https://springcloud.cc" target="_blank" rel="noopener">https://springcloud.cc</a></p>
-<p>Dubbo<br><a href="http://dubbo.apache.org/zh-cn/index.html" target="_blank" rel="noopener">http://dubbo.apache.org/zh-cn/index.html</a><br><a href="https://blog.csdn.net/lchpersonal521/article/details/84107272" target="_blank" rel="noopener">https://blog.csdn.net/lchpersonal521/article/details/84107272</a></p>
-<p><a href="http://gityuan.com" target="_blank" rel="noopener">http://gityuan.com</a></p>
-<p><a href="https://github.com/north2016" target="_blank" rel="noopener">https://github.com/north2016</a></p>
-<p>ModuleBus<br><a href="https://github.com/cangwang/ModuleBus" target="_blank" rel="noopener">https://github.com/cangwang/ModuleBus</a></p>
-<p>T-MVP<br><a href="https://github.com/north2016/T-MVP" target="_blank" rel="noopener">https://github.com/north2016/T-MVP</a><br><a href="https://www.jianshu.com/p/dca3e2c8608a?from=timeline" target="_blank" rel="noopener">https://www.jianshu.com/p/dca3e2c8608a?from=timeline</a><br><a href="https://blog.csdn.net/innost/article/details/49387395" target="_blank" rel="noopener">https://blog.csdn.net/innost/article/details/49387395</a></p>
-<p>Moduler组件化demo<br><a href="https://github.com/north2016/Moduler" target="_blank" rel="noopener">https://github.com/north2016/Moduler</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Hexo博客搭建/简书迁移到Hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Hexo博客搭建/简书迁移到Hexo/" class="post-title-link" itemprop="url">简书迁移到Hexo</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo博客搭建/" itemprop="url" rel="index"><span itemprop="name">Hexo博客搭建</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Caliburn随笔/" itemprop="url" rel="index"><span itemprop="name">Caliburn随笔</span></a></span>
 
                 
                 
@@ -1410,16 +872,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/组件化思路/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Caliburn随笔/素有凌云志，再上井冈山/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
+      <meta itemprop="name" content="引领潮流"/>
     </span>
 
     
@@ -1430,7 +892,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android组件化/组件化思路/" class="post-title-link" itemprop="url">组件化思路</a>
+                <a href="/2020/05/26/Caliburn随笔/素有凌云志，再上井冈山/" class="post-title-link" itemprop="url">素有凌云志，再上井冈山.html</a>
               
             
           </h1>
@@ -1477,7 +939,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Caliburn随笔/" itemprop="url" rel="index"><span itemprop="name">Caliburn随笔</span></a></span>
 
                 
                 
@@ -1514,9 +976,72 @@
       
         
           
-            <p>扁平化，<br>代码隔离<br>设置边界，合理通讯</p>
-<p>功能sdk化，业务组件化</p>
-<p>####1、当前需求<br>目前组件化文章很多，当前项目采用MVPArms，对于使用者来言，期望采用组件化方案是接入成本最小，无感知式的（不破坏原有结构），成为组件化项目。<br>最好的办法是采用公有开发规范，并用插件强行约束，<br>符合这个要求，就可以接入<br>arouter页面路由，消息总线。让后续项目自然接入</p>
+            <!DOCTYPE html>
+<html lang="en">
+  <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素有凌云志，再上井冈山</title>
+    <style type="text/css" media="all">
+      body {
+        margin: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        color: #777;
+        background-color: white;
+      }
+      .container {
+        width: 700px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .post {
+        font-family: Georgia, "Times New Roman", Times, "SimSun", serif;
+        position: relative;
+        padding: 70px;
+        bottom: 0;
+        overflow-y: auto;
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 25px;
+        color: #515151;
+      }
+
+      .post h1{
+        font-size: 50px;
+        font-weight: 500;
+        line-height: 60px;
+        margin-bottom: 40px;
+        color: inherit;
+      }
+
+      .post p {
+        margin: 0 0 35px 0;
+      }
+
+      .post img {
+        border: 1px solid #D9D9D9;
+      }
+
+      .post a {
+        color: #28A1C5;
+      }
+    </style>
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+</head>
+  <body>
+    <div class="container">
+      <div class="post">
+        <h1 class="title">素有凌云志，再上井冈山</h1>
+        <div class="show-content">
+          <p>素有凌云志，再上井冈山</p><p>欲穷千里目，更上一层楼！</p><p>层次！层次！层次！</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
 
           
         
@@ -1573,16 +1098,990 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Java核心基础/Java-得到泛型中得到T-class/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Caliburn随笔/认知偏见，与学习方法论/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
+      <meta itemprop="name" content="引领潮流"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Caliburn随笔/认知偏见，与学习方法论/" class="post-title-link" itemprop="url">认知偏见，与学习方法论</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Caliburn随笔/" itemprop="url" rel="index"><span itemprop="name">Caliburn随笔</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###引文<br>吾尝终日而思矣，不如须臾之所学也；吾尝跂而望矣，不如登高之博见也。登高而招，臂非加长也，而见者远；顺风而呼，声非加疾也，而闻者彰。假舆马者，非利足也，而致千里；假舟楫者，非能水也，而绝江河。<strong>君子生非异也，善假于物也</strong></p>
+<p>###那些使你优秀的本质？<br>通常答案是勤奋努力，自律，意志力，天赋；每种答案都有弊端。</p>
+<ul>
+<li>谈努力的人，局限性在于承认自己努力是努力，而否认了别人的努力，当赶不上别人时，就成了蛮力。</li>
+<li>谈自律的人，局限性在于分别心，每天坚持跑步是自律，那么每天坚持玩麻将不间断不是自律么？自律只是良好习惯，自律的强弱和这个人志向和追求有关。</li>
+<li>谈意志力的人，局限性在于只是所谓优秀份子虚荣心，当一个人在位上时，他解释不清楚为什么在上面的真实原因，或者他不愿意说清真实原因只是运气，机会。这个时候会像下面能力不如自己的人，大谈意志力。人生来就有惰性和拖延症，意志力并非取之不尽用之不竭（详见《最重要的事，只有一件》）</li>
+<li>谈天赋的人，局限性在于不能认识自己，每个人生来都是不同个体，都有她的使命和意义，所谓天赋是很早很找到自己与生俱来的优势，而没有的，还在生活在无明当中。</li>
+</ul>
+<p>若以实事求是的态度，<strong>提高效率，通过工具和方法论</strong>。解释很简单，开轿车的人速度普遍高于骑自行车的人，差别在于工具。如何驾驭轿车和自行车，通过按照客观规律方法来使用。方法和工具局限在于使用的人</p>
+<p>若以唯心的角度观察，工具和方法论是归纳和演绎法得出产物，用昨天的经验演绎明天，天然带有思维惯性，跳不出这个圈子，就比如人有职业病一样，会不自觉地把工作中经验运用于其他方面。唯心角度讲，<strong>一切唯心造</strong>。当这个事物未出现之前，人是如何思考和定义它的出现，它出现的本质来源是什么？更容易跳出圈子，思考事物本质，局限性如不能结合唯物论实事求是落地，会陷入形而上学的思考。这种不断反问探究本质的来源和原理，和第一性原理相同意味。</p>
+<p>总结：善假于物</p>
+<ul>
+<li>思考上：追溯本源，重新思考</li>
+<li>行为上：提高效率，不断迭代进化方法论和工具</li>
+</ul>
+<p>###我如何去做<br>独立思考并决定：</p>
+<ul>
+<li>你想要什么：卓越的Android移动端技术    </li>
+<li>事实是什么：目前水平是高级</li>
+<li>如何实现：写博客，分享源码，提炼知识体系</li>
+</ul>
+<p>实现过程：<br>第一性原理：反思有没有更好解决方案<br>第一阶段：发博客，公布自己实现源码，一句话总结<br>第二阶段：精炼方法论，工具<br>第三阶段：收到反馈，修正方法论</p>
+<p>（完）</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Caliburn随笔/领导力21法则/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Caliburn随笔/领导力21法则/" class="post-title-link" itemprop="url">领导力21法则</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Caliburn随笔/" itemprop="url" rel="index"><span itemprop="name">Caliburn随笔</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>追随这些原则，别人就会追随你</p>
+<p>####4个重点<br>1、这些法则是可以学习的<br>2、这些法则是可以单独运用的<br>3、这些法则都会带出结果<br>4、这些法则是领导的根基</p>
+<p>####第一章 盖子法则<br>领导力决定一个人办事的成败水平</p>
+<p>如何经营才能使整套系统更卓有成效、降低成本且提高利润，属于卓有成效的经理人</p>
+<p>人才模式复制：开始组合一群员工，延揽天下精英于旗下，当这个团队成长并发挥力量时，这些人又去发掘、招募具有领导能力的人</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-abe64b3613cb4e6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="缺乏领导力"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-717df38b873da8a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="增加领导力，几何增长"></p>
+<p>改变团体的方向，只需要换领导<br>个人和团体的成效与领导力的强弱成正比</p>
+<p>优秀团队，队员的禀赋常常不是问题，因为队员都是千挑万选出来的，反之，教练以及主要球员的领导能力却足以使他们比别人出色</p>
+<p>接管公司必定先做两件事：<br>1、把所有员工重新整顿训练，以提高服务品质<br>2、开除原有领导人<br><img src="https://upload-images.jianshu.io/upload_images/5526061-5d8d893952c90106.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="开除原有领导人"></p>
+<p>####第二章 影响力法则<br>衡量一个人的领导力，全看他所发出的影响力</p>
+<p>领导力就是影响力</p>
+<p>头衔唯一能买到的是一点点时间使你有机会增加自己的影响力，或是毁掉它</p>
+<p>真正的领导力是无法转移，指派或委任的，只能逐渐积累影响力而来，它必须是追捕赢得的</p>
+<p>5个错误认识误区</p>
+<ul>
+<li><p>1、经理人就是领导：认为领导与管理是同一回事。<br>二者差异：<br>领导是影响别人来跟随自己<br>管理则专指维持系统及流程<br>测试一个人是否具有领导能力，最好的办法是要他去带动正面改变</p>
+</li>
+<li><p>2、企业家就是领袖<br>企业家说明他只能一时说服别人掏腰包，但不能长远影响人心</p>
+</li>
+<li><p>3、有知识的人就是领袖<br>能力是领导者必备条件，懂得领导未必</p>
+</li>
+<li><p>4、先驱就是领袖<br>带头的并不一定是领袖</p>
+</li>
+<li><p>5、高级职位的人就是领袖<br>胡佛：职位不能叫一个人发挥领导力，反而是一个领导人能使职位发挥作用</p>
+</li>
+</ul>
+<p>领导力就是影响力<br>影响力的本质在于号召他人起而参与</p>
+<p>领导格言：<br>凡自认为在带头走却没有人跟随的，只不过是在闲逛而已</p>
+<p>####第三章 过程法则<br>领导力来自日积月累，而非一日之功</p>
+<p>领导就像投资——是以复利增殖<br>我们成功秘诀可以从每天的办事日程表中窥见端倪，如果你不断投资发展你的领导能力，让你的资产以获利增殖，假以时日必能看到客观的成长。</p>
+<p>好领袖都是学习者<br>成长（growth）与领导力（leadership）之间有很重要的关系。一个人开发与提升技巧的能力，决定他能否成为领袖。每位成功的领袖都是学习者。学习的过程是活到老学到老，是自律与坚毅的结果。每天订一个目标——为了我们多进步一点。今天的进步乃是建立在昨天进步基础上</p>
+<p>领导成长的四个层次<br>层次一：不知道自己有所不知，以致潜能无法发展<br>领导力就是影响力<br>认知误区：属于少数几个顶尖人物所有</p>
+<p>层次二：知道自己有所不知<br>开始察觉自己对事实的无知，乃是迈向知的一大步</p>
+<p>层次三：成长学习操练，成效就开始明显</p>
+<p>层次四：随心所欲，挥洒自如</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5526061-6f7ad8b8ab74c043.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="领导力四层次"></p>
+<p>学习领导力必须每天培养，绝非一天可以实现，这个事实即过程法则</p>
+<p>人的一生中，成功的秘诀是当机会来临时，你已经准备好自己</p>
+<p>力争上游：真正的功劳归于场上的斗士，而不是评论家</p>
+<p>一位说到做到的行动者</p>
+<p>罗斯福起步十分缓慢<br>你有才智，却没有体魄，一个人光有精神没有身体是绝不能成大事的</p>
+<p>成功绝非一夜可成<br>领导人需要经历非常漫长和艰辛的成长过程</p>
+<p>####第四章 导航法则<br>谁都可以掌舵，但唯有领袖才会设定航线</p>
+<p>####第五章 哈顿法则<br>真正的领袖一开口，人们就会洗耳恭听</p>
+<p>####第六章 根基法则<br>信任乃是领导的根基</p>
+<p>####第七章 敬佩法则<br>人们只想跟随比自己强的领袖</p>
+<p>####第八章 直觉法则<br>领袖善用领导的直觉来评估每一件事</p>
+<p>####第九章 磁力法则<br>物以类聚，你是怎样的人，就吸引则囊的人来跟随你</p>
+<p>####第十章 亲和力法则<br>领袖知道，得人之前必先得其心</p>
+<p>####第十一章 核心圈法则<br>核心圈的水平，是以决定你的成败</p>
+<p>####第十二章 授权法则<br>有安全感的领袖才肯授权与人</p>
+<p>####第十三章 增殖法则<br>名师出高徒，只有领袖才能带出领袖</p>
+<p>####第十四章 接纳法则<br>想要人们认同你的想法，必须先让他们接受你这个人</p>
+<p>####第十五章 致胜法则<br>领袖必须为他的团队找出一条致胜之路</p>
+<p>####第十六章 动能法则<br>动能是领袖最好的朋友</p>
+<p>####第十七章 优先次序法则<br>领袖必须明白，忙碌不见得就会有成就</p>
+<p>####第十八章 舍得法则<br>领袖必须先懂得舍，然后才能有得</p>
+<p>####第十九章 时机法则<br>掌握时机与善用策略同样重要</p>
+<p>####第二十章 爆炸性倍增法则<br>培养追随者，得到相加的效果<br>培养领导者，得到相乘倍增的效果</p>
+<p>####第二十一章 传承法则<br>一位领袖的历史地位有赖于顺利传承</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Caliburn随笔/这一切终将使我强大/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Caliburn随笔/这一切终将使我强大/" class="post-title-link" itemprop="url">这一切终将使我强大.html</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Caliburn随笔/" itemprop="url" rel="index"><span itemprop="name">Caliburn随笔</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <!DOCTYPE html>
+<html lang="en">
+  <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>这一切终将使我强大</title>
+    <style type="text/css" media="all">
+      body {
+        margin: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        color: #777;
+        background-color: white;
+      }
+      .container {
+        width: 700px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .post {
+        font-family: Georgia, "Times New Roman", Times, "SimSun", serif;
+        position: relative;
+        padding: 70px;
+        bottom: 0;
+        overflow-y: auto;
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 25px;
+        color: #515151;
+      }
+
+      .post h1{
+        font-size: 50px;
+        font-weight: 500;
+        line-height: 60px;
+        margin-bottom: 40px;
+        color: inherit;
+      }
+
+      .post p {
+        margin: 0 0 35px 0;
+      }
+
+      .post img {
+        border: 1px solid #D9D9D9;
+      }
+
+      .post a {
+        color: #28A1C5;
+      }
+    </style>
+  <link rel="alternate" href="/atom.xml" title="引领潮流" type="application/atom+xml">
+</head>
+  <body>
+    <div class="container">
+      <div class="post">
+        <h1 class="title">这一切终将使我强大</h1>
+        <div class="show-content">
+          <p>    一次次失败，有犹豫也有彷徨，不过理由各异，眼前你已败下阵来。一次次碰壁，直戳漏洞，英雄气短无可辩驳，承认自己功夫不到家。</p><p>    但我不怕！我接受它，承认自己不完美，更要行动起来，不断改进自己。心态更要超然，当这次是难得试炼。反复锻造自己，痛苦是难免的。反思自己，重新认识自己，不舒适是必然的。这一切终将使我强大。</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/git相关/Android-一键发布到jcenter/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/git相关/Android-一键发布到jcenter/" class="post-title-link" itemprop="url">Android-一键发布到jcenter</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git相关/" itemprop="url" rel="index"><span itemprop="name">git相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>######前言<br>本打算用groovy脚本写一个插件来实现，<br>groovy 引用classpath 其他插件时临时遇到瓶颈<br>先按照网络上流行方法解决</p>
+<p>#####1、使用方式</p>
+<ul>
+<li><p>1、下载脚本，并放在根目录<br><a href="https://raw.githubusercontent.com/yinlingchaoliu/android-library-publish-to-jcenter/master/upload.gradle" target="_blank" rel="noopener">https://raw.githubusercontent.com/yinlingchaoliu/android-library-publish-to-jcenter/master/upload.gradle</a></p>
+</li>
+<li><p>2、在gradle.properties 引入公共配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">####github地址</span><br><span class="line">siteUrl=https://github.com/yinlingchaoliu/robolectric-plugin</span><br><span class="line">gitUrl=https://github.com/yinlingchaoliu/robolectric-plugin.git</span><br><span class="line"></span><br><span class="line">//开发者信息</span><br><span class="line">developerId=yinlingchaoliu</span><br><span class="line">developerName=tong.chen</span><br><span class="line">developerEmail=704514698@qq.com</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3、在需要打aar库下引入特定配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ext &#123;</span><br><span class="line">    publishedGroupId=&apos;com.chaoliu.abcdef&apos;</span><br><span class="line">    artifact = &apos;plugin&apos;</span><br><span class="line">    publishedVersion = &quot;0.2.2&quot;</span><br><span class="line">    libraryDescription = &apos;A Robolectric Plugin for android unit&apos;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">//引入 需要打aar的module下build.gradle</span><br><span class="line">apply from &apos;../upload.gradle&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>根目录下 build.gradle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line"></span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        // 增加classpath</span><br><span class="line">        classpath &apos;com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2&apos;</span><br><span class="line">        classpath &apos;com.github.dcendents:android-maven-gradle-plugin:1.5&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在local.properties 设置对应的参数即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bintray.user=xxx</span><br><span class="line">bintray.apikey=xxx</span><br><span class="line">bintray.gpg.password=xxx</span><br></pre></td></tr></table></figure></p>
+<p>1、upload.gradle经过优化的，将公共的抽取出来。<br>不会导致每个脚本写的很乱。</p>
+<p>2、建议artifact和moudle名字是一样的，减少很多不必要的麻烦和配置</p>
+<p>3、上传代码需要vpn支持<br>执行命令<br>gradle  :module:install<br>gradle  :module:bintray</p>
+<p>#####源代码地址<br><a href="https://github.com/yinlingchaoliu/android-library-publish-to-jcenter" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/android-library-publish-to-jcenter</a></p>
+<p>参考<br><a href="https://github.com/panpf/android-library-publish-to-jcenter" target="_blank" rel="noopener">https://github.com/panpf/android-library-publish-to-jcenter</a></p>
+<p>注册bintray<br><a href="https://blog.csdn.net/wzgiceman/article/details/53707042" target="_blank" rel="noopener">https://blog.csdn.net/wzgiceman/article/details/53707042</a></p>
+<p>脚本问题修复 参考<br><a href="https://www.cnblogs.com/dream-sky/p/5640533.html" target="_blank" rel="noopener">https://www.cnblogs.com/dream-sky/p/5640533.html</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/git相关/Android-快速发布开源项目到jcenter/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/git相关/Android-快速发布开源项目到jcenter/" class="post-title-link" itemprop="url">Android-快速发布开源项目到jcenter</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git相关/" itemprop="url" rel="index"><span itemprop="name">git相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>找段时间彻底总结一下</p>
+<p>Android Studio 上传aar(Library)到JCenter<br><a href="https://blog.csdn.net/zyw_java/article/details/60336189" target="_blank" rel="noopener">https://blog.csdn.net/zyw_java/article/details/60336189</a></p>
+<p>Android 快速发布开源项目到jcenter<br><a href="http://blog.csdn.net/lmj623565791/article/details/51148825" target="_blank" rel="noopener">http://blog.csdn.net/lmj623565791/article/details/51148825</a><br>本文出自:<a href="http://blog.csdn.net/lmj623565791/" target="_blank" rel="noopener">【张鸿洋的博客】</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Java核心基础/Java-得到泛型中得到T-class/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流"/>
     </span>
 
     
@@ -1720,346 +2219,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Java核心基础/Java访问权限控制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Java核心基础/Java访问权限控制/" class="post-title-link" itemprop="url">Java访问权限控制</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java核心基础/" itemprop="url" rel="index"><span itemprop="name">Java核心基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>default（friendly）：即默认的包访问权限<br>public：公开的访问权限，也称接口访问权限<br>private：私有的访问权限<br>protect：受保护的访问权限，又称继承访问权限</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-2e2a6b59cfe724ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>####达成效果</p>
-<ol>
-<li>调用者不能访问到被调用者的实现细节</li>
-<li>修改被调用者的实现细节不影响调用者</li>
-</ol>
-<p>####意义<br>一个对象对另一个对象了解最少，更能接近“低耦合”目标　</p>
-<p>####相关几个修饰词</p>
-<ul>
-<li>static  即全局静态 ：实例共享只一个，使用无须实例化</li>
-<li>final   即最终 <pre><code>final类不能被继承，没有子类，final类中的方法默认是final的。
- final方法不能被子类的方法覆盖，但可以被继承。
- final成员变量表示常量，只能被赋值一次，赋值后值不再改变。
-</code></pre></li>
-<li>static final 全局常量</li>
-<li>abstract 抽象</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/androidx/androidx系统学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/androidx/androidx系统学习/" class="post-title-link" itemprop="url">androidx系统学习</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/androidx/" itemprop="url" rel="index"><span itemprop="name">androidx</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="https://upload-images.jianshu.io/upload_images/5526061-158f0ae6649eb19a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="android jetpack"></p>
-<p>学习参考指南<br><a href="https://github.com/android/architecture-components-samples" target="_blank" rel="noopener">https://github.com/android/architecture-components-samples</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2106,7 +2265,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-count">334</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2171,9 +2330,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

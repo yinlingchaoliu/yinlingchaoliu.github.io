@@ -450,6 +450,169 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/monkey压力测试/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/框架编写分析/monkey压力测试/" class="post-title-link" itemprop="url">monkey压力测试</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>####脚本命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line"># 生成随机文件</span><br><span class="line">LOGFILE=&quot;monkey&quot;$[RANDOM]&quot;.txt&quot;</span><br><span class="line">#echo $RANDOM  生成随机数</span><br><span class="line"></span><br><span class="line">echo $LOGFILE</span><br><span class="line"></span><br><span class="line">adb shell monkey -p PACKNAME  --throttle 300   -s 1000 -v -v -v 100  \</span><br><span class="line">        --ignore-crashes  --ignore-timeouts  --ignore-security-exceptions \</span><br><span class="line">        --monitor-native-crashes &gt; $LOGFILE</span><br><span class="line"></span><br><span class="line">#注释  -p apk包名  --throttle 时间间隔  -v -v -v 最详细日志 -s 随机事件  100 次数\</span><br><span class="line">#       忽略崩溃   忽略ANR  忽略安全许可错误 \</span><br><span class="line">#     报告崩溃本地代码</span><br></pre></td></tr></table></figure>
+<p>####参考文章<br><a href="https://github.com/zilianliuxue/AndroidStudy/blob/master/Android%E6%80%A7%E8%83%BD/Android%20Monkey%20%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95.md" target="_blank" rel="noopener">https://github.com/zilianliuxue/AndroidStudy/blob/master/Android%E6%80%A7%E8%83%BD/Android%20Monkey%20%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95.md</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/retrofit-mock-无入侵式mock框架-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -565,169 +728,6 @@
 <p>release版有注解的空实现，生产版本，引入会导致aop失效，又不损失效率</p>
 <p>#####4、特别感谢<br>首先特别感谢<a href="https://www.jianshu.com/p/ef445d5e9be0" target="_blank" rel="noopener">javalong</a>,给retrofit-mock提供了好的思路</p>
 <p>本文代码<br><a href="https://github.com/yinlingchaoliu/retrofitMock" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/retrofitMock</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/monkey压力测试/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/框架编写分析/monkey压力测试/" class="post-title-link" itemprop="url">monkey压力测试</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####脚本命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line"># 生成随机文件</span><br><span class="line">LOGFILE=&quot;monkey&quot;$[RANDOM]&quot;.txt&quot;</span><br><span class="line">#echo $RANDOM  生成随机数</span><br><span class="line"></span><br><span class="line">echo $LOGFILE</span><br><span class="line"></span><br><span class="line">adb shell monkey -p PACKNAME  --throttle 300   -s 1000 -v -v -v 100  \</span><br><span class="line">        --ignore-crashes  --ignore-timeouts  --ignore-security-exceptions \</span><br><span class="line">        --monitor-native-crashes &gt; $LOGFILE</span><br><span class="line"></span><br><span class="line">#注释  -p apk包名  --throttle 时间间隔  -v -v -v 最详细日志 -s 随机事件  100 次数\</span><br><span class="line">#       忽略崩溃   忽略ANR  忽略安全许可错误 \</span><br><span class="line">#     报告崩溃本地代码</span><br></pre></td></tr></table></figure>
-<p>####参考文章<br><a href="https://github.com/zilianliuxue/AndroidStudy/blob/master/Android%E6%80%A7%E8%83%BD/Android%20Monkey%20%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95.md" target="_blank" rel="noopener">https://github.com/zilianliuxue/AndroidStudy/blob/master/Android%E6%80%A7%E8%83%BD/Android%20Monkey%20%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95.md</a></p>
 
           
         
@@ -1319,182 +1319,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-4/" class="post-title-link" itemprop="url">从无到有手写ButterKnife框架-4</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>#####导航<br>一、<a href="https://www.jianshu.com/p/a96de1aa4e29" target="_blank" rel="noopener">代码的演进</a><br>二、<a href="https://www.jianshu.com/p/f8856e913224" target="_blank" rel="noopener">butterKnife反射调用</a><br>三、<a href="https://www.jianshu.com/p/cdf417e52cab" target="_blank" rel="noopener">javapoet自动生成模板代码</a><br>四、<a href="https://www.jianshu.com/p/43eb69b2beeb" target="_blank" rel="noopener">apt与注解</a><br>五、<a href="https://www.jianshu.com/p/a91cbfb8b1a1" target="_blank" rel="noopener">注解支持多层继承</a><br>六、<a href="https://www.jianshu.com/p/8418ef144b29" target="_blank" rel="noopener">apt调试</a><br>七、<a href="https://www.jianshu.com/p/2da1ca9d8ffa" target="_blank" rel="noopener">javapoet语法</a></p>
-<p>#####1、注解支持多层继承，并且支持field相同去重</p>
-<p>继承是树形结构<br>例如javapoetdemo中的示例<img src="https://upload-images.jianshu.io/upload_images/5526061-8be1ed95da628def.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public class BaseActivity extends AppCompatActivity &#123;</span><br><span class="line">    @ViewId(R.id.helloTv)</span><br><span class="line">    TextView helloTv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends BaseActivity &#123;</span><br><span class="line">    @ViewId( R.id.register )</span><br><span class="line">    Button register;</span><br><span class="line">    @ViewId( R.id.login )</span><br><span class="line">    Button login;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class TestActivity extends MainActivity &#123;</span><br><span class="line">    @ViewId( R.id.guess )</span><br><span class="line">    Button guess;</span><br><span class="line">    @ViewId( R.id.login )</span><br><span class="line">    Button helloTv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码是常见情况<br>1、支持注解是继承关系<br>2、支持子类父类field相同，采用子类注解</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class ElementTree &#123;</span><br><span class="line">    public ElementTree parentNode = null;</span><br><span class="line">    public List&lt;ElementTree&gt; childNodeList = new ArrayList&lt;&gt;(  );</span><br><span class="line">    public TypeElement typeElement;</span><br><span class="line">    public List&lt;Element&gt; elementList;</span><br><span class="line">    public Set&lt;String&gt; fieldNameSets;</span><br><span class="line">    public String typeName;</span><br><span class="line">    public  boolean isSorted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>1、思路我们可以获得Map&lt;TypeElement,List<element>&gt; 当前类，当前类元素列表转换成List&lt; ElementTree &gt;</element></p>
-<p>2、创建根节点 root</p>
-<p>3、按照中序的方式(中左右)创建树形关系</p>
-<p>4、遍历list&lt; ElementTree &gt; 每个元素，每个元素判断是否有父节点，按照子父排序方式获得所有元素列表List&lt;List<element>&gt; ,Set<string></string></element></p>
-<p>5、用Set<string> 去重</string></p>
-<p>详见算法<br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/ElementTree.java" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/ElementTree.java</a><br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/TreeUtils.java" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/TreeUtils.java</a></p>
-<p>关键在思路，不多于赘述</p>
-<p>#####从无到有手写butterKnife框架<br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1693,6 +1517,182 @@ private static void gennerateCode(Class target) throws ClassNotFoundException, I
 }
 </code></pre><p>}<br><code>`</code></p>
 <p>以上代码，亲测可用</p>
+<p>#####从无到有手写butterKnife框架<br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/框架编写分析/从无到有手写ButterKnife框架-4/" class="post-title-link" itemprop="url">从无到有手写ButterKnife框架-4</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#####导航<br>一、<a href="https://www.jianshu.com/p/a96de1aa4e29" target="_blank" rel="noopener">代码的演进</a><br>二、<a href="https://www.jianshu.com/p/f8856e913224" target="_blank" rel="noopener">butterKnife反射调用</a><br>三、<a href="https://www.jianshu.com/p/cdf417e52cab" target="_blank" rel="noopener">javapoet自动生成模板代码</a><br>四、<a href="https://www.jianshu.com/p/43eb69b2beeb" target="_blank" rel="noopener">apt与注解</a><br>五、<a href="https://www.jianshu.com/p/a91cbfb8b1a1" target="_blank" rel="noopener">注解支持多层继承</a><br>六、<a href="https://www.jianshu.com/p/8418ef144b29" target="_blank" rel="noopener">apt调试</a><br>七、<a href="https://www.jianshu.com/p/2da1ca9d8ffa" target="_blank" rel="noopener">javapoet语法</a></p>
+<p>#####1、注解支持多层继承，并且支持field相同去重</p>
+<p>继承是树形结构<br>例如javapoetdemo中的示例<img src="https://upload-images.jianshu.io/upload_images/5526061-8be1ed95da628def.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public class BaseActivity extends AppCompatActivity &#123;</span><br><span class="line">    @ViewId(R.id.helloTv)</span><br><span class="line">    TextView helloTv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends BaseActivity &#123;</span><br><span class="line">    @ViewId( R.id.register )</span><br><span class="line">    Button register;</span><br><span class="line">    @ViewId( R.id.login )</span><br><span class="line">    Button login;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class TestActivity extends MainActivity &#123;</span><br><span class="line">    @ViewId( R.id.guess )</span><br><span class="line">    Button guess;</span><br><span class="line">    @ViewId( R.id.login )</span><br><span class="line">    Button helloTv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码是常见情况<br>1、支持注解是继承关系<br>2、支持子类父类field相同，采用子类注解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class ElementTree &#123;</span><br><span class="line">    public ElementTree parentNode = null;</span><br><span class="line">    public List&lt;ElementTree&gt; childNodeList = new ArrayList&lt;&gt;(  );</span><br><span class="line">    public TypeElement typeElement;</span><br><span class="line">    public List&lt;Element&gt; elementList;</span><br><span class="line">    public Set&lt;String&gt; fieldNameSets;</span><br><span class="line">    public String typeName;</span><br><span class="line">    public  boolean isSorted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1、思路我们可以获得Map&lt;TypeElement,List<element>&gt; 当前类，当前类元素列表转换成List&lt; ElementTree &gt;</element></p>
+<p>2、创建根节点 root</p>
+<p>3、按照中序的方式(中左右)创建树形关系</p>
+<p>4、遍历list&lt; ElementTree &gt; 每个元素，每个元素判断是否有父节点，按照子父排序方式获得所有元素列表List&lt;List<element>&gt; ,Set<string></string></element></p>
+<p>5、用Set<string> 去重</string></p>
+<p>详见算法<br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/ElementTree.java" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/ElementTree.java</a><br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/TreeUtils.java" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo/blob/master/poet-compiler/src/main/java/com/chaoliu/sort/TreeUtils.java</a></p>
+<p>关键在思路，不多于赘述</p>
 <p>#####从无到有手写butterKnife框架<br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo</a></p>
 
           
@@ -2158,7 +2158,7 @@ unbinder=null;
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">337</span>
+                    <span class="site-state-item-count">334</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2223,9 +2223,7 @@ unbinder=null;
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

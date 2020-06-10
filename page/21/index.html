@@ -288,7 +288,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/EventBus源码分析/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第16课-柏拉图的思想概论“自然数学化”/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -308,7 +308,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/EventBus源码分析/" class="post-title-link" itemprop="url">EventBus源码分析</a>
+                <a href="/2020/05/26/笔记侠学习/第16课-柏拉图的思想概论“自然数学化”/" class="post-title-link" itemprop="url">第16课-柏拉图的思想概论“自然数学化”</a>
               
             
           </h1>
@@ -355,7 +355,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -392,36 +392,59 @@
       
         
           
-            <p>###EventBus源码分析</p>
-<p>####1、源码分析要点<br>EventBus是观察者模式，是一对多，一般源码分析的重点在register方法上，分析的核心应在在消息队列上PendingPostQueue</p>
-<p>1、消息队列<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PendingPostQueue&#123;</span><br><span class="line">    void enqueue(PendingPost pendingPost)//加入消息</span><br><span class="line">    PendingPost poll()//取出消息</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>2、处理消息核心 五种策略<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">interface Poster &#123;</span><br><span class="line">    void enqueue(Subscription subscription, Object event);//加入消息    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####1、Poster消息队列存取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class XXXPoster implements Runnable, Poster &#123;</span><br><span class="line"></span><br><span class="line">    public void enqueue(Subscription subscription, Object event) &#123;</span><br><span class="line">        //插入消息</span><br><span class="line">        PendingPost pendingPost = PendingPost.obtainPendingPost(subscription, event);</span><br><span class="line">        queue.enqueue(pendingPost);</span><br><span class="line">        //运行</span><br><span class="line">        eventBus.getExecutorService().execute(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        //取出消息</span><br><span class="line">        PendingPost pendingPost = queue.poll();</span><br><span class="line">        //处理消息</span><br><span class="line">        eventBus.invokeSubscriber(pendingPost);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####2、register消费者注册列表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public void register(Object subscriber) &#123;</span><br><span class="line">        Class&lt;?&gt; subscriberClass = subscriber.getClass();</span><br><span class="line">        //获得该类注解信息列表</span><br><span class="line">        List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriberClass);</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            for (SubscriberMethod subscriberMethod : subscriberMethods) &#123;</span><br><span class="line">                subscribe(subscriber, subscriberMethod);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">```</span><br></pre></td></tr></table></figure></p>
-<p>private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) {<br>        Class&lt;?&gt; eventType = subscriberMethod.eventType;<br>        Subscription newSubscription = new Subscription(subscriber, subscriberMethod);<br>        //注册事件列表<br>        CopyOnWriteArrayList<subscription> subscriptions = subscriptionsByEventType.get(eventType);<br>        if (subscriptions == null) {<br>            subscriptions = new CopyOnWriteArrayList&lt;&gt;();<br>            subscriptionsByEventType.put(eventType, subscriptions);<br>        }</subscription></p>
-<pre><code>    //注册该类
-    List&lt;Class&lt;?&gt;&gt; subscribedEvents = typesBySubscriber.get(subscriber);
-    if (subscribedEvents == null) {
-        subscribedEvents = new ArrayList&lt;&gt;();
-        typesBySubscriber.put(subscriber, subscribedEvents);
-    }
-    subscribedEvents.add(eventType);
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">找该类所有注解方法</span><br></pre></td></tr></table></figure>
-<pre><code>List&lt;SubscriberMethod&gt; findSubscriberMethods(Class&lt;?&gt; subscriberClass) {
-    List&lt;SubscriberMethod&gt; subscriberMethods = METHOD_CACHE.get(subscriberClass);
-    subscriberMethods = findUsingReflection(subscriberClass);
-    return subscriberMethods;
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//寻找注解实现</span><br></pre></td></tr></table></figure>
-<p>private void findUsingReflectionInSingleClass(FindState findState) {<br>        Method[] methods;<br>        try {<br>            // This is faster than getMethods, especially when subscribers are fat classes like Activities<br>            methods = findState.clazz.getDeclaredMethods();<br>        } catch (Throwable th) {<br>            methods = findState.clazz.getMethods();<br>            findState.skipSuperClasses = true;<br>        }<br>        for (Method method : methods) {<br>            int modifiers = method.getModifiers();<br>            if ((modifiers &amp; Modifier.PUBLIC) != 0 &amp;&amp; (modifiers &amp; MODIFIERS_IGNORE) == 0) {<br>                Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();<br>                if (parameterTypes.length == 1) {<br>                    Subscribe subscribeAnnotation = method.getAnnotation(Subscribe.class);<br>                    if (subscribeAnnotation != null) {<br>                        Class&lt;?&gt; eventType = parameterTypes[0];<br>                        if (findState.checkAdd(method, eventType)) {<br>                            ThreadMode threadMode = subscribeAnnotation.threadMode();<br>                            findState.subscriberMethods.add(new SubscriberMethod(method, eventType, threadMode,<br>                                    subscribeAnnotation.priority(), subscribeAnnotation.sticky()));<br>                        }<br>                    }<br>                }<br>            }<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">####3、post放入消息流程</span><br></pre></td></tr></table></figure></p>
-<p>post(event)–&gt;postSingleEvent()–&gt;postSingleEventForEventType()–&gt;postToSubscription()–&gt;XXXPoster.enqueue(subscription, event)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1、通过event寻找注册类</span><br></pre></td></tr></table></figure></p>
-<p>private void postSingleEvent(Object event, PostingThreadState postingState) throws Error {<br>        Class&lt;?&gt; eventClass = event.getClass();<br>        boolean subscriptionFound = false;<br>            List&lt;Class&lt;?&gt;&gt; eventTypes = lookupAllEventTypes(eventClass);<br>            int countTypes = eventTypes.size();<br>            for (int h = 0; h &lt; countTypes; h++) {<br>                Class&lt;?&gt; clazz = eventTypes.get(h);<br>                subscriptionFound |= postSingleEventForEventType(event, postingState, clazz);<br>            }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">通过event寻找该注册类函数清单，发送</span><br></pre></td></tr></table></figure></p>
-<p>private boolean postSingleEventForEventType(Object event, PostingThreadState postingState, Class&lt;?&gt; eventClass) {<br>        CopyOnWriteArrayList<subscription> subscriptions;<br>        synchronized (this) {<br>            //通过发送事件类型寻找注册表<br>            subscriptions = subscriptionsByEventType.get(eventClass);<br>        }<br>            //遍历整个列表发送消息<br>            for (Subscription subscription : subscriptions) {<br>                postingState.event = event;<br>                postingState.subscription = subscription;<br>                //处理消息<br>                postToSubscription(subscription, event, postingState.isMainThread);<br>            }<br>            return true;<br>        }<br>        return false;<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">####4、普通post与postSticky区别</span><br><span class="line">1、postSticky 缓存最新的一个事件</span><br><span class="line">2、register后，postSticky 自动触发一遍该类的缓存的事件</span><br></pre></td></tr></table></figure></subscription></p>
-<p>public void postSticky(Object event) {<br>        synchronized (stickyEvents) {<br>            stickyEvents.put(event.getClass(), event);<br>        }<br>        post(event);<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<p>private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) {<br>    if (subscriberMethod.sticky) {<br>        Object stickyEvent = stickyEvents.get(eventType);<br>        checkPostStickyEventToSubscription(newSubscription, stickyEvent);<br>    }<br>}<br><code>`</code></p>
-<p>####定制化RxBus</p>
-<p>#####设计rxbus重点<br>1、调用方式与EventBus一致，降低使用成本<br>2、rxjava是观察者模式，可以替换Eventbus消息队列和处理消息的策略模式<br>3、支持线程安全<br>4、支持黏性事件</p>
+            <p>【第十五次学习】</p>
+<p>2019年12月31日 周二   </p>
+<hr>
+<p>同学们早上好，下面是本周班级学习安排：</p>
+<p>课程内容：《吴国盛 · 第七模块：柏拉图的思想概论“自然数学化”》</p>
+<p>主讲老师：吴国盛 </p>
+<p>听课入口：<a href="https://url.cn/5C44cD4" target="_blank" rel="noopener">https://url.cn/5C44cD4</a></p>
+<p>学习章节：4讲</p>
+<p>学习时长：68分钟（总时长，可自行安排时间学习）</p>
+<p>打卡作业：</p>
+<p>1、柏拉图的“洞穴隐喻”对今天的我们是否有意义？为什么？</p>
+<p>2、请你结合课程谈一谈，柏拉图对近代科学的影响？</p>
+<p>3、为什么那些智慧的哲学思想都诞生于公元前，如孔子、柏拉图，后面的两千多年里不再有如此闪耀的思想？</p>
+<p>请结合整个模块，谈一谈你的观点。</p>
+<p>==========第16次打卡==========<br>1、柏拉图的“洞穴隐喻”对今天的我们是否有意义？为什么？<br> 吴教授解释：洞穴隐喻，被困在洞穴里的囚徒，看到是影像，真相在外面<br>习惯在洞穴里面的人，是不能出去的</p>
+<p>本人理解：洞穴隐喻，讲述人是有局限性的。局限在物质、精神、时空三方面。</p>
+<p>物质：世界是物质的，物质会真实反映现实，但现实不是所有真相，即使洞察能力强的人，也会受到物质世界限制。<br>比如：1、柏拉图说科学为什么诞生希腊，因为闲暇，好奇心。但是柏拉图身在希腊，不识希腊。言论自由是个常识，但是这个最重要常识，意识不到，正如鱼不认识水一样。</p>
+<p>精神：精神是指人对物质世界的认知，比如：苏格拉底被民主暴政判死刑，苏格拉底很淡然，因为他精神上相信轮回，所以对被判死刑，没有感觉</p>
+<p>时空：指时间和空间，比如：中国是农业大国，认识地球就是天圆地方，对天文理解就是为了服务礼教。希腊是航海民族，认识地球方式是一个球体，对天文认识就是为了研究规律来服务航海，在这个时间轴上，升级认识模型来认知天文</p>
+<p>如何减少局限性，在洞穴下，人是无法避免的，只有减少。<br>解决方案：<br>1、在反思基础上再次反思<br>2、理解事物不设观点<br>3、站在全局角度理解</p>
+<h2 id="4、不要禁锢在以往学习经验上"><a href="#4、不要禁锢在以往学习经验上" class="headerlink" title="4、不要禁锢在以往学习经验上"></a>4、不要禁锢在以往学习经验上</h2><p>2、请你结合课程谈一谈，柏拉图对近代科学的影响？<br>柏拉图：原子论，用数来解释世界。<br>用量来还原质，每个复杂问题，最终拆解为简单小问题</p>
+<h2 id="用数学来解释世界这种方式对近代科学影响"><a href="#用数学来解释世界这种方式对近代科学影响" class="headerlink" title="用数学来解释世界这种方式对近代科学影响"></a>用数学来解释世界这种方式对近代科学影响</h2><p>3、为什么那些智慧的哲学思想都诞生于公元前，如孔子、柏拉图，后面的两千多年里不再有如此闪耀的思想？<br>中国角度；<br>1、孔子诞生于春秋战国时期，殷忧启圣，忧患时候，才会引发伟人思考<br>2、中国历来愚民有术，主张虚其心，实其腹，弱其志<br>3、智慧的思想有遮蔽性，在圆融贯通又能联系实际理论思想面前，人们通常迷信权威，会减少不必要思考，不会去主动认识某类思想短板和弊端。<br>4、言论自由控制，比如1、罢黜百家，独尊儒术 2、文字狱<br>5、人性弱点，若否认一个人毕生所学为错，别人情绪上会认为极大侮辱，而不是探究理论是否有短板，很多人是追求知识，而不是追求真理<br>希腊角度<br>希腊科学诞生必要条件：闲暇，好奇心，言论自由。<br>但是在这一切基础上，要政治和军事强盛，国家稳定。<br>中国是虽然王朝几百年间就会灭亡，但是通过民族文化传承，行灭神不灭。<br>然而希腊不注重传承，就断代了，传承断了，苏格拉底，柏拉图，亚里士多德，后面直接over，再也没有类似传承人来延续，而是通过复兴。</p>
+<h2 id="比如：中国有孔夫子第多少代传人，希腊显然没有。"><a href="#比如：中国有孔夫子第多少代传人，希腊显然没有。" class="headerlink" title="比如：中国有孔夫子第多少代传人，希腊显然没有。"></a>比如：中国有孔夫子第多少代传人，希腊显然没有。</h2><p>4、请结合整个模块，谈一谈你的观点<br>智慧是一种思维之眼，其理念是超越性，描述客观世界方式是“自然数学化”，<br>原理将质还原为量，用数学方式来计算。<br>弊端明显：变为量之后，事物没有自己了，只是一种量形式堆叠，很多人文社科解释出现空白地带，潜能现实论解释这个问题，但是缺陷，理念是现实的，现实的理念，是无法透过现象看本质。看问题角度停留在事物自身，对原理细微地方研究不透彻。</p>
+<p>============<br>柏拉图<br>贵族出身<br>plato</p>
+<p>毕达哥拉斯主义</p>
+<p>数学是世界的本质<br>苏格拉底，毕达哥斯拉学派</p>
+<p>柏拉图想当哲学王 帝王师<br>亚里士多德</p>
+<p>对帝王师有企图的，往往失败的人。<br>君从叙拉古归回来？ –》柏拉图</p>
+<p>知识分子手无缚鸡之力，又想假他人之手，他人也不是傻子，能让你假他的手么？<br>古有孔夫子，今有冯友兰</p>
+<p>思想来源<br>赫拉克立特<br>人不能两次踏入同一条河流<br>一切皆变，无物常住</p>
+<p>巴门尼德<br>存在者存在，不存在者不存在<br>是就是，不是就是不是<br>不变是世界本质，变化有度</p>
+<p>苏格拉底</p>
+<h1 id="知识即寻求一般性"><a href="#知识即寻求一般性" class="headerlink" title="知识即寻求一般性"></a>知识即寻求一般性</h1><p>事物皆有自己，变化有度<br>事物具有自身内在逻辑，变化有规则和秩序</p>
+<p>苏格拉底，伦理学不是规范，在于知识<br>伦理学最终目标和最坚实之处在于它是知识</p>
+<p>柏拉图<br>事物根本的东西<br>直观—&gt;视觉中心主义<br>theory 理论是静止的看<br>特殊的观，洞察力<br>希腊人宇宙是看得见，摸得着 </p>
+<p>一件事讲出来，作为问题和反思</p>
+<p>理念论<br>Idea Eidos,Form,理念，相，理型，形式<br>理念是超越的<br>现实的可理解性来自于它对理念的模仿<br>洞穴隐喻，被困在洞穴里的囚徒，看到是影像，真相在外面<br>习惯在洞穴里面的人，是不能出去的</p>
+<p>理念是超越的，思维之眼<br>1、途径是学数学<br>数学不在现实之中，<br>由现实进入超越世界，才能学习纯粹理念知识<br>2、数学具有确定性<br>3、数学是通往哲学(理念)不二法门<br>4、通过数学训练思维方式</p>
+<p>不懂几何者不得入内<br>苏格拉底理想：寻求确定性知识<br>理念说：世界的本质在于理念<br>数学是确定性知识典型</p>
+<p>plato<br>自然是数学构成的思想</p>
+<p>基督教是创世思想<br>希腊思想宇宙是永恒</p>
+<p>上帝说：要有光，于是便有了光</p>
+<p>《蒂迈欧篇》<br>用数学和几何方式模拟世界</p>
+<p>《旧约圣经》希伯来文<br>《新约圣经》希腊文</p>
+<p>创造者<br>善而没有妒忌，希望万物皆善<br>可见事物在先，秩序在后；将世界改造成cosmos<br>将理性放入灵魂，将灵魂放入身体</p>
+<p>1、创造可见事物<br>2、赋予秩序<br>3、赋予灵魂</p>
+<p>用数学化方式处理世界</p>
+<p>人类可以感知到不能直接感知的东西</p>
+<p>柏拉图对近代影响<br>毕达哥拉斯主义<br>近代科学是柏拉图对亚里士多德的胜利<br>–科瓦雷</p>
+<p>柏拉图<br>数学化</p>
+<p>亚里士多德<br>范畴 </p>
+<p>数乃万物本质<br>自然数学化运动</p>
+<p>重走科学复兴之路<br>等量其观</p>
 
           
         
@@ -478,7 +501,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/MVPArmsHelper插件编写代码编写（二）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第17课-数学之父-毕达哥拉斯/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -498,7 +521,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/MVPArmsHelper插件编写代码编写（二）/" class="post-title-link" itemprop="url">MVPArmsHelper插件编写代码编写（二）</a>
+                <a href="/2020/05/26/笔记侠学习/第17课-数学之父-毕达哥拉斯/" class="post-title-link" itemprop="url">第17课-数学之父-毕达哥拉斯</a>
               
             
           </h1>
@@ -545,7 +568,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -582,18 +605,69 @@
       
         
           
-            <p>####导航<br><a href="https://www.jianshu.com/p/13006b034211" target="_blank" rel="noopener">MVPArmsHelper 网络代码自动生成插件</a><br><a href="https://www.jianshu.com/p/35d40e172a63" target="_blank" rel="noopener">MVPArmsHelper插件编写环境配置（一）</a><br><a href="https://www.jianshu.com/p/cd0bd74f800b" target="_blank" rel="noopener">MVPArmsHelper插件编写代码编写（二）</a></p>
-<p>####一、插件编写流程<br>1、触发Action事件，获得复制内容（见上一）<br>2、弹框补充信息<br>3、生成对应模板信息<br>4、动态插入文件</p>
-<p>####一、弹框补充对应信息<br>新建–》GUI Form<br>生成文件继承JFrame<br>如安卓代码一般编写<br>拖拽的时候自动生成控件ID</p>
-<p>####二、生成对应模板信息类<img src="https://upload-images.jianshu.io/upload_images/5526061-6ccb721e05c7d788.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>详见ArmsConstant.java</p>
-<p>三、动态插入文件<br>核心是PSI 程序结构接口，通俗讲java像xml一样解析<br><a href="http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/psi.html?search=Psi" target="_blank" rel="noopener">http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/psi.html?search=Psi</a></p>
-<p>修改project文件<br>常见三个点<br>1、寻找文件<br>2、java文件加载、解析、<br>3、新文件写入内容(非java)</p>
-<p>1、寻找文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//api</span><br><span class="line">FilenameIndex.getFilesByName(project, name, scope);</span><br><span class="line"></span><br><span class="line">//真实封装</span><br><span class="line">public static PsiFile getFileByName(PsiFile psiFile, String fileName) &#123;</span><br><span class="line">        Project project = psiFile.getProject();</span><br><span class="line">        PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, new EverythingGlobalScope(psiFile.getProject()));</span><br><span class="line">        if (psiFiles.length != 0) &#123;</span><br><span class="line">            return psiFiles[0];</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>2、java文件加载、解析、<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//psiFile转psiClass</span><br><span class="line">    public static PsiClass getPsiClass(PsiFile psiFile) &#123;</span><br><span class="line">        String fullName = psiFile.getName();</span><br><span class="line">        String className = fullName.split(&quot;\.&quot;)[0];</span><br><span class="line">        PsiClass[] psiClasses = PsiShortNamesCache.getInstance(psiFile.getProject()).getClassesByName(className, new EverythingGlobalScope(psiFile.getProject()));</span><br><span class="line">        return psiClasses[0];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//插入文件</span><br><span class="line">PsiElementFactory factory = PsiFileUtils.getFactory(psiFile);</span><br><span class="line">String  content = ArmConstant.getPageContractView(entity);</span><br><span class="line">psiClass.add(factory.createMethodFromText(content,psiClass));</span><br></pre></td></tr></table></figure>
-<p>//新建文件写入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">directory.createFile(entity.getClearResponseBean()+&quot;.java&quot;);</span><br><span class="line">        PsiFile file = directory.findFile(entity.getClearResponseBean()+&quot;.java&quot;);</span><br><span class="line">        VirtualFile vf= file.getVirtualFile();</span><br><span class="line">        String  content = ArmConstant.getBeanStr(entity);</span><br><span class="line">        ToastUtil.show(content);</span><br><span class="line">        try &#123;</span><br><span class="line">            vf.setBinaryContent(content.getBytes());</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
-<p>####部署<br>编译后可以生成插件<img src="https://upload-images.jianshu.io/upload_images/5526061-59a0158c5e087b89.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>####github 代码<br><a href="https://github.com/yinlingchaoliu/MVPArmsNetworkHelper" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/MVPArmsNetworkHelper</a></p>
+            <p>【第十七次学习】</p>
+<p>2020年1月7日 周二   </p>
+<hr>
+<p>同学们早上好，下面是本周班级学习安排：</p>
+<p>课程内容：《吴国盛 ·第八模块：“数学之父”毕达哥拉斯》</p>
+<p>主讲老师：吴国盛 </p>
+<p>听课入口：<a href="https://url.cn/5C44cD4" target="_blank" rel="noopener">https://url.cn/5C44cD4</a></p>
+<p>学习章节：6讲</p>
+<p>学习时长：88分钟（总时长，可自行安排时间学习）</p>
+<p>打卡作业：</p>
+<p>1、你怎样理解毕达哥拉斯学派信奉的“万物皆数”？</p>
+<p>2、假如你是毕达哥拉斯，当遇到希帕索斯这样的人，你将如何捍卫自己的权威？</p>
+<p>3、毕达哥拉斯的“音乐宇宙”具体是什么意思？</p>
+<p>=================第17次打卡==============</p>
+<p>1、你怎样理解毕达哥拉斯学派信奉的“万物皆数”？<br>1）天不生毕达哥拉斯，万古如长夜，信徒对毕达哥拉斯崇拜<br>2）数学秩序乃是自然界真正规律<br>3）对每个数字赋予意义<br>4）数学相当于人的断文识字</p>
+<p>2、假如你是毕达哥拉斯，当遇到希帕索斯这样的人，你将如何捍卫自己的权威？<br>一般人来看：毕达哥拉斯信奉数字是完美的，西帕索斯是得意门徒，发现无理数，挑战了权威，需要烧死像哥白尼一样祭天。<br>这个问题，其实是一个领导者格局问题。</p>
+<p>真正掌门人解决方案：兼容并包，试错创新，开创流派。换一个互联网思维方式，当做新物种，给一定空间培育，对方理论有成成立，就是新流派，对原有的补充和叠加，毕竟一个宗派开创，需要人才前仆后继。如果对方理论不成立，鼓励试错，失败不重要，有理论支撑的试错，才是创新的始端。</p>
+<p>领导者要培育创新环境，引领趋势，而不是打压创新</p>
+<p>3、毕达哥拉斯的“音乐宇宙”具体是什么意思？<br>1、音乐在很多高级文化中，都具有净化灵魂的作用<br>2、在具有和声色彩的音乐里面，它本身就提示出一种内在的数学结构<br>内化关于数字和谐<br>3、音乐可以敦风化俗，陶冶情操<br>4、音乐也是增加对宇宙结构的理解方式，本身便于你恢复健康的心灵</p>
+<h1 id="5、健康的心灵，真正领悟宇宙结构，你就获得完毕健康心灵状态"><a href="#5、健康的心灵，真正领悟宇宙结构，你就获得完毕健康心灵状态" class="headerlink" title="5、健康的心灵，真正领悟宇宙结构，你就获得完毕健康心灵状态"></a>5、健康的心灵，真正领悟宇宙结构，你就获得完毕健康心灵状态</h1><p>天不生夫子，万古如长夜<br>萨摩斯<br>毕达哥斯拉  是政治家  科学，政治，宗教</p>
+<p>科学复兴<br>一切准备学数学，</p>
+<p>希腊空间概念，时间是一个循环，轮回</p>
+<p>犹太人经常被驱逐，没有自己国家，没有空间概念<br>有时间概念。<br>把历史赋予时间制度</p>
+<p>物性论</p>
+<p>僭主政治<br>不残暴，开始被选上来，到期后不肯下来<br>波吕克拉里</p>
+<p>赫拉神庙</p>
+<p>1、多才多艺，数学化<br>2、能言善辩<br>3、会音乐</p>
+<p>灵魂不死，轮回转世宗教</p>
+<p>哲学：爱智慧<br>数学是对人类最伟大贡献<br>数学：能学能教的东西</p>
+<p>柏拉图：回忆理论<br>真正学习都是回忆</p>
+<p>潜在开启状态，帮你打开，启蒙</p>
+<p>关于内在知识传授的知识</p>
+<p>算术，音乐，几何，天文</p>
+<p>音乐家是高贵的</p>
+<p>从错误的前提出发，可以推出各种命题</p>
+<p>凡是公式没有提到，不能乱用</p>
+<p>刘辉证法是不合法的</p>
+<p>有数学能力是人性标志</p>
+<p>数学能力是天赋人权，数学是上帝赋予人类的不可剥夺的基本人权<br>语文趋于后天教养</p>
+<p>民主自由与数学关系</p>
+<p>懂数学，相当于中国段文识字</p>
+<p>1是形式<br>2是质料<br>3是宇宙<br>4为造物主的象征<br>5代表婚姻（2+3）<br>6代表生命（5+1，2*3）<br>7代表雅典娜<br>8第一个立方数<br>9海洋数<br>10 完美数</p>
+<p>认知：理性，知识，意见，感觉</p>
+<p>神秘主义</p>
+<p>比例论</p>
+<p>用几何方法处理算术问题</p>
+<p>音乐学</p>
+<p>6、8、9、12</p>
+<p>3：4 四音程<br>2：3 五音程<br>1：2 八音程</p>
+<p>音乐在很多高级文化中，都具有净化灵魂的作用<br>高雅艺术，陶冶情操<br>在具有和声色彩的音乐里面，它本身就提示出一种内在的数学结构<br>内化关于数字和谐</p>
+<p>你理解世界的秩序，当然变为高尚的人，</p>
+<p>关于宇宙和谐结构，和关于个人的崇高德行，是一件事<br>音乐可以敦风化俗，陶冶情操</p>
+<p>无知是缺德</p>
+<p>对于宇宙结构的理解，本身便于你恢复健康的心灵</p>
+<p>健康的心灵，真正领悟宇宙结构，你就获得完毕健康心灵状态</p>
+<p>数是万物的本源</p>
+<p>和谐，宇宙比例结构呈现</p>
+<p>完整医院：体育运动，音乐，泡温泉，治疗室</p>
+<p>毕达哥拉斯现代意义<br>数学秩序乃是自然界真正规律<br>柏拉图学派更重视光，太阳崇拜<br>真理就是光</p>
+<p>《神学大全》<br>亚里士多德<br>柏拉图<br>亚里士多德复兴：教会人事<br>柏拉图复兴：神秘主义复兴</p>
+<p>萨摩斯：毕达哥拉斯主义</p>
+<p>我要到古希腊去：陈省身</p>
+<p>熟知不是真知：黑格尔</p>
 
           
         
@@ -650,7 +724,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/MVPArmsHelper插件编写环境配置（一）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第1课-教你掌控人生/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -670,7 +744,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/MVPArmsHelper插件编写环境配置（一）/" class="post-title-link" itemprop="url">MVPArmsHelper插件编写环境配置（一）</a>
+                <a href="/2020/05/26/笔记侠学习/第1课-教你掌控人生/" class="post-title-link" itemprop="url">第1课-教你掌控人生</a>
               
             
           </h1>
@@ -717,7 +791,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -754,36 +828,7 @@
       
         
           
-            <p>####导航<br><a href="https://www.jianshu.com/p/13006b034211" target="_blank" rel="noopener">MVPArmsHelper 网络代码自动生成插件</a><br><a href="https://www.jianshu.com/p/35d40e172a63" target="_blank" rel="noopener">MVPArmsHelper插件编写环境配置（一）</a><br><a href="https://www.jianshu.com/p/cd0bd74f800b" target="_blank" rel="noopener">MVPArmsHelper插件编写代码编写（二）</a></p>
-<p>#####一、环境配置<br>1、IntelliJ IDE开发<br><a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noopener">https://www.jetbrains.com/idea/download/</a><br>建议下载 Community 免费版<br>2、groovy下载<br><a href="https://groovy.apache.org/download.html" target="_blank" rel="noopener">https://groovy.apache.org/download.html</a><br>配置<br>.bash_profile文件添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/Users/chentong/Android/groovy-2.5.6/bin</span><br><span class="line">$ source .bash_profile</span><br></pre></td></tr></table></figure></p>
-<p>新建插件项目<br>选择IntelliJ Platform Plugin<img src="https://upload-images.jianshu.io/upload_images/5526061-d025d879a494a9d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>配置jdk<img src="https://upload-images.jianshu.io/upload_images/5526061-76433321391c3c7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>运行项目报错<br>One of the two will be used. Which one is undefined.<br>解决方案：<a href="https://www.jianshu.com/p/26cefcc04fec" target="_blank" rel="noopener">https://www.jianshu.com/p/26cefcc04fec</a></p>
-<p>#####二、目录结构<br><img src="https://upload-images.jianshu.io/upload_images/5526061-d7f75f6b81d8df66.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>.idea: idea的一些配置信息。</li>
-<li>out: 编译生成文件，</li>
-<li>resources/META-INF/plugin.xml: 插件的一些描述信息</li>
-<li>src: 这里就是我们要写代码的地方啦。</li>
-<li>.iml: 项目的一些自动配置信息</li>
-</ul>
-<p>####配置插件信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&lt;idea-plugin&gt;</span><br><span class="line">  &lt;id&gt;com.network.helper.mvparmshelper&lt;/id&gt;</span><br><span class="line">  &lt;name&gt;ArmMVPHelper&lt;/name&gt;</span><br><span class="line">  &lt;version&gt;1.0&lt;/version&gt;</span><br><span class="line">  &lt;vendor email=&quot;704514698@qq.com&quot; url=&quot;https://www.jianshu.com/u/bdcce32c05dd&quot;&gt;陈桐&lt;/vendor&gt;</span><br><span class="line"></span><br><span class="line">  &lt;description&gt;ArmMVP框架 网络代码自动生成工具&lt;/description&gt;</span><br><span class="line"></span><br><span class="line">  &lt;change-notes&gt;第一版&lt;/change-notes&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description --&gt;</span><br><span class="line">  &lt;idea-version since-build=&quot;173.0&quot;/&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html</span><br><span class="line">       on how to target different products --&gt;</span><br><span class="line">  &lt;!-- uncomment to enable plugin in all products</span><br><span class="line">  &lt;depends&gt;com.intellij.modules.lang&lt;/depends&gt;</span><br><span class="line">  --&gt;</span><br><span class="line"></span><br><span class="line">  &lt;extensions defaultExtensionNs=&quot;com.intellij&quot;&gt;</span><br><span class="line">    &lt;!-- Add your extensions here --&gt;</span><br><span class="line">  &lt;/extensions&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  &lt;!-- 类似android manifiest --&gt;</span><br><span class="line">  &lt;actions&gt;</span><br><span class="line">    &lt;!-- Add your actions here --&gt;</span><br><span class="line">    &lt;!--&lt;action class=&quot;com.network.helper.armmvp&quot;/&gt;--&gt;</span><br><span class="line">      &lt;action id=&quot;armnetwork&quot; class=&quot;com.network.helper.NetworkHelper&quot; text=&quot;ArmMVP Network Helper&quot; description=&quot;Arm MVP 网络代码自动生成工具&quot;&gt;</span><br><span class="line">          &lt;add-to-group group-id=&quot;GenerateGroup&quot; anchor=&quot;last&quot;/&gt;</span><br><span class="line">      &lt;/action&gt;</span><br><span class="line">  &lt;/actions&gt;</span><br><span class="line"></span><br><span class="line">&lt;/idea-plugin&gt;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>id： 插件唯一的id。</li>
-<li>name： 插件显示的名字。</li>
-<li>version： 插件版本</li>
-<li>vendor： 里面分别是你的邮箱，公司网站或个人网站，公司名。</li>
-<li>description： 插件的描述。</li>
-<li>change-notes： 更新文档。</li>
-<li>extensions defaultExtensionNs： 默认依赖的库。</li>
-<li>actions： 注册动作Action类。</li>
-</ul>
-<p>####配置Action<br>新建Action<br><img src="https://upload-images.jianshu.io/upload_images/5526061-d212fa65e344adbd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-2fb2dae91f08a263.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class NetworkHelper extends AnAction &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void actionPerformed(AnActionEvent anActionEvent) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>提供两个方法<br>1、获得光标下单词<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static PsiElement getPsiElement(Editor editor, PsiFile psiFile) &#123;</span><br><span class="line">        if (editor == null || psiFile == null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        CaretModel caret = editor.getCaretModel();</span><br><span class="line">        PsiElement psiElement = psiFile.findElementAt(caret.getOffset());</span><br><span class="line">        return psiElement;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">psiElement.getText();</span><br></pre></td></tr></table></figure></p>
-<p>2、获得当前复制内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static String getSelectedText(Editor editor) &#123;</span><br><span class="line">        if (editor == null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        return editor.getSelectionModel().getSelectedText();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>####github 代码<br><a href="https://github.com/yinlingchaoliu/MVPArmsNetworkHelper" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/MVPArmsNetworkHelper</a></p>
+            <p> 第一课 教你掌控人生<br>1.好奇心关心世界，联系观点看问题<br>时刻保持学习，对新的东西产生好奇，并用联系的观点看问题<br>2.先做有趣的人，在做成功的人<br>跳脱常态思维模式，思考问题，人群中盲从，变成独立思考，人生有四个问题，健康，财富，学习，冲突。个人观点，学习排在首位，学习会提升自己认知模型，只有更明智，才能有深度的健康，更易获得的财富，有多识而智广的解决冲突<br>3.有趣交谈的公众演说<br>1.一个深刻道理相反也是对的，即相反相成，建议没事逆向思考<br>4.好奇心，打破常规的人，做出改变的人<br>个人观点:将所学习到一切，用联系的观点，综合运用，做减法，这是一种创新<br>5.ted理解同频的人，基于兴趣<br>创立ted,源于好友去世，引发的思考，创始人也是人，也需要理解，又认识一群顶尖的人，也有同样诉求，创始人开始着手做这件事，名字取立意很高，技术，娱乐，设计。<br>6.记忆管理，兴趣培养<br>创始人发端源于自身生活经验，来自好奇心<br>划重点:相信改变<br>常问自己四个问题<br>听别人说？和其他联系？模式是什么？可以做什么？</p>
 
           
         
@@ -840,7 +885,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/Transform-AOP---Transform-API介绍/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第18课-从米利都学派探寻科学起源/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -860,7 +905,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/Transform-AOP---Transform-API介绍/" class="post-title-link" itemprop="url">Transform-AOP---Transform-API介绍</a>
+                <a href="/2020/05/26/笔记侠学习/第18课-从米利都学派探寻科学起源/" class="post-title-link" itemprop="url">第18课-从米利都学派探寻科学起源</a>
               
             
           </h1>
@@ -907,7 +952,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -944,14 +989,56 @@
       
         
           
-            <p>####起因<br>最初使用沪江的aspectjx，做click去重出现问题。经过2天仔细排查找到原因，翻阅aspectjx源码,主要采用 transform + aspectj /asm ，发现此类技术解决方案，在应用非常广泛（权限判断，无痕埋点，性能监控，事件防抖，热修复，优化代码），非常有研究价值，网上关于aop研究不够深入，只是简单接入，为了深入学习，项目基于hujiang项目进行改造，来贯穿各个知识点，改造出适应当前项目的aop</p>
-<p>####感慨<br>碎片化知识可以应付项目一时之急，但是不利于长期发展</p>
-<p>参考<br><a href="https://github.com/Qihoo360/ArgusAPM" target="_blank" rel="noopener">https://github.com/Qihoo360/ArgusAPM</a><br><a href="https://github.com/didi/booster" target="_blank" rel="noopener">https://github.com/didi/booster</a><br><a href="https://booster.johnsonlee.io" target="_blank" rel="noopener">https://booster.johnsonlee.io</a><br><a href="https://github.com/bytedance/ByteX" target="_blank" rel="noopener">https://github.com/bytedance/ByteX</a></p>
-<p>####app打包过程</p>
-<p>####transform介绍</p>
-<p>Transform应用场景<br>1、对编译class文件做自定义处理<br>2、读取编译class文件信息</p>
-<p>Transform API<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<p>####实战项目地址<br><a href="https://github.com/yinlingchaoliu/TransformAOP" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/TransformAOP</a></p>
+            <p>【第十八次学习】</p>
+<p>同学们早上好，下面是本周班级学习安排：</p>
+<p>课程内容：《吴国盛 ·第九模块：从米利都学派探寻科学起源》</p>
+<p>主讲老师：吴国盛 </p>
+<p>打卡作业：</p>
+<p>1、为何古希腊米利都学派能摆脱宗教神话的束缚，以较为理性科学的方式思考问题？</p>
+<p>2、你认为古希腊的自然哲学是怎样一步一步发展成现代科学的？</p>
+<p>3、泰勒斯认为“水是万物之源”，老子认为“万物的本源是道”，你认为哪个更有道理，为什么？</p>
+<p>世界的本源是？</p>
+<p>==============打卡作业==================<br>一）、为何古希腊米利都学派能摆脱宗教神话的束缚，以较为理性科学的方式思考问题？<br>1、独立与自由，主权在民<br>典型独立自由城邦，政治权利不在一个人身上<br>国王与祭祀没有权利，没有知识垄断<br>2、挑战与竞争<br>处于希腊文明和波斯文明最前线<br>竞争激烈<br>符合挑战与应激模式<br>交通便利<br>3、开放与交流<br>商业领域<br>思想领域<br>4、悠闲出智慧<br>5、自由批判的学术氛围</p>
+<p>2、你认为古希腊的自然哲学是怎样一步一步发展成现代科学的？<br>发展的<br>1、科学起源于发现自然<br>2、希腊人不喜欢变，认为变不自然的<br>3、用规则和规律，进行逻辑演绎<br>4、假设模型，逻辑求证，数学思维<br>5、核心是原子论，将一个复杂事物拆解成简单问题，由质变量</p>
+<p>3、泰勒斯认为“水是万物之源”，老子认为“万物的本源是道”，你认为哪个更有道理，为什么？<br>泰勒斯“水是万物之源”观点，是根据表象来看待问题的。<br>水是构成有机生命主要成分，可以直观看到，但是没有讲出水背后的规律和原理，所有泰勒斯就根本说不出，是否有类似等价物替代，也可以达到同样效果</p>
+<p>老子认为“万物本源是道”，其实是正确且唯一标准答案。</p>
+<p>1、老子提出“上善若水”<br>可以在不同人视角下，看到不同答案且都有充足理由支撑的，但是【水并非道】，他只是打一个比喻，虽然水有很多特性，像道，但是事实水并不是道，道和水的关系是包含</p>
+<p>2、道解决了局限性问题<br>西方科学是范式逻辑推演，缺点是一旦落笔，自由性和灵活性就被局限。<br>就像一张白纸，你没有下笔之前，它可能是油画，字帖，哪怕是一张欠条。但是落笔之后其他可能性就逐渐消失没有了。</p>
+<p>3、道德经开篇讲道可道，非常道。<br>在当前上下文语境，就是不可言说。<br>道的另一个含义是道路，就是方向和规律。其实道含义非常多，不能言尽。<br>原因它巧妙的用一种方式，没有限制阅读者想象力。</p>
+<p>4、其大无外，其小无内<br>我们形容道一种方式：其大无外，其小无内。其实给我们理解事物的角度，并非正反，还有多元和多维度，这个就是世界丰富精彩的点</p>
+<p>5、道是道<br>一个事物的本身，才是它的正解。一个只能形容，但无法浅薄的定义事物，它的本身就是它自己定义</p>
+<p>6、本来想写第六点，省略了。。。</p>
+<p>==============打卡作业==================<br>米利都古剧场<br>城邦文明发源于小亚细亚</p>
+<p>米利都“三杰”</p>
+<p>鼎盛年方法</p>
+<p>泰勒斯<br>预报日全食<br>公元前610年9月30日</p>
+<p>1、成功的商人<br>传播人心态<br>非不能也，实不为也</p>
+<p>哲学家确实没钱</p>
+<p>2、政治，审时度势</p>
+<p>3、推理演绎<br>大地测量术转化为几何学</p>
+<p>几何学：大地测量术</p>
+<p>阿那克西曼得<br>充足理由律</p>
+<p>地球空悬宇宙中心</p>
+<p>阿那克西米尼</p>
+<p>科学认识很艰难的，首开记录者往往不能毕其功于一役</p>
+<p>=============希腊科学站总结=============<br>开端即终端，终端即是开端</p>
+<p>回到开端是解决眼前困难是不二法则<br>西方文明遇到困难是不断回到古希腊，中国文明也应回到科学复兴先秦时代</p>
+<p>为什么发源于米利都<br>1、独立与自由，主权在民<br>典型独立自由城邦<br>政治权利不在一个人身上<br>国王与祭祀没有权利，没有知识垄断</p>
+<p>2、挑战与竞争<br>处于希腊文明和波斯文明最前线<br>竞争激烈<br>符合挑战与应激模式<br>交通便利</p>
+<p>3、开放与交流<br>商业领域<br>思想领域</p>
+<p>悠闲出智慧</p>
+<p>科学起源于发现自然<br>自然就是事物自己的本性<br>事物的自己就是事物的自然<br>有自然的事物加起来就是自然界</p>
+<p>道法自然</p>
+<p>自：自己<br>然：如此<br>自然：自己如此<br>道就是追随自己</p>
+<p>自然：不以人的意志转移的客观世界</p>
+<p>研究历史具有强大的现实功能<br>现实中发生的事情，历史都有发生<br>现实未发生的是，历史也有发生</p>
+<p>人类文明发展有内在联系<br>文明有发展路径<br>开端打开，便朝范式逻辑进行，直到逻辑穷尽<br>科学同样有路径，穷尽后需要找新路径</p>
+<p>中国人在现代性面前的悲剧<br>落后的历史，一切都落后了<br>坏处一样没少，不知道其来源</p>
+<p>儒家起源于大家庭<br>楼房居住，儒家文化失效，讲契约精神</p>
+<p>中国人对现代弊病<br>不知由来，无应对政策<br>工业文化改变生活方式，社会结构</p>
+<p>重走科学起源（复兴）之路<br>追索现代科学来源<br>寻走不同路径，拯救现在路径<br>越深入越原始方法越多</p>
+<p>让未来更加清晰<br>打破固有不自知生活模式。<br>eg:人总是生活既定生活方式，不自知<br>了解生活，生产背后的逻辑</p>
+<p>要使用西方技术文明，要理解西方背后文明背后的逻辑</p>
 
           
         
@@ -1008,7 +1095,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/RESTMock/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第2课-斯坦福创新的源泉/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1028,7 +1115,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/RESTMock/" class="post-title-link" itemprop="url">RESTMock</a>
+                <a href="/2020/05/26/笔记侠学习/第2课-斯坦福创新的源泉/" class="post-title-link" itemprop="url">第2课-斯坦福创新的源泉</a>
               
             
           </h1>
@@ -1075,7 +1162,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -1112,9 +1199,11 @@
       
         
           
-            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">   testImplementation &apos;com.github.andrzejchm.RESTMock:android:0.3.1&apos;</span><br><span class="line"></span><br><span class="line">   allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">	maven &#123; url &quot;https://jitpack.io&quot; &#125;</span><br><span class="line">&#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>####use<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RESTMockServer.whenGET(pathContains(&quot;users/andrzejchm&quot;))</span><br><span class="line">            .thenReturnFile(200, &quot;users/andrzejchm.json&quot;);</span><br></pre></td></tr></table></figure></p>
-<p>url<br><a href="https://github.com/andrzejchm/RESTMock" target="_blank" rel="noopener">https://github.com/andrzejchm/RESTMock</a></p>
+            <p>第二课 斯坦福创新的源泉<br>1.关键因素是人才<br>人才定义<br>远见者:遇见未来变化，实现愿景<br>探索者:预感变革来临，发现<br>执行者:愿意尝试不同事物，愿意重新思考问题</p>
+<p>2.孕育人才环境 个人思考<br>1.大学教育组织<br>2.硅谷创业环境<br>3.招收大批高质量学生</p>
+<p>3.斯坦福创新氛围产生<br>找到最优秀的人才<br>1.从世界各地招揽人才<br>2.如何做:1.高能激励 2.完整精英体制（薪资，头衔，研究经费，工作方式）<br>3.学术自由<br>4.创新循环</p>
+<p>4.演讲者逻辑漏洞，第二课<br>找到最优秀的人，砸钱，钱从哪来，又如何从哪挣，如何循环，没有讲清楚<br>1.初始教育机构人才培养和技术输出<br>2.学术技术转为产品<br>3.融资启动项目<br>4.投入市场赚钱<br>5.反哺支持创新</p>
+<p>包容失败是创新之路<br>1.学校和企业联合<br>2.成功需要投资核心技术<br>3.高效方式使技术市场化<br>愿景:创新让人们生活更美好</p>
 
           
         
@@ -1171,7 +1260,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/android单元测试/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第3课-行星科学家-探秘冥王星/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1191,7 +1280,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/android单元测试/" class="post-title-link" itemprop="url">android单元测试</a>
+                <a href="/2020/05/26/笔记侠学习/第3课-行星科学家-探秘冥王星/" class="post-title-link" itemprop="url">第3课-行星科学家-探秘冥王星</a>
               
             
           </h1>
@@ -1238,7 +1327,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -1275,7 +1364,13 @@
       
         
           
-            <p><a href="https://github.com/simplezhli/AndroidUT" target="_blank" rel="noopener">https://github.com/simplezhli/AndroidUT</a><br>Android开发中必要的一环—单元测试（Unit Test）<br>鸿阳<br><a href="https://mp.weixin.qq.com/s/mMMcuuEHgbY67_UoyNq8gQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/mMMcuuEHgbY67_UoyNq8gQ</a><br>美团单元测试<br><a href="https://tech.meituan.com/2015/12/24/android-unit-test.html" target="_blank" rel="noopener">https://tech.meituan.com/2015/12/24/android-unit-test.html</a></p>
+            <p>课程内容：《行星科学家.探秘冥王星》<br>主讲老师：阿兰.斯特恩<br>我们换几个务实的问题来回答<br>一，这个项目面临困难挑战是什么？<br>答:<br>1.资金获取难，且资金需要量极大</p>
+<p>2.技术攻关难，关键时间窗口期不能错过，项目不能delay</p>
+<p>3.太空项目商业化难，任何项目活下来，除了扶持资金，还要商业化挣钱，才能维系下来</p>
+<p>4.科研人员要求素质高，要有长期科研耐心和毅力</p>
+<p>二，项目活下来关键是什么？<br>1.太空探索是人类计划，有资金扶持</p>
+<p>2.项目负责人有能力<br>1.领导能力，凝聚一群人干很多年<br>2.沟通能力:能将晦涩太空技术，转化为普通人能懂的知识，所有人工作能获得外界支持和认可<br>3.打胜仗的能力:获取资金，获取资源，如何赢得竞争，如何商业化盈利的能力<br>4.运气，这个非常重要</p>
+<p>3.团队合作<br>三，我们从中学习到什么？<br>1.技术产品要商业化才能可持续<br>2.项目负责人很重要</p>
 
           
         
@@ -1332,7 +1427,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/assertj-android/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第4课-企业经营和管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1352,7 +1447,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/assertj-android/" class="post-title-link" itemprop="url">assertj-android</a>
+                <a href="/2020/05/26/笔记侠学习/第4课-企业经营和管理/" class="post-title-link" itemprop="url">第4课-企业经营和管理</a>
               
             
           </h1>
@@ -1399,7 +1494,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -1436,24 +1531,9 @@
       
         
           
-            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//常用top 5</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-support-v4:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-appcompat-v7:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-design:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-recyclerview-v7:1.2.0&apos;</span><br><span class="line">//不常用的</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-play-services:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-mediarouter-v7:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-gridlayout-v7:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-cardview-v7:1.2.0&apos;</span><br><span class="line">    testImplementation &apos;com.squareup.assertj:assertj-android-palette-v7:1.2.0&apos;</span><br></pre></td></tr></table></figure>
-<p>####Example</p>
-<ul>
-<li><p>AssertJ Android:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assertThat(view).isGone();</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Regular JUnit:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assertEquals(View.GONE, view.getVisibility());</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Regular AssertJ:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assertThat(view.getVisibility()).isEqualTo(View.GONE);</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="ALL"><a href="#ALL" class="headerlink" title="ALL"></a>ALL</h4><ul>
-<li>AssertJ Android:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">assertThat(layout).isVisible()</span><br><span class="line">    .isVertical()</span><br><span class="line">    .hasChildCount(4)</span><br><span class="line">    .hasShowDividers(SHOW_DIVIDERS_MIDDLE);</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>url<br><a href="https://github.com/square/assertj-android" target="_blank" rel="noopener">https://github.com/square/assertj-android</a></p>
+            <p>第四课 企业经营和管理<br>1.企业根基和永动力？<br>1.愿景和使命<br>2.战略是透明的，核心竞争力是执行，多年深耕，竞争对手很难超越<br>3.价值观: 关心<br>真正care所有人，员工高兴，用户高兴，企业存活，老板高兴<br>结论:让别人开心就是自己开心</p>
+<p>2.如何做好决策和决定<br>围绕让用户开心，思考问题要找出根本原因，彻底解决</p>
+<p>3.如何做好 守门员？<br>公司透明化</p>
 
           
         
@@ -1510,7 +1590,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/gradle插件编写/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第5次学习-吴军-重新审视硅谷/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1530,7 +1610,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/gradle插件编写/" class="post-title-link" itemprop="url">gradle插件编写</a>
+                <a href="/2020/05/26/笔记侠学习/第5次学习-吴军-重新审视硅谷/" class="post-title-link" itemprop="url">第5次学习-吴军-重新审视硅谷</a>
               
             
           </h1>
@@ -1577,7 +1657,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -1614,10 +1694,21 @@
       
         
           
-            <p>经典gradle插件编写<br><a href="https://blog.csdn.net/jeasonlzy/article/details/74273953" target="_blank" rel="noopener">https://blog.csdn.net/jeasonlzy/article/details/74273953</a></p>
-<p>任玉刚三连击<br>Gradle从入门到实战 - Groovy基础<br><a href="https://blog.csdn.net/singwhatiwanna/article/details/76084580" target="_blank" rel="noopener">https://blog.csdn.net/singwhatiwanna/article/details/76084580</a><br>全面理解Gradle - 定义Task<br><a href="https://blog.csdn.net/singwhatiwanna/article/details/78898113" target="_blank" rel="noopener">https://blog.csdn.net/singwhatiwanna/article/details/78898113</a><br>全面理解Gradle - 执行时序<br><a href="https://blog.csdn.net/singwhatiwanna/article/details/78797506" target="_blank" rel="noopener">https://blog.csdn.net/singwhatiwanna/article/details/78797506</a></p>
-<p>gradle 插件 参考手册<br><a href="https://docs.gradle.org/current/userguide/userguide.html" target="_blank" rel="noopener">https://docs.gradle.org/current/userguide/userguide.html</a></p>
-<p>参考<br><a href="https://www.jianshu.com/p/e7a40a592f15" target="_blank" rel="noopener">https://www.jianshu.com/p/e7a40a592f15</a></p>
+            <p>【第五次学习】</p>
+<h2 id="2019年10月15日-周二"><a href="#2019年10月15日-周二" class="headerlink" title="2019年10月15日  周二  "></a>2019年10月15日  周二  </h2><p>同学们早上好，下面是本周班级学习安排：</p>
+<p>课程内容：《吴军.重新审视硅谷》<br>主讲老师：吴军<br>学习章节：5讲<br>学习时长：1小时50分（总时长，可自行安排时间学习）</p>
+<p>打卡作业：</p>
+<p>1、硅谷的地理，人文和奇迹<br>2、叛逆是促进创新的原动力<br>3、硅谷的地域文化：拒绝平庸</p>
+<p>####第5次打卡作业<br>补第5次打卡 吴军.重新审视硅谷<br>1、硅谷的地理，人文和奇迹<br>地理和人文<br>人口：300万<br>人均GDP12万，是美国2倍多<br>硅谷配套很多， 财务会计和金融的人很多，配套从业者75%</p>
+<p>奇迹<br>进入纳斯达克100的公司，总部40%在硅谷<br>美国科技股，全世界市值最高的在top5 ，3家在硅谷<br>系统方法的成功也是科学方法的成功</p>
+<p>2、叛逆是促进创新的原动力<br>1、硅谷起因IBM到来，因为便宜<br>2、新的科技来到硅谷，正规军加入当地发展<br>3、选择人才是否够聪明，做事方法是否对<br>4、人才因为叛逆，才会分家<br>5、糟糕管理不是缺点，而是特点<br>6、DIY式发明<br>7、N+1式发明<br>8、老板ceo投钱<br>9、政府和公权力支持叛逆<br>一个好的生意是来赚钱<br>商业的本质：让每一个人多花钱</p>
+<p>3、硅谷的地域文化：拒绝平庸<br>追求卓越，平庸在硅谷无法生存<br>叛逆和宽容<br>站在巨人的肩膀上<br>非常残忍淘汰平庸公司<br>死亡是企业最后一次贡献<br>某一个项目不死，就没发展<br>高附加值，高价值的公司才能在硅谷生存<br>拒绝平庸，要宽容失败<br>要有竞争，才能这样战斗力<br>硅谷持续创业成功</p>
+<p>忧患意识非常重要</p>
+<p>要有第二名对手，这样才能竞争力<br>要想成为第一名，要宽容失败</p>
+<p>你要永远站在浪潮之巅，叛逆自己<br>信息时代强调一个变化，适应性</p>
+<p>同一种思维方式<br>形势变化了，优势也会变成缺点</p>
+<p>文化思维<br>多元文化很重要<br>1、了解全世界的共性需求和习惯</p>
+<p>以国际化思维方式处理工作<br>以开放心态，参与制定标准</p>
 
           
         
@@ -1674,7 +1765,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/dragger2用法详见demo/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第6次学习-李开复-人工智能入门课/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1694,7 +1785,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/dragger2用法详见demo/" class="post-title-link" itemprop="url">dragger2用法详见demo</a>
+                <a href="/2020/05/26/笔记侠学习/第6次学习-李开复-人工智能入门课/" class="post-title-link" itemprop="url">第6次学习-李开复-人工智能入门课</a>
               
             
           </h1>
@@ -1741,7 +1832,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -1778,7 +1869,26 @@
       
         
           
-            <p><a href="https://github.com/yinlingchaoliu/DraggerDemo" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/DraggerDemo</a></p>
+            <p>【第六次学习】</p>
+<p>2019年10月22日 周二   </p>
+<hr>
+<p>同学们早上好，下面是本周班级学习安排：</p>
+<p>课程内容：《李开复.人工智能入门课》</p>
+<p>主讲老师：李开复</p>
+<p>听课入口：<a href="https://url.cn/5SfGPFU" target="_blank" rel="noopener">https://url.cn/5SfGPFU</a></p>
+<p>学习章节：7讲</p>
+<p>学习时长：1小时38分（总时长，可自行安排时间学习）</p>
+<p>打卡作业：</p>
+<p>1、AI能帮人类做什么？</p>
+<p>2、AI时代将会重击哪些产业和职业？</p>
+<p>3、为什么AI可能会给人类社会带来威胁和破坏？</p>
+<p>4、在AI时代，如何找到自己竞争力和价值？</p>
+<p>========第六次打卡=============</p>
+<p>1、AI能帮人类做什么？<br>1）窥探用户隐私，精准推荐<br>2）商业AI，数据分析跑分<br>3）实体AI 语音识别，人脸识别<br>4）自动化AI，说穿了就是策略自动化</p>
+<p>2、AI时代将会重击哪些产业和职业？<br>重复性工作会被取代</p>
+<p>3、为什么AI可能会给人类社会带来威胁和破坏？<br>1、重复性工作失业<br>2、隐私安全</p>
+<p>4、在AI时代，如何找到自己竞争力和价值？<br>人具有自由意识和创造力，这个是AI不会具备的</p>
+<p>5、做AI的挑战<br>1）需要海量数据<br>2）需要非常精准标注<br>3）只能在一个领域工作，需要大量计算</p>
 
           
         
@@ -1835,7 +1945,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/框架编写分析/javapoet语法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/笔记侠学习/第7次打卡-鲁白-读懂生物医药行业/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1855,7 +1965,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/框架编写分析/javapoet语法/" class="post-title-link" itemprop="url">javapoet语法</a>
+                <a href="/2020/05/26/笔记侠学习/第7次打卡-鲁白-读懂生物医药行业/" class="post-title-link" itemprop="url">第7次打卡-鲁白-读懂生物医药行业</a>
               
             
           </h1>
@@ -1902,7 +2012,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/框架编写分析/" itemprop="url" rel="index"><span itemprop="name">框架编写分析</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/笔记侠学习/" itemprop="url" rel="index"><span itemprop="name">笔记侠学习</span></a></span>
 
                 
                 
@@ -1939,10 +2049,31 @@
       
         
           
-            <p>#####导航<br>一、<a href="https://www.jianshu.com/p/a96de1aa4e29" target="_blank" rel="noopener">代码的演进</a><br>二、<a href="https://www.jianshu.com/p/f8856e913224" target="_blank" rel="noopener">butterKnife反射调用</a><br>三、<a href="https://www.jianshu.com/p/cdf417e52cab" target="_blank" rel="noopener">javapoet自动生成模板代码</a><br>四、<a href="https://www.jianshu.com/p/43eb69b2beeb" target="_blank" rel="noopener">apt与注解</a><br>五、<a href="https://www.jianshu.com/p/a91cbfb8b1a1" target="_blank" rel="noopener">注解支持多层继承</a><br>六、<a href="https://www.jianshu.com/p/8418ef144b29" target="_blank" rel="noopener">apt调试</a><br>七、<a href="https://www.jianshu.com/p/2da1ca9d8ffa" target="_blank" rel="noopener">javapoet语法</a></p>
-<p>#####javapoet语法<br>@see <a href="https://github.com/square/javapoet" target="_blank" rel="noopener">https://github.com/square/javapoet</a><br>一张图<br><img src="https://upload-images.jianshu.io/upload_images/5526061-2e4303f3d4c510fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="javapoet用法"></p>
-<p>#####转载博客<br><a href="https://blog.csdn.net/l540675759/article/details/82931785" target="_blank" rel="noopener">https://blog.csdn.net/l540675759/article/details/82931785</a></p>
-<p>#####从无到有手写butterKnife框架<br><a href="https://github.com/yinlingchaoliu/JavaPoetDemo" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/JavaPoetDemo</a></p>
+            <p>【第七次学习】</p>
+<p>2019年10月29日 周二   </p>
+<hr>
+<p>同学们早上好，下面是本周班级学习安排：</p>
+<p>课程内容：《鲁白.读懂生物医药行业》</p>
+<p>主讲老师：鲁白</p>
+<p>听课入口：<a href="https://url.cn/5ICuDqy" target="_blank" rel="noopener">https://url.cn/5ICuDqy</a></p>
+<p>学习章节：7讲</p>
+<p>学习时长：1小时38分（总时长，可自行安排时间学习）</p>
+<p>打卡作业：</p>
+<p>1、医药生态产业的构成是什么？</p>
+<p>2、中国医药发展历史与现状？</p>
+<p>3、生物医药创业的前景分析。</p>
+<p>============第7次打卡================<br>笔记<br>诊断，医院，治疗<br>化学小分子：多被保护<br>抗体药：蛋白药仿制比较困难<br>细胞治疗：<br>医疗器械：</p>
+<p>抗癌药Rituxan（利妥昔酮）<br>细胞治疗 CAR-T   靶点CD-90  肿瘤  不能储存 不能运输<br>抗体 PD-1<br>糖尿病<br>老年痴呆</p>
+<p>治标药，治本药</p>
+<p>症状药<br>疾病改良药</p>
+<p>制药专利</p>
+<p>资本、学校资源、创业导师、校友资源<br>领导力<br>专业-临床-监管-市场</p>
+<p>动物模型</p>
+<p>安慰剂对照</p>
+<p>临床试验<br>新加坡<br>创业精神<br>科学家+企业家结合不够</p>
+<p>1、医药生态产业的构成是什么？<br>仿制药<br>外包公司<br>跨国公司<br>生物高科技公司</p>
+<p>2、中国医药发展历史与现状？<br>现状：<br>生物学崛起很快，每年翻一番<br>高水平跟踪不错，原创很差<br>人才积累<br>高新园区、产业链完善</p>
+<p>3、生物医药创业的前景分析。<br>分析基本要素<br>1、基础研究要好<br>2、政府资金支持<br>3、IP保护<br>5、创业精神<br>6、FDA监管部门要跟上<br>短板：<br>缺乏原创性，但是有创业热情<br>被转化原创研究比较少<br>早期VC给钱少</p>
 
           
         
@@ -1988,7 +2119,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -2030,7 +2161,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">334</span>
+                    <span class="site-state-item-count">299</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2093,9 +2224,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

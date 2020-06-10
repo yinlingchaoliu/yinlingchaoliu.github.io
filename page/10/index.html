@@ -624,7 +624,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/Read-Write-Lock模式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/Balking模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -644,7 +644,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/java高并发编程/Read-Write-Lock模式/" class="post-title-link" itemprop="url">Read-Write-Lock模式</a>
+                <a href="/2020/05/26/java高并发编程/Balking模式/" class="post-title-link" itemprop="url">Balking模式</a>
               
             
           </h1>
@@ -728,12 +728,8 @@
       
         
           
-            <p>读写锁</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Data&#123;</span><br><span class="line">  private String buffer;</span><br><span class="line">  private final ReadWriteLock lock = new ReadWriteLock();</span><br><span class="line"></span><br><span class="line">  public String read()&#123;</span><br><span class="line">      lock.readLock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doRead();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            lock.readUnlock();  </span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">public void write(String buffer)&#123;</span><br><span class="line">      lock.writeLock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doWrite();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            lock.writeUnlock();  </span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ReentrantReadWriteLock<br>重入读写锁</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class ReentrantData&#123;</span><br><span class="line"></span><br><span class="line">  private String buffer;</span><br><span class="line">  </span><br><span class="line">  private final ReadWriteLock lock = new ReentrantReadWriteLock();</span><br><span class="line">  private final readLock = lock.readLock();</span><br><span class="line">  private final writeLock = lock.writeLock();</span><br><span class="line"></span><br><span class="line">  public String read()&#123;</span><br><span class="line">      readLock.lock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doRead();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            readLock.unLock();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">public void write(String buffer)&#123;</span><br><span class="line">      writeLock.lock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doWrite();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            writeLock.unLock();  </span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>锁降级  降级为读锁</p>
-<p>获取写入锁<br>获取读取锁<br>释放写入锁</p>
+            <p>通过标志位，停止返回线程当前操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Balking&#123;</span><br><span class="line">    private volatile boolean initFlag=false;</span><br><span class="line"></span><br><span class="line">    public synchronized void init()&#123;</span><br><span class="line">      if(initFlag)&#123;</span><br><span class="line">        return;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      doSomething();</span><br><span class="line">      initFlag=true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
           
         
@@ -1122,6 +1118,339 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/Read-Write-Lock模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/java高并发编程/Read-Write-Lock模式/" class="post-title-link" itemprop="url">Read-Write-Lock模式</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java高并发编程/" itemprop="url" rel="index"><span itemprop="name">java高并发编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>读写锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Data&#123;</span><br><span class="line">  private String buffer;</span><br><span class="line">  private final ReadWriteLock lock = new ReadWriteLock();</span><br><span class="line"></span><br><span class="line">  public String read()&#123;</span><br><span class="line">      lock.readLock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doRead();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            lock.readUnlock();  </span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">public void write(String buffer)&#123;</span><br><span class="line">      lock.writeLock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doWrite();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            lock.writeUnlock();  </span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ReentrantReadWriteLock<br>重入读写锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class ReentrantData&#123;</span><br><span class="line"></span><br><span class="line">  private String buffer;</span><br><span class="line">  </span><br><span class="line">  private final ReadWriteLock lock = new ReentrantReadWriteLock();</span><br><span class="line">  private final readLock = lock.readLock();</span><br><span class="line">  private final writeLock = lock.writeLock();</span><br><span class="line"></span><br><span class="line">  public String read()&#123;</span><br><span class="line">      readLock.lock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doRead();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            readLock.unLock();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">public void write(String buffer)&#123;</span><br><span class="line">      writeLock.lock();</span><br><span class="line">      try&#123;</span><br><span class="line">            return doWrite();</span><br><span class="line">      &#125;finally&#123;</span><br><span class="line">            writeLock.unLock();  </span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>锁降级  降级为读锁</p>
+<p>获取写入锁<br>获取读取锁<br>释放写入锁</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/Single-Threaded-Exectution模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/java高并发编程/Single-Threaded-Exectution模式/" class="post-title-link" itemprop="url">Single-Threaded-Exectution模式</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java高并发编程/" itemprop="url" rel="index"><span itemprop="name">java高并发编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一次只有一个线程通过</p>
+<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public  class Gate&#123;</span><br><span class="line">  private volatile int count = 0;</span><br><span class="line">  public synchionized void pass()&#123;</span><br><span class="line">    //逻辑</span><br><span class="line">    count++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用场景：<br>多线程访问非线程安全方法，解决方案：使用单线程执行模式。</p>
+<p>线程安全方法：<br>synchronizedCollection方法<br>synchronizedList方法<br>synchronizedMap方法<br>synchronizedSet方法<br>synchronizedSortedMap方法<br>synchronizedSortedSet方法</p>
+<p>java.util.concurrent方法(JUC方法)<br>ConcurrentHashMap分段锁存储key-value</p>
+<p>详细介绍<br><a href="http://www.importnew.com/28263.html" target="_blank" rel="noopener">Java7/8 中的 HashMap 和 ConcurrentHashMap 全解析</a></p>
+<p><a href="http://www.importnew.com/22007.html" target="_blank" rel="noopener">ConcurrentHashMap总结</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/Thread-Per-Message模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1241,222 +1570,6 @@
 <p>ScheduledExecutorService (调度服务)<br>ScheduledExecutorService ses = Executors.newScheduledThreadPool(5);</p>
 <p>ses.schedule(Runnable r, long delay, TimeUnit unit)</p>
 <p>Executors 创建线程池实例工具类</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/java并发核心机制和内存模型/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/java高并发编程/java并发核心机制和内存模型/" class="post-title-link" itemprop="url">java并发核心机制和内存模型</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java高并发编程/" itemprop="url" rel="index"><span itemprop="name">java高并发编程</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####1、java并发挑战<br>上下文切换、死锁、硬件和软件资源限制</p>
-<p>#####上下文切换<br>任务状态从保存到再加载的过程是一次上下文切换<br>线程创建和上下文切换的会影响效率</p>
-<p>检查工具<br>Lmbench3(性能分析工具)   测量上下文切换时长<br>vmstat（linux命令）  切换次数（cs）</p>
-<p>解决方案：</p>
-<ul>
-<li>减少上下文切换：<br>  1）无锁并发编程：减少使用锁，将数据分段，每个线程处理一段<br>  2）CAS算法：atomic  数值原子操作</li>
-<li><p>减少线程<br>  1）使用最少线程：避免创建不需要线程</p>
-<p>实战，减少大量WAITING状态线程</p>
-</li>
-</ul>
-<p>1、jstack pid &gt; txt , dump线程信息<br>2、统计线程状态<br>grep  “java.lang.Thread.State”  文件 | awk <code>{print $2$3$4$5}</code> |sort| uniq -c </p>
-<p>#####死锁定义·<br>如果一组进程中的每一个进程都在等待仅由该组进程中的其他进程才能引发的事件，那么该组进程是死锁的。</p>
-<p>一句话解析：多个锁之间关系要同一层级对应，死锁原因锁之间关系是越层级等待</p>
-<p>如何避免：<br>1、避免一个线程同时获取多个锁<br>2、避免一个线程内锁内同时只有多个资源<br>3、尝试定时锁 lock.tryLock(time)</p>
-<p>#####资源限制定义<br>进行并发编程时，程序的执行速度受限于计算机硬件资源或者软件资源</p>
-<p>资源限制引发问题<br>并行代码，受到资源限制，串行执行，那么上下文切换与资源调度极大浪费时间。</p>
-<p>解决方案：<br>1、硬件资源，集群并行执行（带宽和硬盘）<br>2、资源池复用（连接数）</p>
-<p>####2、java并发机制和原理<br>线程安全：如果一个对象可以安全被多个线程同时使用，那么它就是线程安全的</p>
-<p>#####并发三个特性</p>
-<ul>
-<li>原子性：是指一个操作或多个操作要么全部执行，且执行的过程不会被任何因素打断，要么就都不执行。</li>
-</ul>
-<p>关键词：原子</p>
-<ul>
-<li>可见性：当一个线程修改共享变量的值，其他线程能够立即得知这个修改</li>
-</ul>
-<p>关键词：volatile </p>
-<ul>
-<li>有序性：即程序执行的顺序按照代码的先后顺序执行</li>
-</ul>
-<p>关键词：先后顺序</p>
-<p>#####volatile<br>实现原理<br>1、将当前处理器缓存行的数据写回到系统内存<br>2、这个写回内存的操作会使在其他cpu里缓存该内存地址的数据无效</p>
-<p>#####synchronized<br>原理：jvm基于进入和退出Monitor对象来实现方法同步和代码块同步的</p>
-<p>synchronized 重量锁<br>1、对于普通同步方法，锁是当前实例对象<br>2、对于静态同步方法，锁是当前类的Class对象<br>3、对于同步方法块，锁是synchonized括号里的配置对象</p>
-<p>锁的级别，只可以升级，不能降级<br>从低到高：无状态锁、偏向锁、轻量级锁、重量级锁</p>
-<p>#####原子操作<br>不可中断的一个或一系列操作</p>
-<p>原理：<br>通过总线锁保证原子性<br>使用缓存锁保证原子性 </p>
-<h4 id="3、java内存模型（JMM）"><a href="#3、java内存模型（JMM）" class="headerlink" title="3、java内存模型（JMM）"></a>3、java内存模型（JMM）</h4><p>并发编程关键问题：<br>1）共享内存<br>2）消息传递  </p>
-<p>#####指令重排：<br>在执行程序时，为提高性能，编译器和处理器会对指令重新排序</p>
-<p><strong><em>插入内存屏障，来禁止指令重排序</em></strong></p>
-<p>#####volatile修饰含义：<br>1、使用同一个锁对这些单个读/写操作做了同步<br>2、修饰变量指令禁止重排<br>3、多个volatile复合操作，不具有原子性。eg:volatile++</p>
-<p>进阶：<br><a href="https://www.cnblogs.com/huichuan/archive/2013/06/14/3136033.html" target="_blank" rel="noopener">《java理论与实践 正确使用Volatile变量》</a></p>
-<p>#####锁的内存语义：<br>锁可以让临界区互斥执行<br>从内存读取共享变量，而不是缓存</p>
-<p>#####final域内存语义<br>1、在构造函数内对一个final域写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序</p>
-<p>2、初次读一个包含final域的对象引用，与随后初次读这个final域，这两个操作之间不能重排序</p>
-<p>3、final引用不能从构造函数内“逸出” obj=this</p>
-<p>4、被构造对象的引用在构造函数中没有“逸出”。<br>那么不需要使用同步就可以保证任意线程都能看到这个初始值</p>
-<p>happens-before原则</p>
-<p>JMM设计<br>偏好：<br>程序员： 强内存模型来编写代码<br>编译器：基于优化弱内存模型</p>
-<p>原则<br>1、会改变程序执行结果的禁止重排序<br>2、不会改变程序结果的重排序</p>
-<p>#####双重检查锁定错误<br>double-checked lock(双重锁定是错误的)<br>问题：当instance !=null 时，实例初始化未完成</p>
-<p>问题根源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">instance = new Singleton()</span><br><span class="line">memory = allocate() //1、分配内存空间</span><br><span class="line">ctorInstance(memory)//2、初始化对象</span><br><span class="line">instance = memory// 3、设置instance指向内存分配地址</span><br><span class="line"></span><br><span class="line">第2、3步可能重排序</span><br></pre></td></tr></table></figure></p>
-<p>解决方案<br>1、禁止重排序<br>2、允许重排序，不容许其他线程“看到”</p>
-<p>#####实战</p>
-<p>######1、基于volatile解决方案 (禁止重排序)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class SafeDoubleCheckedLocking&#123;</span><br><span class="line">    private volatile static Instance instance;</span><br><span class="line">    public static Instance getInstance()&#123;</span><br><span class="line">        if(instance == null)&#123;</span><br><span class="line">            synchronized(SafeDoubleCheckedLocking.class)&#123;</span><br><span class="line">                if(instance == null)&#123;</span><br><span class="line">                    instance = new Instance();</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>######2、基于类初始化的解决方案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class SingleFactory&#123;</span><br><span class="line">    private static class InstanceHolder&#123;</span><br><span class="line">        public static final Instance instance = new Instance();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Instance getInstance()&#123;</span><br><span class="line">        return InstanceHolder.instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
           
         
@@ -1686,7 +1799,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/多线程程序评价标准/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/java高并发编程/java临时笔记并发基础/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1706,7 +1819,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/java高并发编程/多线程程序评价标准/" class="post-title-link" itemprop="url">多线程程序评价标准</a>
+                <a href="/2020/05/26/java高并发编程/java临时笔记并发基础/" class="post-title-link" itemprop="url">java临时笔记并发基础</a>
               
             
           </h1>
@@ -1790,196 +1903,82 @@
       
         
           
-            <p>####标准</p>
-<ul>
-<li>安全性：不损坏对象</li>
-<li>生存性：必要处理能够被执行</li>
-<li>可复用性：类可重复利用</li>
-<li>性能：能快速、大批量地执行处理<br>  1）吞吐量<br>  2）响应性<br>  3）容量<br>  4）效率、可伸缩性、降级</li>
-</ul>
-<p>####总结</p>
-<ul>
-<li>安全性和生存性：必要条件（必须遵守标准）</li>
-<li>可复用性和性能：提高质量</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Java核心基础/Java访问权限控制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Java核心基础/Java访问权限控制/" class="post-title-link" itemprop="url">Java访问权限控制</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java核心基础/" itemprop="url" rel="index"><span itemprop="name">Java核心基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>default（friendly）：即默认的包访问权限<br>public：公开的访问权限，也称接口访问权限<br>private：私有的访问权限<br>protect：受保护的访问权限，又称继承访问权限</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-2e2a6b59cfe724ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>####达成效果</p>
-<ol>
-<li>调用者不能访问到被调用者的实现细节</li>
-<li>修改被调用者的实现细节不影响调用者</li>
-</ol>
-<p>####意义<br>一个对象对另一个对象了解最少，更能接近“低耦合”目标　</p>
-<p>####相关几个修饰词</p>
-<ul>
-<li>static  即全局静态 ：实例共享只一个，使用无须实例化</li>
-<li>final   即最终 <pre><code>final类不能被继承，没有子类，final类中的方法默认是final的。
- final方法不能被子类的方法覆盖，但可以被继承。
- final成员变量表示常量，只能被赋值一次，赋值后值不再改变。
-</code></pre></li>
-<li>static final 全局常量</li>
-<li>abstract 抽象</li>
-</ul>
+            <p>####临时笔记<br><a href="http://ifeve.com/concurrentlinkedqueue/" target="_blank" rel="noopener">http://ifeve.com/concurrentlinkedqueue/</a></p>
+<p>#java并发编程基础<br>线程优先级<br>Priority</p>
+<p>jstack工具查看状态<br>jps 查看列表<br>jstack pid</p>
+<p>线程状态<br>初始(NEW)：    新创建了一个线程对象，但还没有调用start()方法。<br>运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的成为“运行”。<br>阻塞(BLOCKED)：表线程阻塞于锁。<br>等待(WAITING)：进入该状态的线程需要等待其他线程做出一些特定动作（通知或中断）。<br>超时等待(TIME_WAITING)：该状态不同于WAITING，它可以在指定的时间内自行返回。<br>终止(TERMINATED)：表示该线程已经执行完毕。<br>[图片上传失败…(image-dbcd3-1535531273194)]</p>
+<p><a href="https://img-blog.csdn.net/2018070117435683?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BhbmdlMTk5MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" target="_blank" rel="noopener">线程状态图</a></p>
+<p>Daemon进程<br>精灵进程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thread.setDaemeon(true)</span><br></pre></td></tr></table></figure></p>
+<p>在进程启动之前设置</p>
+<p>线程初始化<br>1、daemon<br>2、priority<br>3、name<br>4、本地数据<br>5、线程ID</p>
+<p>最好自定义线程名字</p>
+<p>理解中断<br>线程的一个标识位属性，<br>interrupt()中断<br>interrupted() 复位</p>
+<p>Thread.isInterrupted()<br>sleep() 方法不能被中断</p>
+<p>过期方法 suspend(暂停) 、resume(恢复)、stop(停止)<br>死锁、不会释放资源</p>
+<p>安全终止线程<br>中断状态是线程的一个标识位，而中断操作是一种渐变的线程间交互方式<br>1、interrupt() 中断<br>2、boolean值变量来控制是否需要停止任务并且终止<br>flag &amp;&amp; Tread.currentThread().isInterrupted()</p>
+<p>推荐第二种：清理资源</p>
+<p>线程间通讯<br><strong>1、</strong>volatile、synchronized<br><strong>2、</strong>wait/notify<br>[图片上传失败…(image-5475ff-1535531273194)]</p>
+<p>生产者-消费者</p>
+<p>等待方-通知方<br>1、获取对象的锁<br>2、条件不满足等待（wait），被通知后仍要检查条件<br>3、条件满足执行</p>
+<p>1、等待方<br>synchrionized(对象){<br>    while(条件不满足){<br>        对象.wait();<br>    }<br>    处理逻辑<br>}<br>2、通知方<br>1、获得对象的锁<br>2、改变条件<br>3、通知所有等待对象上的线程<br>synchionized(对象){<br>    改变条件<br>    对象.notifyAll()<br>}</p>
+<p>3、<strong>管道输入/输出流</strong><br>线程之间数据传入<br>PipedReader / PipedWriter<br>PipedOutputStream / PipedInputStream<br>需要connect()绑定<br>out.connect(in)</p>
+<p>4、Thread.join()<br>当前线程，等待上一个终止后再开始</p>
+<p>5、ThreadLocal使用 线程变量</p>
+<p>实战用法<br>等待超时模式</p>
+<p>synchrionized void get(){<br>long future = System.currentTimeMills()+mills;<br>long remaining = mills;<br>    while(result == null &amp;&amp; remaining &gt; 0){<br>        对象.wait(remaining);<br>        remaining = future - System.currentTimeMills();<br>    }<br>    处理逻辑<br>}</p>
+<p>增加超时控制</p>
+<p>countDownLatch 预备-同时</p>
+<p>线程池<br>一个线程安全工作队列连接工作者线程和客户端线程<br>生产者-消费者</p>
+<p>#java中的锁<br>juc<br>使用和实现两个方面</p>
+<p>lock接口<br>锁是用来解决多个线程访问共享资源的方式</p>
+<p>synchionized 隐式调用</p>
+<p>Lock lock = new ReentrantLock();<br>lock.lock();<br>try{<br>    doSomething()<br>}finally{<br>    lock.unlock();<br>}</p>
+<p>队列同步器 AbstractQueuedSynchrionizer<br>getState()<br>setState(int status)<br>compareAndSetStatus(int expect,int update) 设置cas状态</p>
+<p>独占锁（互斥锁）<br>Mutex</p>
+<p>重入锁（条件锁）<br>支持一个线程对资源重复加锁<br>ReentrantLock</p>
+<p>公平锁与非公平锁问题<br>时间(FIFO先进先出原则)，条件</p>
+<p>排他锁</p>
+<p>读写锁<br>读写（锁）分离<br>ReentrantReadWriteLock<br>使用场景：读多于写的<br>3个特性：<br>公平性选择（加条件）<br>重进入<br>锁降级:写锁降级为读锁</p>
+<p>readLock()<br>writeLock()</p>
+<p>写法：<br>锁降级: 需要再确认一下<br>readLock.lock()<br>try{<br>    //先释放<br>    readLock.unlock()<br>    //写锁<br>    writeLock.lock()<br>    try{</p>
+<pre><code>    readLock.lock()
+}finally{
+    writeLock.unlock()
+}
+</code></pre><p>}finally{<br>    readLock.unlock();<br>}</p>
+<p>LockSupport工具<br>阻塞或唤醒线程</p>
+<p>Condition接口 (条件)</p>
+<p>Lock lock = new ReentrantLock()<br>Condition condition = lock.newCondition();</p>
+<p>public void conWait(){<br>    lock.lock();<br>    try{<br>        condition.await();<br>    }finally{<br>        lock.unlock();<br>    }<br>}</p>
+<p>public void conSigal(){<br>    lock.lock();<br>    try{<br>        condition.sigal();<br>    }finally{<br>        lock.unlock();<br>    }<br>}</p>
+<p>#并发容器和框架</p>
+<p>####1、ConcurrentHashMap 是线程安全且高效的HashMap<br>锁分段技术<br>1、线程不安全Hashmap，陷入死循环<br>2、效率低下的HashTable<br>锁分段技术<br>首先将数据分成一段一段的存储，并给每段数据配一把锁<br>当一个线程占用锁访问其中一段数据时，其他段数据也能被其他线程访问</p>
+<p>####ConcurrentLinkedQueue<br>线程安全队列<br>阻塞和非阻塞算法</p>
+<p>####Java阻塞队列</p>
+<p>重点看</p>
+<p>线程池的使用</p>
+<p>*简单线程池实现</p>
+<p>Executor 工作单元与执行单元分离</p>
+<p>#java并发实践</p>
+<p>生产者–消费者</p>
+<p>mark 阻塞队列用来给生产者与消费者解耦</p>
+<p>LinkedBlockingQueue</p>
+<p>一个生产者–多个消费者</p>
+<p>线程池与生产消费者模式</p>
+<p>线上问题定位<br>top命令<br>top  1<br>top H</p>
+<p>CPU占用率高，top前10</p>
+<p>jstat -gcuutil pid  1000  5<br>把线程dump下来<br>jstack pid  &gt; txt</p>
+<p>nid线程</p>
+<p>10进制转16进制<br>printf “x<br>“ nid</p>
+<p>性能测试<br>响应时间（RT）<br>吞吐量（TPS）  反比关系<br>并发数 承载多少用户操作<br>QPS 每秒查询数</p>
+<p>QPS必须是峰值</p>
+<p>netatat -nat | grep  port -c </p>
+<p>ps -eLf | grep java -c </p>
+<p>增加 线程数、CPU、机器</p>
+<p>1、查看网络流量<br>cat /proc/net/dev<br>查看平均负载<br>cat /proc/loadavg<br>查看系统内存情况<br>cat /proc/meminfo</p>
+<p>查看cpu利用率<br>cat /proc/stat</p>
+<p>异步线程池<br>场景：集群环境，解决线程池重启问题</p>
+<p>任务池–多线程池<br>任务状态<br>创建（NEW）<br>执行（EXECUTING）<br>重试(RETRY)<br>挂起（SUSPEND）<br>中止（TERMNER）<br>执行完成（FINISH）</p>
 
           
         
@@ -2025,7 +2024,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -2067,7 +2066,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">334</span>
+                    <span class="site-state-item-count">299</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2130,9 +2129,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

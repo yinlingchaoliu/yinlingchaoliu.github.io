@@ -288,178 +288,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/16、本地方法调用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/手动编写jvm虚拟机/16、本地方法调用/" class="post-title-link" itemprop="url">16、本地方法调用</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####本地方法注册与调用<br>注册<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">//本地方法定义为函数</span><br><span class="line">type NativeMethod func(frame *rtda.Frame)</span><br><span class="line"></span><br><span class="line">//定义函数数组</span><br><span class="line">var registry = map[string]NativeMethod&#123;&#125;</span><br><span class="line"></span><br><span class="line">//空方法</span><br><span class="line">func emptyNativeMethod(frame *rtda.Frame) &#123;</span><br><span class="line">	// do nothing</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//注册本地方法</span><br><span class="line">func Register(className, methodName, methodDescriptor string, method NativeMethod) &#123;</span><br><span class="line">	key := className + &quot;~&quot; + methodName + &quot;~&quot; + methodDescriptor</span><br><span class="line">	registry[key] = method</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//寻找注册方法</span><br><span class="line">func FindNativeMethod(className, methodName, methodDescriptor string) NativeMethod &#123;</span><br><span class="line">	key := className + &quot;~&quot; + methodName + &quot;~&quot; + methodDescriptor</span><br><span class="line">	if method, ok := registry[key]; ok &#123;</span><br><span class="line">		return method</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//如果是 object中 registerNatives 返回空方法，且此方法不会注册到registry中</span><br><span class="line">	if methodDescriptor == &quot;()V&quot; &amp;&amp; methodName == &quot;registerNatives&quot;&#123;</span><br><span class="line">		return emptyNativeMethod</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>invoke_native指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame) &#123;</span><br><span class="line">	method := frame.Method()</span><br><span class="line">	className := method.Class().Name()</span><br><span class="line">	methodName := method.Name()</span><br><span class="line">	methodDescriptor := method.Descriptor()</span><br><span class="line"></span><br><span class="line">	nativeMethod := native.FindNativeMethod(className, methodName, methodDescriptor)</span><br><span class="line">	if nativeMethod == nil &#123;</span><br><span class="line">		methodInfo := className + &quot;.&quot; + methodName + methodDescriptor</span><br><span class="line">		panic(&quot;java.lang.UnsatisfiedLinkError: &quot; + methodInfo)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	nativeMethod(frame)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>调用本地方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">method.go</span><br><span class="line"></span><br><span class="line">func newMethod(class *Class, cfMethod *classfile.MemberInfo) *Method &#123;</span><br><span class="line">	method := &amp;Method&#123;&#125;</span><br><span class="line">	method.class = class</span><br><span class="line">	method.copyMemberInfo(cfMethod)</span><br><span class="line">	method.copyAttributes(cfMethod)</span><br><span class="line">	//method.calArgSlotCount() //参数</span><br><span class="line">	md := parseMethodDescriptor(method.descriptor)</span><br><span class="line">	method.calcArgSlotCount(md.parameterTypes)</span><br><span class="line">	if method.IsNative() &#123;</span><br><span class="line">                //方法字节码表插入Code</span><br><span class="line">		method.injectCodeAttribute(md.returnType)</span><br><span class="line">	&#125;</span><br><span class="line">	return method</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//0xfe 对应助记符指令 invoke_native</span><br><span class="line">func (self *Method) injectCodeAttribute(returnType string) &#123;</span><br><span class="line">	self.maxStack = 4 // todo</span><br><span class="line">	self.maxLocals = self.argSlotCount</span><br><span class="line">	switch returnType[0] &#123;</span><br><span class="line">	case &apos;V&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xb1&#125; // return</span><br><span class="line">	case &apos;L&apos;, &apos;[&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xb0&#125; // areturn</span><br><span class="line">	case &apos;D&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xaf&#125; // dreturn</span><br><span class="line">	case &apos;F&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xae&#125; // freturn</span><br><span class="line">	case &apos;J&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xad&#125; // lreturn</span><br><span class="line">	default:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xac&#125; // ireturn</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>####添加native类<br>native/java/lang/Object.go</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">package lang</span><br><span class="line"></span><br><span class="line">import &quot;unsafe&quot;</span><br><span class="line">import &quot;main/native&quot;</span><br><span class="line">import &quot;main/rtda&quot;</span><br><span class="line"></span><br><span class="line">const jlObject = &quot;java/lang/Object&quot;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	native.Register(jlObject, &quot;getClass&quot;, &quot;()Ljava/lang/Class;&quot;, getClass)</span><br><span class="line">	native.Register(jlObject, &quot;hashCode&quot;, &quot;()I&quot;, hashCode)</span><br><span class="line">	native.Register(jlObject, &quot;clone&quot;, &quot;()Ljava/lang/Object;&quot;, clone)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// public final native Class&lt;?&gt; getClass();</span><br><span class="line">// ()Ljava/lang/Class;</span><br><span class="line">func getClass(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	class := this.Class().JClass()</span><br><span class="line">	frame.OperandStack().PushRef(class)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// public native int hashCode();</span><br><span class="line">// ()I</span><br><span class="line">func hashCode(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	hash := int32(uintptr(unsafe.Pointer(this)))</span><br><span class="line">	frame.OperandStack().PushInt(hash)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// protected native Object clone() throws CloneNotSupportedException;</span><br><span class="line">// ()Ljava/lang/Object;</span><br><span class="line">func clone(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line"></span><br><span class="line">	cloneable := this.Class().Loader().LoadClass(&quot;java/lang/Cloneable&quot;)</span><br><span class="line">	if !this.Class().IsImplements(cloneable) &#123;</span><br><span class="line">		panic(&quot;java.lang.CloneNotSupportedException&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	frame.OperandStack().PushRef(this.Clone())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在invoke_native中注册</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//todo 非常重要</span><br><span class="line">	_ &quot;main/native/java/lang&quot; //@todo init 注册</span><br></pre></td></tr></table></figure>
-<p>测试方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#测试本地方法调用</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.GetClassTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.StringTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.ObjectTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.CloneTest</span><br></pre></td></tr></table></figure></p>
-<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
-<p>提交标签 “native”</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/17、ClassLoader原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -579,6 +407,683 @@
 <p>class文件加载顺序<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">+ go run main -verbose:class -cp test/lib/example.jar jvmgo.book.ch09.TestLoadClass</span><br><span class="line">[loadNonArrayClass Loaded java/lang/Object from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/io/Serializable from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/reflect/AnnotatedElement from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/reflect/GenericDeclaration from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/reflect/Type from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/Class from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded jvmgo/book/ch09/TestLoadClass from /Users/chentong/github/jvmgo/go/test/lib/example.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/Comparable from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/CharSequence from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/String from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">[loadNonArrayClass Loaded java/lang/Cloneable from /Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/jre/lib/rt.jar]</span><br><span class="line">+ echo OK</span><br><span class="line">OK</span><br></pre></td></tr></table></figure></p>
 <h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
 <p>提交标签 “native”</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/18、异常处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/手动编写jvm虚拟机/18、异常处理/" class="post-title-link" itemprop="url">18、异常处理</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####异常处理<br>unchecked 异常 ： java.lang.RuntimeException、java.lang.Error<br>checked异常:其他<br>异常父类：java.lang.Throwable</p>
+<p>异常指令 athrow</p>
+<p>需要实现Throwable native方法<br>private native Throwable fillInStackTrace(int dummy)</p>
+<p>1、注册native方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">const jlThrowable = &quot;java/lang/Throwable&quot;</span><br><span class="line"></span><br><span class="line">type StackTraceElement struct &#123;</span><br><span class="line">	fileName   string</span><br><span class="line">	className  string</span><br><span class="line">	methodName string</span><br><span class="line">	lineNumber int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *StackTraceElement) String() string &#123;</span><br><span class="line">	return fmt.Sprintf(&quot;%s.%s(%s:%d)&quot;,</span><br><span class="line">		self.className, self.methodName, self.fileName, self.lineNumber)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	native.Register(jlThrowable, &quot;fillInStackTrace&quot;, &quot;(I)Ljava/lang/Throwable;&quot;, fillInStackTrace)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// private native Throwable fillInStackTrace(int dummy);</span><br><span class="line">// (I)Ljava/lang/Throwable;</span><br><span class="line">func fillInStackTrace(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	frame.OperandStack().PushRef(this)</span><br><span class="line"></span><br><span class="line">	stes := createStackTraceElements(this, frame.Thread())</span><br><span class="line">	this.SetExtra(stes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>java代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void catchOne()&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        tryItOut()</span><br><span class="line">    &#125;catch(TestExc e)&#123;</span><br><span class="line">        handleExc(e)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常处理表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type ExceptionHandler struct &#123;</span><br><span class="line">	startPc   int       //try代码段</span><br><span class="line">	endPc     int       //try代码段</span><br><span class="line">	handlerPc int       //处理句柄</span><br><span class="line">	catchType *ClassRef //异常类</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Method<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">type Method struct &#123;</span><br><span class="line">	exceptionTable ExceptionTable //异常处理表</span><br><span class="line">	lineNumberTable * classfile.LineNumberTableAttribute</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) &#123;</span><br><span class="line">	if codeAttr := cfMethod.CodeAttribute(); codeAttr != nil &#123;</span><br><span class="line">		self.maxStack = codeAttr.MaxStack()</span><br><span class="line">		self.maxLocals = codeAttr.MaxLocals()</span><br><span class="line">		self.code = codeAttr.Code()</span><br><span class="line">		//todo exception 增加异常处理</span><br><span class="line">		self.exceptionTable = newExceptionTable(codeAttr.ExceptionTable(),self.class.constantPool)</span><br><span class="line">		// todo 代码行号</span><br><span class="line">		self.lineNumberTable = codeAttr.LineNumberTableAttribute()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func (self *Method) FindExceptionHandler(exClass *Class, pc int) int &#123;</span><br><span class="line">	handler := self.exceptionTable.findExceptionHandler(exClass, pc)</span><br><span class="line">	if handler != nil &#123;</span><br><span class="line">		return handler.handlerPc</span><br><span class="line">	&#125;</span><br><span class="line">	return -1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Method) GetLineNumber(pc int) int &#123;</span><br><span class="line">	if self.IsNative() &#123;</span><br><span class="line">		return -2</span><br><span class="line">	&#125;</span><br><span class="line">	if self.lineNumberTable == nil &#123;</span><br><span class="line">		return -1</span><br><span class="line">	&#125;</span><br><span class="line">	return self.lineNumberTable.GetLineNumber(pc)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>newExceptionTable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">//todo exception 异常处理</span><br><span class="line">type ExceptionTable []*ExceptionHandler</span><br><span class="line"></span><br><span class="line">type ExceptionHandler struct &#123;</span><br><span class="line">	startPc   int       //try代码段</span><br><span class="line">	endPc     int       //try代码段</span><br><span class="line">	handlerPc int       //处理句柄</span><br><span class="line">	catchType *ClassRef //异常类</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//从classfile生成异常处理</span><br><span class="line">func newExceptionTable(entries []*classfile.ExceptionTableEntry, cp *ConstantPool) ExceptionTable &#123;</span><br><span class="line">	table := make([]*ExceptionHandler, len(entries))</span><br><span class="line">	for i, entry := range entries &#123;</span><br><span class="line">		table[i] = &amp;ExceptionHandler&#123;</span><br><span class="line">			startPc:   int(entry.StartPc()),</span><br><span class="line">			endPc:     int(entry.EndPc()),</span><br><span class="line">			handlerPc: int(entry.HandlerPc()),</span><br><span class="line">			catchType: getCatchType(uint(entry.CatchType()), cp),</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return table</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//获得异常类</span><br><span class="line">func getCatchType(index uint, cp *ConstantPool) *ClassRef &#123;</span><br><span class="line">	if index == 0 &#123;</span><br><span class="line">		return nil // catch all</span><br><span class="line">	&#125;</span><br><span class="line">	return cp.GetConstant(index).(*ClassRef)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self ExceptionTable) findExceptionHandler(exClass *Class, pc int) *ExceptionHandler &#123;</span><br><span class="line">	for _, handler := range self &#123;</span><br><span class="line">		// jvms: The start_pc is inclusive and end_pc is exclusive</span><br><span class="line">		if pc &gt;= handler.startPc &amp;&amp; pc &lt; handler.endPc &#123;</span><br><span class="line">			if handler.catchType == nil &#123;</span><br><span class="line">				return handler //catch-all</span><br><span class="line">			&#125;</span><br><span class="line">			catchClass := handler.catchType.ResolvedClass()</span><br><span class="line">			if catchClass == exClass || catchClass.IsSuperClassOf(exClass) &#123;</span><br><span class="line">				return handler</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>异常代码行数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func (self *CodeAttribute) LineNumberTableAttribute() *LineNumberTableAttribute &#123;</span><br><span class="line">	for _, attrInfo := range self.attributes &#123;</span><br><span class="line">		switch attrInfo.(type) &#123;</span><br><span class="line">		case *LineNumberTableAttribute:</span><br><span class="line">			return attrInfo.(*LineNumberTableAttribute)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常指令athrow<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">func (self *ATHROW) Execute(frame *rtda.Frame) &#123;</span><br><span class="line">	ex := frame.OperandStack().PopRef()</span><br><span class="line">	if ex == nil &#123;</span><br><span class="line">		panic(&quot;java.lang.NullPointerException&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	thread := frame.Thread()</span><br><span class="line">	//未找异常处理方法</span><br><span class="line">	if !findAndGotoExceptionHandler(thread, ex) &#123;</span><br><span class="line">		//抛出uncaught异常</span><br><span class="line">		handleUncaughtException(thread, ex)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func findAndGotoExceptionHandler(thread *rtda.Thread, ex *heap.Object) bool &#123;</span><br><span class="line">	for &#123;</span><br><span class="line">		frame := thread.CurrentFrame()</span><br><span class="line">		pc := frame.NextPC() - 1</span><br><span class="line"></span><br><span class="line">		handlerPC := frame.Method().FindExceptionHandler(ex.Class(), pc)</span><br><span class="line">		if handlerPC &gt; 0 &#123;</span><br><span class="line">			stack := frame.OperandStack()</span><br><span class="line">			stack.Clear()</span><br><span class="line">			stack.PushRef(ex)</span><br><span class="line">			frame.SetNextPC(handlerPC)</span><br><span class="line">			return true</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		thread.PopFrame()</span><br><span class="line">		if thread.IsStackEmpty() &#123;</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// todo</span><br><span class="line">func handleUncaughtException(thread *rtda.Thread, ex *heap.Object) &#123;</span><br><span class="line">	thread.ClearStack()</span><br><span class="line"></span><br><span class="line">	jMsg := ex.GetRefVar(&quot;detailMessage&quot;, &quot;Ljava/lang/String;&quot;)</span><br><span class="line">	goMsg := heap.GoString(jMsg)</span><br><span class="line">	println(ex.Class().JavaName() + &quot;: &quot; + goMsg)</span><br><span class="line"></span><br><span class="line">	stes := reflect.ValueOf(ex.Extra())</span><br><span class="line">	for i := 0; i &lt; stes.Len(); i++ &#123;</span><br><span class="line">		ste := stes.Index(i).Interface().(interface &#123;</span><br><span class="line">			String() string</span><br><span class="line">		&#125;)</span><br><span class="line">		println(&quot;	at &quot; + ste.String())</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>异常测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#exception 异常处理</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  123</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  abc</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest</span><br></pre></td></tr></table></figure></p>
+<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+<p>提交标签 “exception”</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/19、-启动jvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/手动编写jvm虚拟机/19、-启动jvm/" class="post-title-link" itemprop="url">19、-启动jvm</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####1、System类初始化<br>1、System类初始化方法<br>2、VM调用 System.initializeSystemClass()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1、System&#123;</span><br><span class="line">    static&#123;</span><br><span class="line">      registerNatives()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">2、VM.initialize()&#123;</span><br><span class="line">        System.initializeSystemClass()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####2、Ending 小遗憾<br>未能真实实现system类加载，依然用hack方式打印输出信息<br>笔者水平有限，对虚拟机理解更深刻时，再完整实现</p>
+<p>####3、JVM类封装<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义jvm</span></span><br><span class="line"><span class="keyword">type</span> JVM <span class="keyword">struct</span> &#123;</span><br><span class="line">	cmd         *Cmd              <span class="comment">//命令行</span></span><br><span class="line">	classLoader *heap.ClassLoader <span class="comment">//类加载器</span></span><br><span class="line">	mainThread  *rtda.Thread      <span class="comment">//主线程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//新建虚拟机</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newJVM</span><span class="params">(cmd *Cmd)</span> *<span class="title">JVM</span></span> &#123;</span><br><span class="line">	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)</span><br><span class="line">	classLoader := heap.NewClassLoader(cp, cmd.verboseClassFlag)</span><br><span class="line">	<span class="keyword">return</span> &amp;JVM&#123;</span><br><span class="line">		cmd:         cmd,</span><br><span class="line">		classLoader: classLoader,</span><br><span class="line">		mainThread:  rtda.NewTread(),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//启动虚拟机</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span> <span class="title">start</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//暂时未能真正启动VM</span></span><br><span class="line">	<span class="comment">//self.initJVM()</span></span><br><span class="line">	self.execMain()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化虚拟机</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span> <span class="title">initJVM</span><span class="params">()</span></span> &#123;</span><br><span class="line">	vmClass := self.classLoader.LoadClass(<span class="string">"sun/misc/VM"</span>)</span><br><span class="line">	base.InitClass(self.mainThread, vmClass)</span><br><span class="line">	interpret(self.mainThread, self.cmd.verboseInstFlag)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//运行main主方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span> <span class="title">execMain</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//获得加载类名字</span></span><br><span class="line">	className := strings.Replace(self.cmd.class, <span class="string">"."</span>, <span class="string">"/"</span>, <span class="number">-1</span>)</span><br><span class="line">	mainClass := self.classLoader.LoadClass(className)</span><br><span class="line">	<span class="comment">//获得main方法</span></span><br><span class="line">	mainMethod := mainClass.GetMainMethod()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> mainMethod == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="comment">//增加命令行参数</span></span><br><span class="line">		fmt.Printf(<span class="string">"Main method not found in class %s</span></span><br><span class="line"><span class="string">"</span>, self.cmd.class)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	frame := self.mainThread.NewFrame(mainMethod) <span class="comment">//创建栈帧</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//字符串参数</span></span><br><span class="line">	jArgs := self.createArgsArray()</span><br><span class="line">	frame.LocalVars().SetRef(<span class="number">0</span>, jArgs)</span><br><span class="line">	self.mainThread.PushFrame(frame)              <span class="comment">//将栈帧push线程stack中</span></span><br><span class="line"></span><br><span class="line">	interpret(self.mainThread,self.cmd.verboseInstFlag)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建args数组</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span><span class="title">createArgsArray</span><span class="params">()</span> *<span class="title">heap</span>.<span class="title">Object</span></span> &#123;</span><br><span class="line">	<span class="comment">//加载class类</span></span><br><span class="line">	stringClass := self.classLoader.LoadClass(<span class="string">"java/lang/String"</span>)</span><br><span class="line">	argsArr := stringClass.ArrayClass().NewArray(<span class="keyword">uint</span>(<span class="built_in">len</span>(self.cmd.args)))</span><br><span class="line">	jArgs := argsArr.Refs()</span><br><span class="line">	<span class="keyword">for</span> i, arg := <span class="keyword">range</span> self.cmd.args &#123;</span><br><span class="line">		jArgs[i] = heap.JString(self.classLoader, arg)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> argsArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>启动jvm</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//启动jvm</span><br><span class="line">func startJvm(cmd *Cmd) &#123;</span><br><span class="line">	newJVM(cmd).start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印hello world</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch01.HelloWorld</span><br></pre></td></tr></table></figure>
+<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+<p>提交标签 “jvm”</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/1、搭建go环境/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/手动编写jvm虚拟机/1、搭建go环境/" class="post-title-link" itemprop="url">1、搭建go环境</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####Mac环境<br>go的 ide和安装包<br>链接:<a href="https://pan.baidu.com/s/1DtHgS1M_kmpeiKHpRzYqag" target="_blank" rel="noopener">https://pan.baidu.com/s/1DtHgS1M_kmpeiKHpRzYqag</a>  密码:1vxn</p>
+<p>####添加环境变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi .bash_profile </span><br><span class="line">#go</span><br><span class="line">export GOROOT=/usr/local/go</span><br><span class="line">export PATH=$PATH:$&#123;GOROOT&#125;/bin</span><br></pre></td></tr></table></figure></p>
+<p>设置gopath<br><img src="https://upload-images.jianshu.io/upload_images/5526061-6323a4362b308fd0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>####实战项目地址<br><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/2、cmd命令行参数解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/手动编写jvm虚拟机/2、cmd命令行参数解析/" class="post-title-link" itemprop="url">2、cmd命令行参数解析</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####执行文件 入参解析<br>cmd.go<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;flag&quot;</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">import &quot;os&quot;</span><br><span class="line"></span><br><span class="line">// java [-options] class [args...]</span><br><span class="line">type Cmd struct &#123;</span><br><span class="line">	helpFlag    bool   //java -help</span><br><span class="line">	versionFlag bool   //java -version</span><br><span class="line">	cpOption    string</span><br><span class="line">	class       string // 执行主类</span><br><span class="line">	args        []string // 附加参数</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//将flag参数转成cmd</span><br><span class="line">func parseCmd() *Cmd &#123;</span><br><span class="line">	cmd := &amp;Cmd&#123;&#125;</span><br><span class="line"></span><br><span class="line">	flag.Usage = printUsage</span><br><span class="line">	flag.BoolVar(&amp;cmd.helpFlag, &quot;help&quot;, false, &quot;print help message&quot;)</span><br><span class="line">	flag.BoolVar(&amp;cmd.helpFlag, &quot;?&quot;, false, &quot;print help message&quot;)</span><br><span class="line">	flag.BoolVar(&amp;cmd.versionFlag, &quot;version&quot;, false, &quot;print version and exit&quot;)</span><br><span class="line">	flag.StringVar(&amp;cmd.cpOption, &quot;classpath&quot;, &quot;&quot;, &quot;classpath&quot;)</span><br><span class="line">	flag.StringVar(&amp;cmd.cpOption, &quot;cp&quot;, &quot;&quot;, &quot;classpath&quot;)</span><br><span class="line">	//parse失败 会执行 printUsage</span><br><span class="line">	flag.Parse()</span><br><span class="line"></span><br><span class="line">	//解析剩余参数</span><br><span class="line">	args := flag.Args()</span><br><span class="line">	if len(args) &gt; 0 &#123;</span><br><span class="line">		cmd.class = args[0]</span><br><span class="line">		cmd.args = args[1:]</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return cmd</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//使用范例</span><br><span class="line">func printUsage() &#123;</span><br><span class="line">	fmt.Printf(&quot;Usage: %s [-options] class [args...]</span><br><span class="line">&quot;, os.Args[0])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####测试类<br>main.go<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	cmd := parseCmd()</span><br><span class="line"></span><br><span class="line">	if cmd.versionFlag &#123;</span><br><span class="line">		fmt.Println(&quot;version 0.0.1&quot;)</span><br><span class="line">	&#125; else if cmd.helpFlag || cmd.class == &quot;&quot; &#123;</span><br><span class="line">		printUsage()</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		startJVM(cmd)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func startJVM(cmd *Cmd) &#123;</span><br><span class="line">	fmt.Printf(&quot;classpath:%s class:%s args:%v</span><br><span class="line">&quot;,</span><br><span class="line">		cmd.cpOption, cmd.class, cmd.args)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试命令 run.sh<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">set</span> -ex</span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$PWD</span></span><br><span class="line">go run . -version | grep -q <span class="string">"version 0.0.1"</span></span><br></pre></td></tr></table></figure></p>
+<p>go命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go install 编译</span><br><span class="line">go run 运行</span><br></pre></td></tr></table></figure></p>
+<p>####实战项目地址<br><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a><br>提交标签 “cmd”</p>
 
           
         
@@ -774,177 +1279,6 @@
 <p>Entry 类路径查找<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package classpath</span><br><span class="line"></span><br><span class="line">import &quot;os&quot;</span><br><span class="line">import &quot;strings&quot;</span><br><span class="line"></span><br><span class="line">//分隔符 &quot;:&quot;</span><br><span class="line">const pathListSeparator = string(os.PathListSeparator)</span><br><span class="line"></span><br><span class="line">//定义接口</span><br><span class="line">type Entry interface &#123;</span><br><span class="line">	// 寻找和读取 class 文件</span><br><span class="line">	// 入参：className - class文件的相对路径，eg. 如果要读取 java.lang.Object 类，则className = java/lang/Object.class</span><br><span class="line">	// 返回值：</span><br><span class="line">	// 1. 读取到的class文件内容的[]byte</span><br><span class="line">	// 2. 最终定位到包含className文件的Entry对象</span><br><span class="line">	// 3. 错误信息error</span><br><span class="line">	readClass(className string) ([]byte, Entry, error)</span><br><span class="line">	//获得className</span><br><span class="line">	string() string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//根据参数类型创建不同搜索模式</span><br><span class="line">func newEntry(path string) Entry &#123;</span><br><span class="line"></span><br><span class="line">	//读取多个className文件 java -cp path1/classes:path2/classes</span><br><span class="line">	if strings.Contains(path, pathListSeparator) &#123;</span><br><span class="line">		return newCompositeEntry(path)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 读取path下所有jar文件的className文件  java -cp path/*</span><br><span class="line">	if strings.HasSuffix(path, &quot;*&quot;) &#123;</span><br><span class="line">		return newWildcardEntry(path)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 从path/lib1.jar下查找并读取className文件：java -cp path/lib1.jar 或者 java -cp path/lib1.zip</span><br><span class="line">	//读取zip/jar下 className文件 :java -cp path/lib1.jar</span><br><span class="line">	if strings.HasSuffix(path, &quot;.jar&quot;) || strings.HasSuffix(path, &quot;.zip&quot;) &#123;</span><br><span class="line">		return newZipEntry(path)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//遍历目录</span><br><span class="line">	return newDirEntry(path)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>测试类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//测试classpath</span><br><span class="line">func parseClasspath(cmd *Cmd) &#123;</span><br><span class="line">	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)</span><br><span class="line">	fmt.Printf(&quot;classpath:%v class:%v args:%v</span><br><span class="line">&quot;,</span><br><span class="line">		cp, cmd.class, cmd.args)</span><br><span class="line"></span><br><span class="line">	className := strings.Replace(cmd.class, &quot;.&quot;, &quot;/&quot;, -1)</span><br><span class="line">	classData, _, err := cp.ReadClass(className)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;Could not find or load main class %s</span><br><span class="line">&quot;, cmd.class)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;class data:%v</span><br><span class="line">&quot;, classData)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>####实战项目地址<br><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a><br>提交标签classpath</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/19、-启动jvm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/手动编写jvm虚拟机/19、-启动jvm/" class="post-title-link" itemprop="url">19、-启动jvm</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####1、System类初始化<br>1、System类初始化方法<br>2、VM调用 System.initializeSystemClass()</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1、System&#123;</span><br><span class="line">    static&#123;</span><br><span class="line">      registerNatives()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">2、VM.initialize()&#123;</span><br><span class="line">        System.initializeSystemClass()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>####2、Ending 小遗憾<br>未能真实实现system类加载，依然用hack方式打印输出信息<br>笔者水平有限，对虚拟机理解更深刻时，再完整实现</p>
-<p>####3、JVM类封装<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义jvm</span></span><br><span class="line"><span class="keyword">type</span> JVM <span class="keyword">struct</span> &#123;</span><br><span class="line">	cmd         *Cmd              <span class="comment">//命令行</span></span><br><span class="line">	classLoader *heap.ClassLoader <span class="comment">//类加载器</span></span><br><span class="line">	mainThread  *rtda.Thread      <span class="comment">//主线程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//新建虚拟机</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newJVM</span><span class="params">(cmd *Cmd)</span> *<span class="title">JVM</span></span> &#123;</span><br><span class="line">	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)</span><br><span class="line">	classLoader := heap.NewClassLoader(cp, cmd.verboseClassFlag)</span><br><span class="line">	<span class="keyword">return</span> &amp;JVM&#123;</span><br><span class="line">		cmd:         cmd,</span><br><span class="line">		classLoader: classLoader,</span><br><span class="line">		mainThread:  rtda.NewTread(),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//启动虚拟机</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span> <span class="title">start</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//暂时未能真正启动VM</span></span><br><span class="line">	<span class="comment">//self.initJVM()</span></span><br><span class="line">	self.execMain()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化虚拟机</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span> <span class="title">initJVM</span><span class="params">()</span></span> &#123;</span><br><span class="line">	vmClass := self.classLoader.LoadClass(<span class="string">"sun/misc/VM"</span>)</span><br><span class="line">	base.InitClass(self.mainThread, vmClass)</span><br><span class="line">	interpret(self.mainThread, self.cmd.verboseInstFlag)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//运行main主方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span> <span class="title">execMain</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//获得加载类名字</span></span><br><span class="line">	className := strings.Replace(self.cmd.class, <span class="string">"."</span>, <span class="string">"/"</span>, <span class="number">-1</span>)</span><br><span class="line">	mainClass := self.classLoader.LoadClass(className)</span><br><span class="line">	<span class="comment">//获得main方法</span></span><br><span class="line">	mainMethod := mainClass.GetMainMethod()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> mainMethod == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="comment">//增加命令行参数</span></span><br><span class="line">		fmt.Printf(<span class="string">"Main method not found in class %s</span></span><br><span class="line"><span class="string">"</span>, self.cmd.class)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	frame := self.mainThread.NewFrame(mainMethod) <span class="comment">//创建栈帧</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//字符串参数</span></span><br><span class="line">	jArgs := self.createArgsArray()</span><br><span class="line">	frame.LocalVars().SetRef(<span class="number">0</span>, jArgs)</span><br><span class="line">	self.mainThread.PushFrame(frame)              <span class="comment">//将栈帧push线程stack中</span></span><br><span class="line"></span><br><span class="line">	interpret(self.mainThread,self.cmd.verboseInstFlag)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建args数组</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *JVM)</span><span class="title">createArgsArray</span><span class="params">()</span> *<span class="title">heap</span>.<span class="title">Object</span></span> &#123;</span><br><span class="line">	<span class="comment">//加载class类</span></span><br><span class="line">	stringClass := self.classLoader.LoadClass(<span class="string">"java/lang/String"</span>)</span><br><span class="line">	argsArr := stringClass.ArrayClass().NewArray(<span class="keyword">uint</span>(<span class="built_in">len</span>(self.cmd.args)))</span><br><span class="line">	jArgs := argsArr.Refs()</span><br><span class="line">	<span class="keyword">for</span> i, arg := <span class="keyword">range</span> self.cmd.args &#123;</span><br><span class="line">		jArgs[i] = heap.JString(self.classLoader, arg)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> argsArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>启动jvm</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//启动jvm</span><br><span class="line">func startJvm(cmd *Cmd) &#123;</span><br><span class="line">	newJVM(cmd).start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>打印hello world</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch01.HelloWorld</span><br></pre></td></tr></table></figure>
-<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
-<p>提交标签 “jvm”</p>
 
           
         
@@ -1390,337 +1724,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/1、搭建go环境/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/手动编写jvm虚拟机/1、搭建go环境/" class="post-title-link" itemprop="url">1、搭建go环境</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####Mac环境<br>go的 ide和安装包<br>链接:<a href="https://pan.baidu.com/s/1DtHgS1M_kmpeiKHpRzYqag" target="_blank" rel="noopener">https://pan.baidu.com/s/1DtHgS1M_kmpeiKHpRzYqag</a>  密码:1vxn</p>
-<p>####添加环境变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi .bash_profile </span><br><span class="line">#go</span><br><span class="line">export GOROOT=/usr/local/go</span><br><span class="line">export PATH=$PATH:$&#123;GOROOT&#125;/bin</span><br></pre></td></tr></table></figure></p>
-<p>设置gopath<br><img src="https://upload-images.jianshu.io/upload_images/5526061-6323a4362b308fd0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
-<p>####实战项目地址<br><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/2、cmd命令行参数解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/手动编写jvm虚拟机/2、cmd命令行参数解析/" class="post-title-link" itemprop="url">2、cmd命令行参数解析</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####执行文件 入参解析<br>cmd.go<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;flag&quot;</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">import &quot;os&quot;</span><br><span class="line"></span><br><span class="line">// java [-options] class [args...]</span><br><span class="line">type Cmd struct &#123;</span><br><span class="line">	helpFlag    bool   //java -help</span><br><span class="line">	versionFlag bool   //java -version</span><br><span class="line">	cpOption    string</span><br><span class="line">	class       string // 执行主类</span><br><span class="line">	args        []string // 附加参数</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//将flag参数转成cmd</span><br><span class="line">func parseCmd() *Cmd &#123;</span><br><span class="line">	cmd := &amp;Cmd&#123;&#125;</span><br><span class="line"></span><br><span class="line">	flag.Usage = printUsage</span><br><span class="line">	flag.BoolVar(&amp;cmd.helpFlag, &quot;help&quot;, false, &quot;print help message&quot;)</span><br><span class="line">	flag.BoolVar(&amp;cmd.helpFlag, &quot;?&quot;, false, &quot;print help message&quot;)</span><br><span class="line">	flag.BoolVar(&amp;cmd.versionFlag, &quot;version&quot;, false, &quot;print version and exit&quot;)</span><br><span class="line">	flag.StringVar(&amp;cmd.cpOption, &quot;classpath&quot;, &quot;&quot;, &quot;classpath&quot;)</span><br><span class="line">	flag.StringVar(&amp;cmd.cpOption, &quot;cp&quot;, &quot;&quot;, &quot;classpath&quot;)</span><br><span class="line">	//parse失败 会执行 printUsage</span><br><span class="line">	flag.Parse()</span><br><span class="line"></span><br><span class="line">	//解析剩余参数</span><br><span class="line">	args := flag.Args()</span><br><span class="line">	if len(args) &gt; 0 &#123;</span><br><span class="line">		cmd.class = args[0]</span><br><span class="line">		cmd.args = args[1:]</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return cmd</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//使用范例</span><br><span class="line">func printUsage() &#123;</span><br><span class="line">	fmt.Printf(&quot;Usage: %s [-options] class [args...]</span><br><span class="line">&quot;, os.Args[0])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####测试类<br>main.go<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	cmd := parseCmd()</span><br><span class="line"></span><br><span class="line">	if cmd.versionFlag &#123;</span><br><span class="line">		fmt.Println(&quot;version 0.0.1&quot;)</span><br><span class="line">	&#125; else if cmd.helpFlag || cmd.class == &quot;&quot; &#123;</span><br><span class="line">		printUsage()</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		startJVM(cmd)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func startJVM(cmd *Cmd) &#123;</span><br><span class="line">	fmt.Printf(&quot;classpath:%s class:%s args:%v</span><br><span class="line">&quot;,</span><br><span class="line">		cmd.cpOption, cmd.class, cmd.args)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>测试命令 run.sh<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">set</span> -ex</span><br><span class="line"><span class="built_in">export</span> GOPATH=<span class="variable">$PWD</span></span><br><span class="line">go run . -version | grep -q <span class="string">"version 0.0.1"</span></span><br></pre></td></tr></table></figure></p>
-<p>go命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go install 编译</span><br><span class="line">go run 运行</span><br></pre></td></tr></table></figure></p>
-<p>####实战项目地址<br><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a><br>提交标签 “cmd”</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/6、运行时数据区/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2085,7 +2088,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -2127,7 +2130,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">334</span>
+                    <span class="site-state-item-count">299</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2190,9 +2193,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

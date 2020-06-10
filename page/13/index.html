@@ -288,337 +288,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/vue事件修饰符/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/weex专题/vue事件修饰符/" class="post-title-link" itemprop="url">vue事件修饰符</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 阻止单击事件冒泡 --&gt;</span><br><span class="line">&lt;a v-on:click.stop=&quot;doThis&quot;&gt;&lt;/a&gt;</span><br><span class="line">&lt;!-- 提交事件不再重载页面 --&gt;</span><br><span class="line">&lt;form v-on:submit.prevent=&quot;onSubmit&quot;&gt;&lt;/form&gt;</span><br><span class="line">&lt;!-- 修饰符可以串联  --&gt;</span><br><span class="line">&lt;a v-on:click.stop.prevent=&quot;doThat&quot;&gt;&lt;/a&gt;</span><br><span class="line">&lt;!-- 只有修饰符 --&gt;</span><br><span class="line">&lt;form v-on:submit.prevent&gt;&lt;/form&gt;</span><br><span class="line">&lt;!-- 添加事件侦听器时使用事件捕获模式 --&gt;</span><br><span class="line">&lt;div v-on:click.capture=&quot;doThis&quot;&gt;...&lt;/div&gt;</span><br><span class="line">&lt;!-- 只当事件在该元素本身（而不是子元素）触发时触发回调 --&gt;</span><br><span class="line">&lt;div v-on:click.self=&quot;doThat&quot;&gt;...&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- click 事件只能点击一次，2.1.4版本新增 --&gt;</span><br><span class="line">&lt;a v-on:click.once=&quot;doThis&quot;&gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure>
-<p>按键修饰符<br><!-- 同上 --></p>
-<p><input v-on:keyup.enter="submit"><br><!-- 缩写语法 --></p>
-<input @keyup.enter="submit">
-
-<p>全部的按键别名：<br>.enter<br>.tab<br>.delete (捕获 “删除” 和 “退格” 键)<br>.esc<br>.space<br>.up<br>.down<br>.left<br>.right<br>.ctrl<br>.alt<br>.shift<br>.meta</p>
-<p></p><p><!-- Alt + C --></p>
-<p><input @keyup.alt.67="clear"><br><!-- Ctrl + Click --></p>
-<div @click.ctrl="doSomething">Do something</div>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/Vue-js-目录结构/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/weex专题/Vue-js-目录结构/" class="post-title-link" itemprop="url">Vue-js-目录结构</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>######vue目录<img src="https://upload-images.jianshu.io/upload_images/5526061-fbeffa5c82d33d07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-dbcc892a67275490.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/vue基础语法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -752,6 +421,336 @@
 </li>
 </ul>
 <p>v-on缩写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click=&quot;doSomething&quot;&gt;&lt;/a&gt;</span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click=&quot;doSomething&quot;&gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/vue常用命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/weex专题/vue常用命令/" class="post-title-link" itemprop="url">vue常用命令</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>常用命令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看版本</span></span><br><span class="line">$ npm -v</span><br><span class="line">2.3.0</span><br><span class="line"></span><br><span class="line"><span class="comment">#升级 npm</span></span><br><span class="line">cnpm install npm -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># 升级或安装 cnpm</span></span><br><span class="line">npm install cnpm -g</span><br></pre></td></tr></table></figure></p>
+<p>在用 Vue.js 构建大型应用时推荐使用 NPM 安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 最新稳定版</span><br><span class="line">$ cnpm install vue -g</span><br></pre></td></tr></table></figure></p>
+<p>创建项目并运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 全局安装 vue-cli</span><br><span class="line">$ cnpm install --global vue-cli</span><br><span class="line"># 创建一个基于 webpack 模板的新项目</span><br><span class="line">$ vue init webpack my-project</span><br><span class="line"></span><br><span class="line">$ cd my-project</span><br><span class="line">$ cnpm install</span><br><span class="line">$ cnpm run dev</span><br><span class="line"> DONE  Compiled successfully in 2985ms</span><br><span class="line"> I  Your application is running here:http://localhost:8080</span><br></pre></td></tr></table></figure></p>
+<p>weex常用命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g weex-toolkit</span><br><span class="line">$ weex -v // 查看当前weex工具版本</span><br><span class="line"></span><br><span class="line">weex create awesome-project</span><br><span class="line"></span><br><span class="line">cd awesome-app</span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line">npm start</span><br><span class="line"></span><br><span class="line">weex platform add ios</span><br><span class="line">weex platform add android</span><br><span class="line"></span><br><span class="line">weex run android </span><br><span class="line">weex run ios</span><br><span class="line">weex run web </span><br><span class="line"></span><br><span class="line">weex debug</span><br></pre></td></tr></table></figure></p>
+<p>编译<br>weex compile src build</p>
+<p>预览<br> weex src –entry src/foo.vue</p>
+<p>代码检查<br>weex lint </p>
+<p>常用脚本命令<br>前缀 npm run<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&quot;start&quot;: &quot;npm run serve&quot;,</span><br><span class="line">&quot;build&quot;: &quot;webpack --env.NODE_ENV=common&quot;,</span><br><span class="line">&quot;build:prod&quot;: &quot;webpack --env.NODE_ENV=production&quot;,</span><br><span class="line">&quot;build:prod:web&quot;: &quot;webpack --env.NODE_ENV=release&quot;,</span><br><span class="line">&quot;build:plugin&quot;: &quot;webpack --env.NODE_ENV=plugin&quot;,</span><br><span class="line">&quot;clean:web&quot;: &quot;rimraf ./release/web&quot;,</span><br><span class="line">&quot;clean:ios&quot;: &quot;rimraf ./release/ios&quot;,</span><br><span class="line">&quot;clean:android&quot;: &quot;rimraf ./release/android&quot;,</span><br><span class="line">&quot;dev&quot;: &quot;webpack --env.NODE_ENV=common --progress --watch&quot;,</span><br><span class="line">&quot;unit&quot;: &quot;karma start test/unit/karma.conf.js --single-run&quot;,</span><br><span class="line">&quot;test&quot;: &quot;npm run unit&quot;,</span><br><span class="line">&quot;lint&quot;: &quot;eslint --ext .js,.vue src  test/unit --fix&quot;,</span><br><span class="line">&quot;serve&quot;: &quot;webpack-dev-server --env.NODE_ENV=development --progress&quot;,</span><br><span class="line">&quot;ios&quot;: &quot;weex run ios&quot;,</span><br><span class="line">&quot;web&quot;: &quot;npm run serve&quot;,</span><br><span class="line">&quot;android&quot;: &quot;weex run android&quot;,</span><br><span class="line">&quot;pack:ios&quot;: &quot;npm run clean:ios &amp;&amp; weex build ios&quot;,</span><br><span class="line">&quot;pack:android&quot;: &quot;npm run clean:android &amp;&amp; weex build android&quot;,</span><br><span class="line">&quot;pack:web&quot;: &quot;npm run clean:web &amp;&amp; npm run build:prod:web&quot;,</span><br><span class="line">&quot;ide:preview&quot; : &quot;npm run dev&quot;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/vue循环语法-v-for/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/weex专题/vue循环语法-v-for/" class="post-title-link" itemprop="url">vue循环语法-v-for</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>v-for<br>v-for 指令需要以 site in sites</p>
+<p>各种写法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;li v-for=&quot;site in sites&quot;&gt;</span><br><span class="line">      &#123;&#123; site.name &#125;&#125;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line"></span><br><span class="line">//模板</span><br><span class="line">&lt;template v-for=&quot;site in sites&quot;&gt;</span><br><span class="line">      &lt;li&gt;&#123;&#123; site.name &#125;&#125;&lt;/li&gt;</span><br><span class="line">      &lt;li&gt;--------------&lt;/li&gt;</span><br><span class="line">    &lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;li v-for=&quot;value in object&quot;&gt;</span><br><span class="line">    &#123;&#123; value &#125;&#125;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line"></span><br><span class="line">&lt;li v-for=&quot;(value, key) in object&quot;&gt;</span><br><span class="line">    &#123;&#123; key &#125;&#125; : &#123;&#123; value &#125;&#125;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line"></span><br><span class="line">&lt;li v-for=&quot;(value, key, index) in object&quot;&gt;</span><br><span class="line">     &#123;&#123; index &#125;&#125;. &#123;&#123; key &#125;&#125; : &#123;&#123; value &#125;&#125;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line"></span><br><span class="line">&lt;li v-for=&quot;n in 10&quot;&gt;</span><br><span class="line">     &#123;&#123; n &#125;&#125;</span><br><span class="line">    &lt;/li&gt;</span><br></pre></td></tr></table></figure></p>
 
           
         
@@ -1134,6 +1133,177 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/vue表单/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/weex专题/vue表单/" class="post-title-link" itemprop="url">vue表单</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p> input 和 textarea 元素中使用 v-model 实现双向数据绑定：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;p&gt;input 元素：&lt;/p&gt;</span><br><span class="line">  &lt;input v-model=&quot;message&quot; placeholder=&quot;编辑我……&quot;&gt;</span><br><span class="line">  &lt;p&gt;消息是: &#123;&#123; message &#125;&#125;&lt;/p&gt;</span><br><span class="line">    </span><br><span class="line">  &lt;p&gt;textarea 元素：&lt;/p&gt;</span><br><span class="line">  &lt;p style=&quot;white-space: pre&quot;&gt;&#123;&#123; message2 &#125;&#125;&lt;/p&gt;</span><br><span class="line">  &lt;textarea v-model=&quot;message2&quot; placeholder=&quot;多行文本输入……&quot;&gt;&lt;/textarea&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    message: &apos;Runoob&apos;,</span><br><span class="line">    message2: &apos;菜鸟教程</span><br><span class="line">http://www.runoob.com&apos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>checkbox<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;p&gt;单个复选框：&lt;/p&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;checkbox&quot; v-model=&quot;checked&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;checkbox&quot;&gt;&#123;&#123; checked &#125;&#125;&lt;/label&gt;</span><br><span class="line">    </span><br><span class="line">  &lt;p&gt;多个复选框：&lt;/p&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;runoob&quot; value=&quot;Runoob&quot; v-model=&quot;checkedNames&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;runoob&quot;&gt;Runoob&lt;/label&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;google&quot; value=&quot;Google&quot; v-model=&quot;checkedNames&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;google&quot;&gt;Google&lt;/label&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;taobao&quot; value=&quot;Taobao&quot; v-model=&quot;checkedNames&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;taobao&quot;&gt;taobao&lt;/label&gt;</span><br><span class="line">  &lt;br&gt;</span><br><span class="line">  &lt;span&gt;选择的值为: &#123;&#123; checkedNames &#125;&#125;&lt;/span&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    checked : false,</span><br><span class="line">    checkedNames: []</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>select</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;select v-model=&quot;selected&quot; name=&quot;fruit&quot;&gt;</span><br><span class="line">    &lt;option value=&quot;&quot;&gt;选择一个网站&lt;/option&gt;</span><br><span class="line">    &lt;option value=&quot;www.runoob.com&quot;&gt;Runoob&lt;/option&gt;</span><br><span class="line">    &lt;option value=&quot;www.google.com&quot;&gt;Google&lt;/option&gt;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line"> </span><br><span class="line">  &lt;div id=&quot;output&quot;&gt;</span><br><span class="line">      选择的网站是: &#123;&#123;selected&#125;&#125;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    selected: &apos;&apos; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>修饰符</p>
+<!-- 在 "change" 而不是 "input" 事件中更新 -->
+<input v-model.lazy="msg">
+
+<p>数据类型要求<br><code>&lt;input v-model.number=&quot;age&quot; type=&quot;number&quot;&gt;</code></p>
+<p>过滤首位空格</p>
+<input v-model.trim="msg">
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/vue计算属性-computed-vs-methods/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1241,176 +1411,6 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
             <p>关键词 computed<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;p&gt;原始字符串: &#123;&#123; message &#125;&#125;&lt;/p&gt;</span><br><span class="line">  &lt;p&gt;计算后反转字符串: &#123;&#123; reversedMessage &#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">var vm = new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    message: &apos;Runoob!&apos;</span><br><span class="line">  &#125;,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    // 计算属性的 getter</span><br><span class="line">    reversedMessage: function () &#123;</span><br><span class="line">      // `this` 指向 vm 实例</span><br><span class="line">      return this.message.split(&apos;&apos;).reverse().join(&apos;&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
 <p>method vs computed<br>区别<br>1、函数函数，属性调用<br>2、computed 依赖缓存，缓存变化，重新取值<br>methods 重新渲染时，总会执行<br>总之，computed性能更好，不希望缓存methods</p>
 <p>setter 方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">var vm = new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    name: &apos;Google&apos;,</span><br><span class="line">    url: &apos;http://www.google.com&apos;</span><br><span class="line">  &#125;,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    site: &#123;</span><br><span class="line">      // getter</span><br><span class="line">      get: function () &#123;</span><br><span class="line">        return this.name + &apos; &apos; + this.url</span><br><span class="line">      &#125;,</span><br><span class="line">      // setter</span><br><span class="line">      set: function (newValue) &#123;</span><br><span class="line">        var names = newValue.split(&apos; &apos;)</span><br><span class="line">        this.name = names[0]</span><br><span class="line">        this.url = names[names.length - 1]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 调用 setter， vm.name 和 vm.url 也会被对应更新</span><br><span class="line">vm.site = &apos;菜鸟教程 http://www.runoob.com&apos;;</span><br><span class="line">document.write(&apos;name: &apos; + vm.name);</span><br><span class="line">document.write(&apos;&lt;br&gt;&apos;);</span><br><span class="line">document.write(&apos;url: &apos; + vm.url);</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/weex开始学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/weex专题/weex开始学习/" class="post-title-link" itemprop="url">weex开始学习</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/weex专题/" itemprop="url" rel="index"><span itemprop="name">weex专题</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>#####1、如何快速学习weex<br>接触新语言，为了快速上手，就是写法，后期研究对应原理</p>
-<p>#####weex学习思路<br><img src="https://upload-images.jianshu.io/upload_images/5526061-a5bed8da0fede220.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>编译IDE下载<br><a href="https://www.jianshu.com/p/42418c4ddc9f" target="_blank" rel="noopener">https://www.jianshu.com/p/42418c4ddc9f</a></p>
-<p>weex简单教程<br><a href="https://weex.apache.org/zh/" target="_blank" rel="noopener">https://weex.apache.org/zh/</a><br>指南+文档两部分，优先关注指南</p>
-<p>vue基础教程<br><a href="https://www.jianshu.com/c/c7de79415652" target="_blank" rel="noopener">https://www.jianshu.com/c/c7de79415652</a></p>
-<p>菜鸟教程<br><a href="https://www.runoob.com/vue2/vue-start.html" target="_blank" rel="noopener">https://www.runoob.com/vue2/vue-start.html</a></p>
-<p>vue API教程<br><a href="https://cn.vuejs.org/v2/api/" target="_blank" rel="noopener">https://cn.vuejs.org/v2/api/</a></p>
-<p>快速借鉴开源项目<br><a href="https://github.com/CarGuo/GSYGithubAppWeex" target="_blank" rel="noopener">https://github.com/CarGuo/GSYGithubAppWeex</a></p>
-<p>weex官方博客<br><a href="https://weex.apache.org/zh/blog/write-a-blog.html" target="_blank" rel="noopener">https://weex.apache.org/zh/blog/write-a-blog.html</a></p>
-<p>#####一般交接项目关注点<br>1.移动app接口文档；<br>2.app原型图与设计图，UI切图；<br>3.app（iOS，Android）重要技术和关键的第三方开源库；<br>4.是否有推送，热更新功能；<br>5.app签名证书和各种开发平台账号，合作的第三方SDK账号；<br>6.app关键功能使用的的说明文档；<br>7.app接口网络配置（测试，生产）；<br>8.app  使用严重bug修复验收</p>
 
           
         
@@ -1791,7 +1791,7 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/vue表单/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/weex专题/weex开始学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1811,7 +1811,7 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/weex专题/vue表单/" class="post-title-link" itemprop="url">vue表单</a>
+                <a href="/2020/05/26/weex专题/weex开始学习/" class="post-title-link" itemprop="url">weex开始学习</a>
               
             
           </h1>
@@ -1895,17 +1895,16 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
       
         
           
-            <p> input 和 textarea 元素中使用 v-model 实现双向数据绑定：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;p&gt;input 元素：&lt;/p&gt;</span><br><span class="line">  &lt;input v-model=&quot;message&quot; placeholder=&quot;编辑我……&quot;&gt;</span><br><span class="line">  &lt;p&gt;消息是: &#123;&#123; message &#125;&#125;&lt;/p&gt;</span><br><span class="line">    </span><br><span class="line">  &lt;p&gt;textarea 元素：&lt;/p&gt;</span><br><span class="line">  &lt;p style=&quot;white-space: pre&quot;&gt;&#123;&#123; message2 &#125;&#125;&lt;/p&gt;</span><br><span class="line">  &lt;textarea v-model=&quot;message2&quot; placeholder=&quot;多行文本输入……&quot;&gt;&lt;/textarea&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    message: &apos;Runoob&apos;,</span><br><span class="line">    message2: &apos;菜鸟教程</span><br><span class="line">http://www.runoob.com&apos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p>checkbox<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;p&gt;单个复选框：&lt;/p&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;checkbox&quot; v-model=&quot;checked&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;checkbox&quot;&gt;&#123;&#123; checked &#125;&#125;&lt;/label&gt;</span><br><span class="line">    </span><br><span class="line">  &lt;p&gt;多个复选框：&lt;/p&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;runoob&quot; value=&quot;Runoob&quot; v-model=&quot;checkedNames&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;runoob&quot;&gt;Runoob&lt;/label&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;google&quot; value=&quot;Google&quot; v-model=&quot;checkedNames&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;google&quot;&gt;Google&lt;/label&gt;</span><br><span class="line">  &lt;input type=&quot;checkbox&quot; id=&quot;taobao&quot; value=&quot;Taobao&quot; v-model=&quot;checkedNames&quot;&gt;</span><br><span class="line">  &lt;label for=&quot;taobao&quot;&gt;taobao&lt;/label&gt;</span><br><span class="line">  &lt;br&gt;</span><br><span class="line">  &lt;span&gt;选择的值为: &#123;&#123; checkedNames &#125;&#125;&lt;/span&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    checked : false,</span><br><span class="line">    checkedNames: []</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p>select</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;select v-model=&quot;selected&quot; name=&quot;fruit&quot;&gt;</span><br><span class="line">    &lt;option value=&quot;&quot;&gt;选择一个网站&lt;/option&gt;</span><br><span class="line">    &lt;option value=&quot;www.runoob.com&quot;&gt;Runoob&lt;/option&gt;</span><br><span class="line">    &lt;option value=&quot;www.google.com&quot;&gt;Google&lt;/option&gt;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line"> </span><br><span class="line">  &lt;div id=&quot;output&quot;&gt;</span><br><span class="line">      选择的网站是: &#123;&#123;selected&#125;&#125;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: &apos;#app&apos;,</span><br><span class="line">  data: &#123;</span><br><span class="line">    selected: &apos;&apos; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-<p>修饰符</p>
-<!-- 在 "change" 而不是 "input" 事件中更新 -->
-<input v-model.lazy="msg">
-
-<p>数据类型要求<br><code>&lt;input v-model.number=&quot;age&quot; type=&quot;number&quot;&gt;</code></p>
-<p>过滤首位空格</p>
-<input v-model.trim="msg">
+            <p>#####1、如何快速学习weex<br>接触新语言，为了快速上手，就是写法，后期研究对应原理</p>
+<p>#####weex学习思路<br><img src="https://upload-images.jianshu.io/upload_images/5526061-a5bed8da0fede220.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>编译IDE下载<br><a href="https://www.jianshu.com/p/42418c4ddc9f" target="_blank" rel="noopener">https://www.jianshu.com/p/42418c4ddc9f</a></p>
+<p>weex简单教程<br><a href="https://weex.apache.org/zh/" target="_blank" rel="noopener">https://weex.apache.org/zh/</a><br>指南+文档两部分，优先关注指南</p>
+<p>vue基础教程<br><a href="https://www.jianshu.com/c/c7de79415652" target="_blank" rel="noopener">https://www.jianshu.com/c/c7de79415652</a></p>
+<p>菜鸟教程<br><a href="https://www.runoob.com/vue2/vue-start.html" target="_blank" rel="noopener">https://www.runoob.com/vue2/vue-start.html</a></p>
+<p>vue API教程<br><a href="https://cn.vuejs.org/v2/api/" target="_blank" rel="noopener">https://cn.vuejs.org/v2/api/</a></p>
+<p>快速借鉴开源项目<br><a href="https://github.com/CarGuo/GSYGithubAppWeex" target="_blank" rel="noopener">https://github.com/CarGuo/GSYGithubAppWeex</a></p>
+<p>weex官方博客<br><a href="https://weex.apache.org/zh/blog/write-a-blog.html" target="_blank" rel="noopener">https://weex.apache.org/zh/blog/write-a-blog.html</a></p>
+<p>#####一般交接项目关注点<br>1.移动app接口文档；<br>2.app原型图与设计图，UI切图；<br>3.app（iOS，Android）重要技术和关键的第三方开源库；<br>4.是否有推送，热更新功能；<br>5.app签名证书和各种开发平台账号，合作的第三方SDK账号；<br>6.app关键功能使用的的说明文档；<br>7.app接口网络配置（测试，生产）；<br>8.app  使用严重bug修复验收</p>
 
           
         
@@ -1951,7 +1950,7 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1993,7 +1992,7 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">334</span>
+                    <span class="site-state-item-count">299</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2056,9 +2055,7 @@ style 这种写法 与html耦合在一起，不易读懂</code></p>
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

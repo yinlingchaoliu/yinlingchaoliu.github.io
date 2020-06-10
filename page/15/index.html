@@ -288,412 +288,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/开源工具/简单易用sharepref存储工具/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/开源工具/简单易用sharepref存储工具/" class="post-title-link" itemprop="url">简单易用sharepref存储工具</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/开源工具/" itemprop="url" rel="index"><span itemprop="name">开源工具</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>简单sharepref存储工具，支持多sharepref表使用，支持参数化配置</p>
-<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p><a href="https://github.com/yinlingchaoliu/sharepref.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/sharepref.git</a></p>
-<h3 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h3><p><img src="https://upload-images.jianshu.io/upload_images/5526061-260e0a4c86ab82ff.gif?imageMogr2/auto-orient/strip" alt><br>源码中有完整使用示例</p>
-<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><ul>
-<li>支持参数可配置化</li>
-<li>支持多种数据类型任意实体类， list， map</li>
-<li>支持原有sp数据存储 getObj putObj</li>
-<li>支持数据迁移</li>
-<li>可扩展性强，后续可支持加密</li>
-<li>支持数据异步提交用apply并且兼容</li>
-<li>支持多sharepref文件</li>
-<li>支持项目可拆分多部分 动态配置, 基本库(sp+注解)</li>
-</ul>
-<h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>1.引仓库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maven &#123; url &apos;https://jitpack.io&apos; &#125;</span><br></pre></td></tr></table></figure></p>
-<p>2.加依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation &apos;com.github.yinlingchaoliu:sharepref:1.0.0&apos;</span><br></pre></td></tr></table></figure></p>
-<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><h4 id="1、增加注解配置"><a href="#1、增加注解配置" class="headerlink" title="1、增加注解配置"></a>1、增加注解配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 初始化spname</span><br><span class="line"> * 一个spname 映射 一个table</span><br><span class="line"> */</span><br><span class="line">@SPNAME(&quot;sharepref_table&quot;) //sharepref文件名</span><br><span class="line">public interface ISharedPref &#123;</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;username&quot;) //存储的key值</span><br><span class="line">    @DEFAULT(&quot;&quot;)    //默认值</span><br><span class="line">    Call&lt;String&gt; username(); //支持数据类型 String</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;isOk&quot;)</span><br><span class="line">    @DEFAULT(&quot;false&quot;)</span><br><span class="line">    Call&lt;Boolean&gt; isOk();//支持数据类型 boolean</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;age&quot;)</span><br><span class="line">    @DEFAULT(&quot;0&quot;)</span><br><span class="line">    Call&lt;Integer&gt; age();//支持数据类型 Integer</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;waitTime&quot;)</span><br><span class="line">    @DEFAULT(&quot;0&quot;)</span><br><span class="line">    Call&lt;Long&gt; waitTime();//支持数据类型 Long</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="2、继承SharePrefFacade，如下实现即可"><a href="#2、继承SharePrefFacade，如下实现即可" class="headerlink" title="2、继承SharePrefFacade，如下实现即可"></a>2、继承SharePrefFacade，如下实现即可</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class SharePrefManager extends SharePrefFacade &#123;</span><br><span class="line"></span><br><span class="line">    private ISharedPref mISharedPrefDelegate;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void create() &#123;</span><br><span class="line">        mISharedPrefDelegate = create(ISharedPref.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static ISharedPref ISharedPref() &#123;</span><br><span class="line">        return getIns().mISharedPrefDelegate;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private SharePrefManager() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class SingleHolder &#123;</span><br><span class="line">        private static final SharePrefManager sharePrefManager = new SharePrefManager();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static SharePrefManager getIns() &#123;</span><br><span class="line">        return SingleHolder.sharePrefManager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="3、application初始化"><a href="#3、application初始化" class="headerlink" title="3、application初始化"></a>3、application初始化</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SharePrefManager.getIns().init(this);</span><br></pre></td></tr></table></figure>
-<h4 id="4、使用"><a href="#4、使用" class="headerlink" title="4、使用"></a>4、使用</h4><ol>
-<li>存储</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SharePrefManager.ISharedPref().username().put(name);</span><br><span class="line">```    </span><br><span class="line">2. 取值</span><br></pre></td></tr></table></figure>
-<p>String name = SharePrefManager.ISharedPref().username().get();<br><code>`</code></p>
-<h3 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h3><p>参考：<br><a href="https://github.com/orhanobut/hawk" target="_blank" rel="noopener">https://github.com/orhanobut/hawk</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/如何学习ndk/opengl快速学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/如何学习ndk/opengl快速学习/" class="post-title-link" itemprop="url">opengl快速学习</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:51" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/如何学习ndk/" itemprop="url" rel="index"><span itemprop="name">如何学习ndk</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####前言<br><a href="https://juejin.im/post/5e00bc2051882512454b44f3" target="_blank" rel="noopener">https://juejin.im/post/5e00bc2051882512454b44f3</a></p>
-<p>opengl学习方法</p>
-<ul>
-<li><p>1）原理<br>原理便于系统理解opengl</p>
-</li>
-<li><p>2）通用封装方法<br>封装是基于整体性理解，用面向对象思想封装，增加复用性同时，也增加易用性</p>
-</li>
-<li><p>3）实战范例<br>实战范例目的是新手在项目基础上修改，通过直观效果，更容易理解opengl<br>案例：<a href="https://github.com/yinlingchaoliu/HowToLearnNdk" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/HowToLearnNdk</a><br>模块：opengl</p>
-</li>
-</ul>
-<p>####opengl原理及思考</p>
-<p>#####1、 opengl的安卓支持 </p>
-<ul>
-<li><p>1、Android为opengl提供特定视图GLSurfaceView，可以单独运行在一个单独线程中，提供渲染方法setRenderer来设置渲染器</p>
-<p> 实现特定渲染器，可以让图像效果多样化<br>GLSurfaceView. Renderer </p>
-<p> 渲染器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public interface Renderer &#123;</span><br><span class="line">   //视图创建时调用  初始化工作</span><br><span class="line">    void onSurfaceCreated(GL10 gl, EGLConfig config);</span><br><span class="line">    //视图改变时调用  主流程绘制工作</span><br><span class="line">    void onSurfaceChanged(GL10 gl, int width, int height);</span><br><span class="line">    //视图绘制时调用  实时监测工作</span><br><span class="line">    void onDrawFrame(GL10 gl);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>2、opengl坐标<br>OpenGL 都会把手机屏幕映射到 [-1，1] 的范围内。也就是说：屏幕的左边对应 X 轴的 -1 ，屏幕的右边对应 +1，屏幕的底边会对应 Y 轴的 -1，而屏幕的顶边就对应 +1,屏幕中心[0,0]</p>
-</li>
-<li><p>3、基本图元<br>点、线、三角形<br>其他所有图形都是基于三种图元完成，矩形视为两个三角形拼成</p>
-</li>
-</ul>
-<p>#####2、基本思考<br><code>编写代码时刻要考虑，视图与逻辑分离作为第一原则</code><br>1、图像基本组成要素是一样的，要抽象出来增加复用性<br>2、图像修改，要通过回调来操作，避免业务代码写到图像代码中，增加可读性<br>3、每种图形GLSurfaceView，Renderer代码中，避免过多全局变量，如果渲染器或图形视图过于复杂，要分开写</p>
-<p>#####opengl 整体渲染流程</p>
-<ul>
-<li><p>######1、渲染管线及流程</p>
-<p>1）渲染管线也称为渲染流水线或像素流水线或像素管线，是显示芯片内部（GPU）处理图形信号相互独立的并行处理单元。现阶段显卡分为顶点渲染和像素渲染</p>
-</li>
-</ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/5526061-33fa4c366e9dc108.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="opengl渲染管线处理流程"></p>
-<p>顶点着色器 ：根据顶点坐标，建立图形模型。<br>片段着色器：图形填上颜色。</p>
-<p>目前手机上opengl使用渲染管线，围绕形状绘制和着色展开工作</p>
-<ul>
-<li><p>1、读取顶点数据-内存拷贝<br>将顶点坐标通过内存拷贝传递给渲染管线<br>Java层传递</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 声明一个字节缓冲区 FloatBuffer</span><br><span class="line">private FloatBuffer floatBuffer;</span><br><span class="line">// 定义顶点数据</span><br><span class="line">float[] vertexData = new float[16];</span><br><span class="line">// FloatBuffer 初始化工作并放入顶点数据</span><br><span class="line">floatBuffer = ByteBuffer</span><br><span class="line">    .allocateDirect(vertexData.length * Constant.BYTES_PRE_FLOAT)</span><br><span class="line">    .order(ByteOrder.nativeOrder())</span><br><span class="line">    .asFloatBuffer()</span><br><span class="line">    .put(vertexData);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>2、执行顶点着色器和组装图元<br>用GLSL语言定义着色</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">attribute vec4 a_Position;</span><br><span class="line">void main()</span><br><span class="line">&#123;</span><br><span class="line">    gl_Position = a_Position; //接收顶点坐标</span><br><span class="line">    gl_PointSize = 30.0; //点大小</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>顶点坐标    a_Position<br>特殊全局变量 gl_Position 和 gl_PointSize<br>实战：要提供通用ShapeUtil工具类，便于快速着色</p>
-<ul>
-<li><p>3、光栅化图元<br>OpenGL 就是通过 光栅化 技术的过程把每个点、直线及三角形分解成大量的小片段，它们可以映射到移动设备显示屏的像素上，从而生成一幅图像</p>
-</li>
-<li><p>4、执行片段着色器<br>片段着色器的主要目的就是告诉 GPU 每个片段的最终颜色应该是什么</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">precision mediump float; //精度</span><br><span class="line">uniform vec4 u_Color; //颜色</span><br><span class="line">void main()</span><br><span class="line">&#123;</span><br><span class="line">    gl_FragColor = u_Color;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>颜色的全局变量 ：gl_FragColor<br>java层颜色赋值：u_Color<br>精度：mediump<br>片段着色之后，自动写入缓存，显示在屏幕上</p>
-<p> #####2、opengl代码编写完整流程</p>
-<ul>
-<li>1、编译OpenGL程序<br>四步流程<br>1、编译着色器<br>2、创建opengl程序和着色器链接<br>3、验证OpenGL程序<br>4、使用opengl程序</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class ShaderHelper &#123;</span><br><span class="line"></span><br><span class="line">  //编译着色器</span><br><span class="line">  public static int compileShader(int type, String shaderCode);</span><br><span class="line">  </span><br><span class="line">//创建 OpenGL 程序和着色器链接</span><br><span class="line">  public static int linkProgram(int vertexShaderId, int fragmentShaderId) ;</span><br><span class="line"></span><br><span class="line">  //验证OpenGL程序</span><br><span class="line">  public static boolean validateProgram(int programObjectId) ;</span><br><span class="line"></span><br><span class="line">  //使用open程序</span><br><span class="line">  public static void  glUseProgram(int program)；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>2、绘制Renderer渲染器</li>
-<li>3、GLSurfaceView与<br>特别注意</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">创建opengl必须在onSurfaceCreated()方法中，才能生效</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/常用工具/pycharm-ide安装/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -801,6 +395,173 @@
             <p><a href="https://www.jetbrains.com/zh/pycharm/specials/pycharm/pycharm.html" target="_blank" rel="noopener">https://www.jetbrains.com/zh/pycharm/specials/pycharm/pycharm.html</a></p>
 <p>2019年破解码<br><a href="https://blog.csdn.net/weixin_43641304/article/details/87071864" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43641304/article/details/87071864</a></p>
 <p>破解地址：<br><a href="http://idea.lanyus.com" target="_blank" rel="noopener">http://idea.lanyus.com</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/常用工具/finalshell安装-及-mac远程桌面安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/常用工具/finalshell安装-及-mac远程桌面安装/" class="post-title-link" itemprop="url">finalshell安装-及-mac远程桌面安装</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/常用工具/" itemprop="url" rel="index"><span itemprop="name">常用工具</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>####finalshell官网<br><a href="http://www.hostbuf.com" target="_blank" rel="noopener">http://www.hostbuf.com</a></p>
+<p>Mac版安装路径<br>/Applications/finalshelldata</p>
+<p>Linux版安装路径<br>/usr/lib/finalshelldata</p>
+<p>####安装命令<br>Mac一键安装脚本<br>curl -o finalshell_install.sh <a href="http://www.hostbuf.com/downloads/finalshell_install.sh;chmod" target="_blank" rel="noopener">www.hostbuf.com/downloads/finalshell_install.sh;chmod</a> +x finalshell_install.sh;sudo ./finalshell_install.sh</p>
+<p>Linux一键安装脚本1(通用)<br>rm -f finalshell_install.sh ;wget finalshell_install.sh <a href="http://www.hostbuf.com/downloads/finalshell_install.sh;chmod" target="_blank" rel="noopener">www.hostbuf.com/downloads/finalshell_install.sh;chmod</a> +x finalshell_install.sh;sudo ./finalshell_install.sh</p>
+<p>Linux一键安装脚本2(适合系统没有sudo或未加入sudoer,比如debian)<br>rm -f finalshell_install.sh ;wget finalshell_install.sh <a href="http://www.hostbuf.com/downloads/finalshell_install.sh;chmod" target="_blank" rel="noopener">www.hostbuf.com/downloads/finalshell_install.sh;chmod</a> +x finalshell_install.sh;su -l –preserve-environment -c ./finalshell_install.sh</p>
+<p>mac远程桌面<br>Microsoft Remote Desktop for Mac<br>下载地址：<br><a href="https://www.newasp.net/soft/320727.html" target="_blank" rel="noopener">https://www.newasp.net/soft/320727.html</a><br>实测可用</p>
 
           
         
@@ -1018,7 +779,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/13-类初始化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/10、类加载器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1038,7 +799,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/手动编写jvm虚拟机/13-类初始化/" class="post-title-link" itemprop="url">13-类初始化</a>
+                <a href="/2020/05/26/手动编写jvm虚拟机/10、类加载器/" class="post-title-link" itemprop="url">10、类加载器</a>
               
             
           </h1>
@@ -1123,13 +884,200 @@
         
           
             <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####类初始化触发情况<br>1、执行new指令创建类实例<br>2、执行putstatic、getstatic 指令存取类的静态变量<br>3、执行invokestatic调用静态方法<br>4、初始化一个类时，类的超类还没有初始化，要先初始化超类<br>5、执行某些反射操作</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Class <span class="keyword">struct</span>&#123;</span><br><span class="line"><span class="comment">//其他字段</span></span><br><span class="line">    initStarted <span class="keyword">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Class)</span> <span class="title">InitStarted</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> self.initStarted</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// setter</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Class)</span> <span class="title">StartInit</span><span class="params">()</span></span> &#123;</span><br><span class="line">	self.initStarted = <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>####初始化逻辑</p>
-<p>在指令 putstatic、getstatic、new、invokestatic 添加初始化逻辑<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> !class.InitStarted() &#123;</span><br><span class="line">	frame.RevertNextPC()</span><br><span class="line">	base.InitClass(frame.Thread(), class)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func (self *Frame) RevertNextPC() &#123;</span><br><span class="line">	self.nextPC = self.thread.pc</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>base逻辑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">func InitClass(thread *rtda.Thread, class *heap.Class) &#123;</span><br><span class="line">	class.StartInit()             // 设置开始初始化标志</span><br><span class="line">	scheduleClinit(thread, class) // 准备执行类初始化方法，push到栈顶，下一次执行的时候就会执行&lt;cinit&gt;</span><br><span class="line">	initSuperClass(thread, class) // 循环初始化父类</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func scheduleClinit(thread *rtda.Thread, class *heap.Class) &#123;</span><br><span class="line">	clinit := class.GetClinitMethod()</span><br><span class="line">	if clinit != nil &#123;</span><br><span class="line">		// exec &lt;clinit&gt;</span><br><span class="line">		newFrame := thread.NewFrame(clinit)</span><br><span class="line">		thread.PushFrame(newFrame)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func initSuperClass(thread *rtda.Thread, class *heap.Class) &#123;</span><br><span class="line">	if !class.IsInterface() &#123;</span><br><span class="line">		superClass := class.SuperClass()</span><br><span class="line">		if superClass != nil &amp;&amp; !superClass.InitStarted() &#123;</span><br><span class="line">			InitClass(thread, superClass)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####知识扩展<br>1、依赖classpath 读取class文件<br>2、map存储class类<br>3、动态加载class</p>
+<p>####1、定义classloader</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">type ClassLoader struct &#123;</span><br><span class="line">	cp       *classpath.Classpath // 用于搜索和读取 class 文件</span><br><span class="line">	classMap map[string]*Class    // 已经加载的类数据，key=全限定类名</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 创建一个类加载器</span><br><span class="line">func NewClassLoader(cp *classpath.Classpath) *ClassLoader &#123;</span><br><span class="line">	return &amp;ClassLoader&#123;</span><br><span class="line">		cp:       cp,</span><br><span class="line">		classMap: make(map[string]*Class),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 把类数据加载到方法区</span><br><span class="line">func (self *ClassLoader) LoadClass(name string) *Class &#123;</span><br><span class="line">	if class, ok := self.classMap[name]; ok &#123;</span><br><span class="line">		return class // 类已经加载</span><br><span class="line">	&#125;</span><br><span class="line">	return self.loadNonArrayClass(name) // 普通类的数据来自于class文件，数组类的数据是jvm在运行期间动态生成的</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####2、类加载过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 类加载过程</span><br><span class="line">func (self *ClassLoader) loadNonArrayClass(name string) *Class &#123;</span><br><span class="line">	data, entry := self.readClass(name) // 1. 找到class文件并读取为 byte[]</span><br><span class="line">	class := self.defineClass(data)     // 2. byte[] -&gt; ClassFile -&gt; Class，并放入方法区</span><br><span class="line">	link(class)                         // 3. 进行链接</span><br><span class="line">	fmt.Printf(&quot;[Loaded %s from %s]</span><br><span class="line">&quot;, name, entry)</span><br><span class="line">	return class</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>readClass  从classpath 读取 class []byte<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">func (self *ClassLoader) readClass(name string) ([]byte, classpath.Entry) &#123;</span><br><span class="line">	data, entry, err := self.cp.ReadClass(name)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		panic(&quot;java.lang.ClassNotFoundException: &quot; + name)</span><br><span class="line">	&#125;</span><br><span class="line">	return data, entry</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>defineClass 加载class<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">func (self *ClassLoader) defineClass(data []byte) *Class &#123;</span><br><span class="line">	class := parseClass(data)</span><br><span class="line">	class.loader = self</span><br><span class="line">	resolveSuperClass(class)          // 递归加载父类</span><br><span class="line">	resolveInterfaces(class)          // 递归加载接口类</span><br><span class="line">	self.classMap[class.name] = class // 放入已加载列表</span><br><span class="line">	return class</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// byte[] -&gt; ClassFile -&gt; Class</span><br><span class="line">func parseClass(data []byte) *Class &#123;</span><br><span class="line">	cf, err := classfile.Parse(data)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		panic(&quot;java.lang.ClassFormatError&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	return newClass(cf)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func resolveSuperClass(class *Class) &#123;</span><br><span class="line">	if class.name != &quot;java/lang/Object&quot; &#123;</span><br><span class="line">		class.superClass = class.loader.LoadClass(class.superClassName) // 递归加载父类</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func resolveInterfaces(class *Class) &#123;</span><br><span class="line">	interfaceCount := len(class.interfaceNames)</span><br><span class="line">	if interfaceCount &gt; 0 &#123;</span><br><span class="line">		class.interfaces = make([]*Class, interfaceCount)</span><br><span class="line">		for i, interfaceName := range class.interfaceNames &#123;</span><br><span class="line">			class.interfaces[i] = class.loader.LoadClass(interfaceName)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>link 链接class<br>给class赋初始值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func link(class *Class) &#123;</span><br><span class="line">	verify(class)  // 验证</span><br><span class="line">	prepare(class) // 准备</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 准备阶段：给类变量分配空间并给予初始值</span><br><span class="line">func prepare(class *Class) &#123;</span><br><span class="line">	calcInstanceFieldSlotIds(class) // 计算实例变量的个数，并分别标号</span><br><span class="line">	calcStaticFieldSlotIds(class)   // 计算类变量的个数，并分别标号</span><br><span class="line">	allocAndInitStaticVars(class)   // 为类变量分配空间并初始化</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/开源工具/简单易用sharepref存储工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/开源工具/简单易用sharepref存储工具/" class="post-title-link" itemprop="url">简单易用sharepref存储工具</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/开源工具/" itemprop="url" rel="index"><span itemprop="name">开源工具</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>简单sharepref存储工具，支持多sharepref表使用，支持参数化配置</p>
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p><a href="https://github.com/yinlingchaoliu/sharepref.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/sharepref.git</a></p>
+<h3 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h3><p><img src="https://upload-images.jianshu.io/upload_images/5526061-260e0a4c86ab82ff.gif?imageMogr2/auto-orient/strip" alt><br>源码中有完整使用示例</p>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><ul>
+<li>支持参数可配置化</li>
+<li>支持多种数据类型任意实体类， list， map</li>
+<li>支持原有sp数据存储 getObj putObj</li>
+<li>支持数据迁移</li>
+<li>可扩展性强，后续可支持加密</li>
+<li>支持数据异步提交用apply并且兼容</li>
+<li>支持多sharepref文件</li>
+<li>支持项目可拆分多部分 动态配置, 基本库(sp+注解)</li>
+</ul>
+<h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>1.引仓库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maven &#123; url &apos;https://jitpack.io&apos; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.加依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation &apos;com.github.yinlingchaoliu:sharepref:1.0.0&apos;</span><br></pre></td></tr></table></figure></p>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><h4 id="1、增加注解配置"><a href="#1、增加注解配置" class="headerlink" title="1、增加注解配置"></a>1、增加注解配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 初始化spname</span><br><span class="line"> * 一个spname 映射 一个table</span><br><span class="line"> */</span><br><span class="line">@SPNAME(&quot;sharepref_table&quot;) //sharepref文件名</span><br><span class="line">public interface ISharedPref &#123;</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;username&quot;) //存储的key值</span><br><span class="line">    @DEFAULT(&quot;&quot;)    //默认值</span><br><span class="line">    Call&lt;String&gt; username(); //支持数据类型 String</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;isOk&quot;)</span><br><span class="line">    @DEFAULT(&quot;false&quot;)</span><br><span class="line">    Call&lt;Boolean&gt; isOk();//支持数据类型 boolean</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;age&quot;)</span><br><span class="line">    @DEFAULT(&quot;0&quot;)</span><br><span class="line">    Call&lt;Integer&gt; age();//支持数据类型 Integer</span><br><span class="line"></span><br><span class="line">    @KEY(&quot;waitTime&quot;)</span><br><span class="line">    @DEFAULT(&quot;0&quot;)</span><br><span class="line">    Call&lt;Long&gt; waitTime();//支持数据类型 Long</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2、继承SharePrefFacade，如下实现即可"><a href="#2、继承SharePrefFacade，如下实现即可" class="headerlink" title="2、继承SharePrefFacade，如下实现即可"></a>2、继承SharePrefFacade，如下实现即可</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class SharePrefManager extends SharePrefFacade &#123;</span><br><span class="line"></span><br><span class="line">    private ISharedPref mISharedPrefDelegate;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void create() &#123;</span><br><span class="line">        mISharedPrefDelegate = create(ISharedPref.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static ISharedPref ISharedPref() &#123;</span><br><span class="line">        return getIns().mISharedPrefDelegate;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private SharePrefManager() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class SingleHolder &#123;</span><br><span class="line">        private static final SharePrefManager sharePrefManager = new SharePrefManager();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static SharePrefManager getIns() &#123;</span><br><span class="line">        return SingleHolder.sharePrefManager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3、application初始化"><a href="#3、application初始化" class="headerlink" title="3、application初始化"></a>3、application初始化</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SharePrefManager.getIns().init(this);</span><br></pre></td></tr></table></figure>
+<h4 id="4、使用"><a href="#4、使用" class="headerlink" title="4、使用"></a>4、使用</h4><ol>
+<li>存储</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SharePrefManager.ISharedPref().username().put(name);</span><br><span class="line">```    </span><br><span class="line">2. 取值</span><br></pre></td></tr></table></figure>
+<p>String name = SharePrefManager.ISharedPref().username().get();<br><code>`</code></p>
+<h3 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h3><p>参考：<br><a href="https://github.com/orhanobut/hawk" target="_blank" rel="noopener">https://github.com/orhanobut/hawk</a></p>
 
           
         
@@ -1390,6 +1338,174 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/13-类初始化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/手动编写jvm虚拟机/13-类初始化/" class="post-title-link" itemprop="url">13-类初始化</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
+<p>####类初始化触发情况<br>1、执行new指令创建类实例<br>2、执行putstatic、getstatic 指令存取类的静态变量<br>3、执行invokestatic调用静态方法<br>4、初始化一个类时，类的超类还没有初始化，要先初始化超类<br>5、执行某些反射操作</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Class <span class="keyword">struct</span>&#123;</span><br><span class="line"><span class="comment">//其他字段</span></span><br><span class="line">    initStarted <span class="keyword">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Class)</span> <span class="title">InitStarted</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> self.initStarted</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// setter</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Class)</span> <span class="title">StartInit</span><span class="params">()</span></span> &#123;</span><br><span class="line">	self.initStarted = <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####初始化逻辑</p>
+<p>在指令 putstatic、getstatic、new、invokestatic 添加初始化逻辑<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> !class.InitStarted() &#123;</span><br><span class="line">	frame.RevertNextPC()</span><br><span class="line">	base.InitClass(frame.Thread(), class)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func (self *Frame) RevertNextPC() &#123;</span><br><span class="line">	self.nextPC = self.thread.pc</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>base逻辑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">func InitClass(thread *rtda.Thread, class *heap.Class) &#123;</span><br><span class="line">	class.StartInit()             // 设置开始初始化标志</span><br><span class="line">	scheduleClinit(thread, class) // 准备执行类初始化方法，push到栈顶，下一次执行的时候就会执行&lt;cinit&gt;</span><br><span class="line">	initSuperClass(thread, class) // 循环初始化父类</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func scheduleClinit(thread *rtda.Thread, class *heap.Class) &#123;</span><br><span class="line">	clinit := class.GetClinitMethod()</span><br><span class="line">	if clinit != nil &#123;</span><br><span class="line">		// exec &lt;clinit&gt;</span><br><span class="line">		newFrame := thread.NewFrame(clinit)</span><br><span class="line">		thread.PushFrame(newFrame)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func initSuperClass(thread *rtda.Thread, class *heap.Class) &#123;</span><br><span class="line">	if !class.IsInterface() &#123;</span><br><span class="line">		superClass := class.SuperClass()</span><br><span class="line">		if superClass != nil &amp;&amp; !superClass.InitStarted() &#123;</span><br><span class="line">			InitClass(thread, superClass)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/14、jvm支持数组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1584,7 +1700,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/10、类加载器/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/16、本地方法调用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1604,7 +1720,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/手动编写jvm虚拟机/10、类加载器/" class="post-title-link" itemprop="url">10、类加载器</a>
+                <a href="/2020/05/26/手动编写jvm虚拟机/16、本地方法调用/" class="post-title-link" itemprop="url">16、本地方法调用</a>
               
             
           </h1>
@@ -1689,16 +1805,17 @@
         
           
             <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####知识扩展<br>1、依赖classpath 读取class文件<br>2、map存储class类<br>3、动态加载class</p>
-<p>####1、定义classloader</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">type ClassLoader struct &#123;</span><br><span class="line">	cp       *classpath.Classpath // 用于搜索和读取 class 文件</span><br><span class="line">	classMap map[string]*Class    // 已经加载的类数据，key=全限定类名</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 创建一个类加载器</span><br><span class="line">func NewClassLoader(cp *classpath.Classpath) *ClassLoader &#123;</span><br><span class="line">	return &amp;ClassLoader&#123;</span><br><span class="line">		cp:       cp,</span><br><span class="line">		classMap: make(map[string]*Class),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 把类数据加载到方法区</span><br><span class="line">func (self *ClassLoader) LoadClass(name string) *Class &#123;</span><br><span class="line">	if class, ok := self.classMap[name]; ok &#123;</span><br><span class="line">		return class // 类已经加载</span><br><span class="line">	&#125;</span><br><span class="line">	return self.loadNonArrayClass(name) // 普通类的数据来自于class文件，数组类的数据是jvm在运行期间动态生成的</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>####2、类加载过程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 类加载过程</span><br><span class="line">func (self *ClassLoader) loadNonArrayClass(name string) *Class &#123;</span><br><span class="line">	data, entry := self.readClass(name) // 1. 找到class文件并读取为 byte[]</span><br><span class="line">	class := self.defineClass(data)     // 2. byte[] -&gt; ClassFile -&gt; Class，并放入方法区</span><br><span class="line">	link(class)                         // 3. 进行链接</span><br><span class="line">	fmt.Printf(&quot;[Loaded %s from %s]</span><br><span class="line">&quot;, name, entry)</span><br><span class="line">	return class</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>readClass  从classpath 读取 class []byte<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">func (self *ClassLoader) readClass(name string) ([]byte, classpath.Entry) &#123;</span><br><span class="line">	data, entry, err := self.cp.ReadClass(name)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		panic(&quot;java.lang.ClassNotFoundException: &quot; + name)</span><br><span class="line">	&#125;</span><br><span class="line">	return data, entry</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>defineClass 加载class<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">func (self *ClassLoader) defineClass(data []byte) *Class &#123;</span><br><span class="line">	class := parseClass(data)</span><br><span class="line">	class.loader = self</span><br><span class="line">	resolveSuperClass(class)          // 递归加载父类</span><br><span class="line">	resolveInterfaces(class)          // 递归加载接口类</span><br><span class="line">	self.classMap[class.name] = class // 放入已加载列表</span><br><span class="line">	return class</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// byte[] -&gt; ClassFile -&gt; Class</span><br><span class="line">func parseClass(data []byte) *Class &#123;</span><br><span class="line">	cf, err := classfile.Parse(data)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		panic(&quot;java.lang.ClassFormatError&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	return newClass(cf)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func resolveSuperClass(class *Class) &#123;</span><br><span class="line">	if class.name != &quot;java/lang/Object&quot; &#123;</span><br><span class="line">		class.superClass = class.loader.LoadClass(class.superClassName) // 递归加载父类</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func resolveInterfaces(class *Class) &#123;</span><br><span class="line">	interfaceCount := len(class.interfaceNames)</span><br><span class="line">	if interfaceCount &gt; 0 &#123;</span><br><span class="line">		class.interfaces = make([]*Class, interfaceCount)</span><br><span class="line">		for i, interfaceName := range class.interfaceNames &#123;</span><br><span class="line">			class.interfaces[i] = class.loader.LoadClass(interfaceName)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>link 链接class<br>给class赋初始值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func link(class *Class) &#123;</span><br><span class="line">	verify(class)  // 验证</span><br><span class="line">	prepare(class) // 准备</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 准备阶段：给类变量分配空间并给予初始值</span><br><span class="line">func prepare(class *Class) &#123;</span><br><span class="line">	calcInstanceFieldSlotIds(class) // 计算实例变量的个数，并分别标号</span><br><span class="line">	calcStaticFieldSlotIds(class)   // 计算类变量的个数，并分别标号</span><br><span class="line">	allocAndInitStaticVars(class)   // 为类变量分配空间并初始化</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####本地方法注册与调用<br>注册<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">//本地方法定义为函数</span><br><span class="line">type NativeMethod func(frame *rtda.Frame)</span><br><span class="line"></span><br><span class="line">//定义函数数组</span><br><span class="line">var registry = map[string]NativeMethod&#123;&#125;</span><br><span class="line"></span><br><span class="line">//空方法</span><br><span class="line">func emptyNativeMethod(frame *rtda.Frame) &#123;</span><br><span class="line">	// do nothing</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//注册本地方法</span><br><span class="line">func Register(className, methodName, methodDescriptor string, method NativeMethod) &#123;</span><br><span class="line">	key := className + &quot;~&quot; + methodName + &quot;~&quot; + methodDescriptor</span><br><span class="line">	registry[key] = method</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//寻找注册方法</span><br><span class="line">func FindNativeMethod(className, methodName, methodDescriptor string) NativeMethod &#123;</span><br><span class="line">	key := className + &quot;~&quot; + methodName + &quot;~&quot; + methodDescriptor</span><br><span class="line">	if method, ok := registry[key]; ok &#123;</span><br><span class="line">		return method</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//如果是 object中 registerNatives 返回空方法，且此方法不会注册到registry中</span><br><span class="line">	if methodDescriptor == &quot;()V&quot; &amp;&amp; methodName == &quot;registerNatives&quot;&#123;</span><br><span class="line">		return emptyNativeMethod</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>invoke_native指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame) &#123;</span><br><span class="line">	method := frame.Method()</span><br><span class="line">	className := method.Class().Name()</span><br><span class="line">	methodName := method.Name()</span><br><span class="line">	methodDescriptor := method.Descriptor()</span><br><span class="line"></span><br><span class="line">	nativeMethod := native.FindNativeMethod(className, methodName, methodDescriptor)</span><br><span class="line">	if nativeMethod == nil &#123;</span><br><span class="line">		methodInfo := className + &quot;.&quot; + methodName + methodDescriptor</span><br><span class="line">		panic(&quot;java.lang.UnsatisfiedLinkError: &quot; + methodInfo)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	nativeMethod(frame)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>调用本地方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">method.go</span><br><span class="line"></span><br><span class="line">func newMethod(class *Class, cfMethod *classfile.MemberInfo) *Method &#123;</span><br><span class="line">	method := &amp;Method&#123;&#125;</span><br><span class="line">	method.class = class</span><br><span class="line">	method.copyMemberInfo(cfMethod)</span><br><span class="line">	method.copyAttributes(cfMethod)</span><br><span class="line">	//method.calArgSlotCount() //参数</span><br><span class="line">	md := parseMethodDescriptor(method.descriptor)</span><br><span class="line">	method.calcArgSlotCount(md.parameterTypes)</span><br><span class="line">	if method.IsNative() &#123;</span><br><span class="line">                //方法字节码表插入Code</span><br><span class="line">		method.injectCodeAttribute(md.returnType)</span><br><span class="line">	&#125;</span><br><span class="line">	return method</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//0xfe 对应助记符指令 invoke_native</span><br><span class="line">func (self *Method) injectCodeAttribute(returnType string) &#123;</span><br><span class="line">	self.maxStack = 4 // todo</span><br><span class="line">	self.maxLocals = self.argSlotCount</span><br><span class="line">	switch returnType[0] &#123;</span><br><span class="line">	case &apos;V&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xb1&#125; // return</span><br><span class="line">	case &apos;L&apos;, &apos;[&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xb0&#125; // areturn</span><br><span class="line">	case &apos;D&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xaf&#125; // dreturn</span><br><span class="line">	case &apos;F&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xae&#125; // freturn</span><br><span class="line">	case &apos;J&apos;:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xad&#125; // lreturn</span><br><span class="line">	default:</span><br><span class="line">		self.code = []byte&#123;0xfe, 0xac&#125; // ireturn</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####添加native类<br>native/java/lang/Object.go</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">package lang</span><br><span class="line"></span><br><span class="line">import &quot;unsafe&quot;</span><br><span class="line">import &quot;main/native&quot;</span><br><span class="line">import &quot;main/rtda&quot;</span><br><span class="line"></span><br><span class="line">const jlObject = &quot;java/lang/Object&quot;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	native.Register(jlObject, &quot;getClass&quot;, &quot;()Ljava/lang/Class;&quot;, getClass)</span><br><span class="line">	native.Register(jlObject, &quot;hashCode&quot;, &quot;()I&quot;, hashCode)</span><br><span class="line">	native.Register(jlObject, &quot;clone&quot;, &quot;()Ljava/lang/Object;&quot;, clone)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// public final native Class&lt;?&gt; getClass();</span><br><span class="line">// ()Ljava/lang/Class;</span><br><span class="line">func getClass(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	class := this.Class().JClass()</span><br><span class="line">	frame.OperandStack().PushRef(class)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// public native int hashCode();</span><br><span class="line">// ()I</span><br><span class="line">func hashCode(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	hash := int32(uintptr(unsafe.Pointer(this)))</span><br><span class="line">	frame.OperandStack().PushInt(hash)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// protected native Object clone() throws CloneNotSupportedException;</span><br><span class="line">// ()Ljava/lang/Object;</span><br><span class="line">func clone(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line"></span><br><span class="line">	cloneable := this.Class().Loader().LoadClass(&quot;java/lang/Cloneable&quot;)</span><br><span class="line">	if !this.Class().IsImplements(cloneable) &#123;</span><br><span class="line">		panic(&quot;java.lang.CloneNotSupportedException&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	frame.OperandStack().PushRef(this.Clone())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在invoke_native中注册</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//todo 非常重要</span><br><span class="line">	_ &quot;main/native/java/lang&quot; //@todo init 注册</span><br></pre></td></tr></table></figure>
+<p>测试方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#测试本地方法调用</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.GetClassTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.StringTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.ObjectTest</span><br><span class="line">go run main    -cp test/lib/example.jar   jvmgo.book.ch09.CloneTest</span><br></pre></td></tr></table></figure></p>
 <h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
+<p>提交标签 “native”</p>
 
           
         
@@ -1755,7 +1872,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/15、jvm支持字符串-数组扩展/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android组件化/第3章-仿微信" -api"化-实现原理（下） ">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -1775,7 +1892,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/手动编写jvm虚拟机/15、jvm支持字符串-数组扩展/" class="post-title-link" itemprop="url">15、jvm支持字符串-数组扩展</a>
+                <a href="/2020/05/26/Android组件化/第3章-仿微信" -api"化-实现原理（下） " class="post-title-link" itemprop="url">第3章-仿微信"-api"化-实现原理（下）</a>
               
             
           </h1>
@@ -1800,7 +1917,7 @@
                 
               
 
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
             
 
             
@@ -1822,7 +1939,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android组件化/" itemprop="url" rel="index"><span itemprop="name">Android组件化</span></a></span>
 
                 
                 
@@ -1859,192 +1976,22 @@
       
         
           
-            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####<br>采用hook方式生成字符串<br>1、加载java/lang/String =&gt; jstr<br>2、ClassLoader加载’[C’  char数组<br>3、将go 字符串utf-8  转换为 java utf-16格式<br>3、反射修改string value字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// go string -&gt; java.lang.String</span><br><span class="line">func JString(loader *ClassLoader, goStr string) *Object &#123;</span><br><span class="line">	if internedStr, ok := internedStrings[goStr]; ok &#123;</span><br><span class="line">		return internedStr</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//go 字符串 utf-8 =&gt; java utf-16</span><br><span class="line">	chars := stringToUtf16(goStr)</span><br><span class="line"></span><br><span class="line">	//加载 java类 char数组</span><br><span class="line">	jChars := &amp;Object&#123;loader.LoadClass(&quot;[C&quot;), chars&#125;</span><br><span class="line"></span><br><span class="line">	//加载java类 String</span><br><span class="line">	jStr := loader.LoadClass(&quot;java/lang/String&quot;).NewObject()</span><br><span class="line"></span><br><span class="line">	//反射设置</span><br><span class="line">	jStr.SetRefVar(&quot;value&quot;, &quot;[C&quot;, jChars)</span><br><span class="line"></span><br><span class="line">	internedStrings[goStr] = jStr</span><br><span class="line">	return jStr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>反射支持<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">object.<span class="keyword">go</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Object)</span> <span class="title">GetRefVar</span><span class="params">(name, descriptor <span class="keyword">string</span>)</span> *<span class="title">Object</span></span> &#123;</span><br><span class="line">	field := self.class.getField(name, descriptor, <span class="literal">false</span>)</span><br><span class="line">	slots := self.data.(Slots)</span><br><span class="line">	<span class="keyword">return</span> slots.GetRef(field.slotId)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Object)</span> <span class="title">SetRefVar</span><span class="params">(name, descriptor <span class="keyword">string</span>, ref *Object)</span></span> &#123;</span><br><span class="line">	field := self.class.getField(name, descriptor, <span class="literal">false</span>)</span><br><span class="line">	slots := self.data.(Slots)</span><br><span class="line">	slots.SetRef(field.slotId, ref)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class.<span class="keyword">go</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Class)</span> <span class="title">getField</span><span class="params">(name, descriptor <span class="keyword">string</span>, isStatic <span class="keyword">bool</span>)</span> *<span class="title">Field</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> c := self; c != <span class="literal">nil</span>; c = c.superClass &#123;</span><br><span class="line">		<span class="keyword">for</span> _, field := <span class="keyword">range</span> c.fields &#123;</span><br><span class="line">			<span class="keyword">if</span> field.IsStatic() == isStatic &amp;&amp;</span><br><span class="line">				field.name == name &amp;&amp;</span><br><span class="line">				field.descriptor == descriptor &#123;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">return</span> field</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// todo 支持反射 reflection</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Class)</span> <span class="title">GetRefVar</span><span class="params">(fieldName, fieldDescriptor <span class="keyword">string</span>)</span> *<span class="title">Object</span></span> &#123;</span><br><span class="line">	field := self.getField(fieldName, fieldDescriptor, <span class="literal">true</span>)</span><br><span class="line">	<span class="keyword">return</span> self.staticVars.GetRef(field.slotId)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *Class)</span> <span class="title">SetRefVar</span><span class="params">(fieldName, fieldDescriptor <span class="keyword">string</span>, ref *Object)</span></span> &#123;</span><br><span class="line">	field := self.getField(fieldName, fieldDescriptor, <span class="literal">true</span>)</span><br><span class="line">	self.staticVars.SetRef(field.slotId, ref)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>idc扩展<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//todo 特别支持</span></span><br><span class="line">	<span class="keyword">case</span> <span class="keyword">string</span>:  <span class="comment">//todo 支持字符串 压栈</span></span><br><span class="line">		internedStr := heap.JString(class.Loader(),c.(<span class="keyword">string</span>))</span><br><span class="line">		stack.PushRef(internedStr)</span><br></pre></td></tr></table></figure></p>
-<p>classloader扩展<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">func initStaticFinalVar()&#123;</span><br><span class="line"></span><br><span class="line">case &quot;Ljava/lang/String;&quot;: //todo 支持字符串</span><br><span class="line">			goStr := cp.GetConstant(cpIndex).(string)</span><br><span class="line">			jStr := JString(class.Loader(),goStr)</span><br><span class="line">			vars.SetRef(slotId,jStr)</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####字符串测试</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">func Interpret()&#123;</span><br><span class="line">	//字符串参数</span><br><span class="line">	jArgs := createArgsArray(method.Class().Loader(),args)</span><br><span class="line">	frame.LocalVars().SetRef(0,jArgs)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//创建args数组</span><br><span class="line">func createArgsArray(loader *heap.ClassLoader, args []string) *heap.Object &#123;</span><br><span class="line">	//加载class类</span><br><span class="line">	stringClass := loader.LoadClass(&quot;java/lang/String&quot;)</span><br><span class="line">	argsArr := stringClass.ArrayClass().NewArray(uint(len(args)))</span><br><span class="line">	jArgs := argsArr.Refs()</span><br><span class="line">	for i, arg := range args &#123;</span><br><span class="line">		jArgs[i] = heap.JString(loader, arg)</span><br><span class="line">	&#125;</span><br><span class="line">	return argsArr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>shell脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#测试字符串数组</span><br><span class="line">go run main   -test &quot;string&quot;  -cp test/lib/example.jar   jvmgo.book.ch01.HelloWorld</span><br><span class="line">#测试字符串参数</span><br><span class="line">go run main   -test &quot;string&quot;  -cp test/lib/example.jar   jvmgo.book.ch08.PrintArgs  &apos;go jvm args&apos; &apos;PrintArgs&apos; &apos;Hello , World&apos;</span><br></pre></td></tr></table></figure></p>
-<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
-<p>提交标签 “array”</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/手动编写jvm虚拟机/18、异常处理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/手动编写jvm虚拟机/18、异常处理/" class="post-title-link" itemprop="url">18、异常处理</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:50" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/手动编写jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">手动编写jvm虚拟机</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://www.jianshu.com/p/cb8fe1f365be" target="_blank" rel="noopener">gojvm目录</a><br><a href="https://www.jianshu.com/p/9156bc2bbeba" target="_blank" rel="noopener">1、搭建go环境</a><br><a href="https://www.jianshu.com/p/bea27c053053" target="_blank" rel="noopener">2、cmd命令行参数解析</a><br><a href="https://www.jianshu.com/p/e76c793b5981" target="_blank" rel="noopener">3、搜索class文件</a><br><a href="https://www.jianshu.com/p/aec9576f08f8" target="_blank" rel="noopener">4、添加testOption 便于单元测试</a><br><a href="https://www.jianshu.com/p/97756f2820a8" target="_blank" rel="noopener">5、解析classfile文件</a><br><a href="https://www.jianshu.com/p/682b548e24a3" target="_blank" rel="noopener">6、运行时数据区</a><br><a href="https://www.jianshu.com/p/9775be0d790e" target="_blank" rel="noopener">7、指令集</a><br><a href="https://www.jianshu.com/p/e924ac1da848" target="_blank" rel="noopener">8、解释器</a><br><a href="https://www.jianshu.com/p/072fd852418c" target="_blank" rel="noopener">9、创建Class</a><br><a href="https://www.jianshu.com/p/ba231854662d" target="_blank" rel="noopener">10、类加载器</a><br><a href="https://www.jianshu.com/p/f870bb0959c8" target="_blank" rel="noopener">11、对象实例化new object</a><br><a href="https://www.jianshu.com/p/614cdc94ecd0" target="_blank" rel="noopener">12、方法调用和返回</a><br><a href="https://www.jianshu.com/p/f200ba4aa420" target="_blank" rel="noopener">13 类初始化</a><br><a href="https://www.jianshu.com/p/11ac0e3a92b3" target="_blank" rel="noopener">14、jvm支持数组</a><br><a href="https://www.jianshu.com/p/d27ab1534f52" target="_blank" rel="noopener">15、jvm支持字符串-数组扩展</a><br><a href="https://www.jianshu.com/p/8dd487605bf4" target="_blank" rel="noopener">16、本地方法调用</a><br><a href="https://www.jianshu.com/p/defba0b8941d" target="_blank" rel="noopener">17、ClassLoader原理</a><br><a href="https://www.jianshu.com/p/4b915f356a61" target="_blank" rel="noopener">18、异常处理</a><br><a href="https://www.jianshu.com/p/21a65fbba2e7" target="_blank" rel="noopener">19、 启动jvm</a></p>
-<p>####异常处理<br>unchecked 异常 ： java.lang.RuntimeException、java.lang.Error<br>checked异常:其他<br>异常父类：java.lang.Throwable</p>
-<p>异常指令 athrow</p>
-<p>需要实现Throwable native方法<br>private native Throwable fillInStackTrace(int dummy)</p>
-<p>1、注册native方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">const jlThrowable = &quot;java/lang/Throwable&quot;</span><br><span class="line"></span><br><span class="line">type StackTraceElement struct &#123;</span><br><span class="line">	fileName   string</span><br><span class="line">	className  string</span><br><span class="line">	methodName string</span><br><span class="line">	lineNumber int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *StackTraceElement) String() string &#123;</span><br><span class="line">	return fmt.Sprintf(&quot;%s.%s(%s:%d)&quot;,</span><br><span class="line">		self.className, self.methodName, self.fileName, self.lineNumber)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	native.Register(jlThrowable, &quot;fillInStackTrace&quot;, &quot;(I)Ljava/lang/Throwable;&quot;, fillInStackTrace)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// private native Throwable fillInStackTrace(int dummy);</span><br><span class="line">// (I)Ljava/lang/Throwable;</span><br><span class="line">func fillInStackTrace(frame *rtda.Frame) &#123;</span><br><span class="line">	this := frame.LocalVars().GetThis()</span><br><span class="line">	frame.OperandStack().PushRef(this)</span><br><span class="line"></span><br><span class="line">	stes := createStackTraceElements(this, frame.Thread())</span><br><span class="line">	this.SetExtra(stes)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>java代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void catchOne()&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        tryItOut()</span><br><span class="line">    &#125;catch(TestExc e)&#123;</span><br><span class="line">        handleExc(e)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>异常处理表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type ExceptionHandler struct &#123;</span><br><span class="line">	startPc   int       //try代码段</span><br><span class="line">	endPc     int       //try代码段</span><br><span class="line">	handlerPc int       //处理句柄</span><br><span class="line">	catchType *ClassRef //异常类</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Method<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">type Method struct &#123;</span><br><span class="line">	exceptionTable ExceptionTable //异常处理表</span><br><span class="line">	lineNumberTable * classfile.LineNumberTableAttribute</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) &#123;</span><br><span class="line">	if codeAttr := cfMethod.CodeAttribute(); codeAttr != nil &#123;</span><br><span class="line">		self.maxStack = codeAttr.MaxStack()</span><br><span class="line">		self.maxLocals = codeAttr.MaxLocals()</span><br><span class="line">		self.code = codeAttr.Code()</span><br><span class="line">		//todo exception 增加异常处理</span><br><span class="line">		self.exceptionTable = newExceptionTable(codeAttr.ExceptionTable(),self.class.constantPool)</span><br><span class="line">		// todo 代码行号</span><br><span class="line">		self.lineNumberTable = codeAttr.LineNumberTableAttribute()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func (self *Method) FindExceptionHandler(exClass *Class, pc int) int &#123;</span><br><span class="line">	handler := self.exceptionTable.findExceptionHandler(exClass, pc)</span><br><span class="line">	if handler != nil &#123;</span><br><span class="line">		return handler.handlerPc</span><br><span class="line">	&#125;</span><br><span class="line">	return -1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self *Method) GetLineNumber(pc int) int &#123;</span><br><span class="line">	if self.IsNative() &#123;</span><br><span class="line">		return -2</span><br><span class="line">	&#125;</span><br><span class="line">	if self.lineNumberTable == nil &#123;</span><br><span class="line">		return -1</span><br><span class="line">	&#125;</span><br><span class="line">	return self.lineNumberTable.GetLineNumber(pc)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>newExceptionTable</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">//todo exception 异常处理</span><br><span class="line">type ExceptionTable []*ExceptionHandler</span><br><span class="line"></span><br><span class="line">type ExceptionHandler struct &#123;</span><br><span class="line">	startPc   int       //try代码段</span><br><span class="line">	endPc     int       //try代码段</span><br><span class="line">	handlerPc int       //处理句柄</span><br><span class="line">	catchType *ClassRef //异常类</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//从classfile生成异常处理</span><br><span class="line">func newExceptionTable(entries []*classfile.ExceptionTableEntry, cp *ConstantPool) ExceptionTable &#123;</span><br><span class="line">	table := make([]*ExceptionHandler, len(entries))</span><br><span class="line">	for i, entry := range entries &#123;</span><br><span class="line">		table[i] = &amp;ExceptionHandler&#123;</span><br><span class="line">			startPc:   int(entry.StartPc()),</span><br><span class="line">			endPc:     int(entry.EndPc()),</span><br><span class="line">			handlerPc: int(entry.HandlerPc()),</span><br><span class="line">			catchType: getCatchType(uint(entry.CatchType()), cp),</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return table</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//获得异常类</span><br><span class="line">func getCatchType(index uint, cp *ConstantPool) *ClassRef &#123;</span><br><span class="line">	if index == 0 &#123;</span><br><span class="line">		return nil // catch all</span><br><span class="line">	&#125;</span><br><span class="line">	return cp.GetConstant(index).(*ClassRef)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (self ExceptionTable) findExceptionHandler(exClass *Class, pc int) *ExceptionHandler &#123;</span><br><span class="line">	for _, handler := range self &#123;</span><br><span class="line">		// jvms: The start_pc is inclusive and end_pc is exclusive</span><br><span class="line">		if pc &gt;= handler.startPc &amp;&amp; pc &lt; handler.endPc &#123;</span><br><span class="line">			if handler.catchType == nil &#123;</span><br><span class="line">				return handler //catch-all</span><br><span class="line">			&#125;</span><br><span class="line">			catchClass := handler.catchType.ResolvedClass()</span><br><span class="line">			if catchClass == exClass || catchClass.IsSuperClassOf(exClass) &#123;</span><br><span class="line">				return handler</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>异常代码行数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func (self *CodeAttribute) LineNumberTableAttribute() *LineNumberTableAttribute &#123;</span><br><span class="line">	for _, attrInfo := range self.attributes &#123;</span><br><span class="line">		switch attrInfo.(type) &#123;</span><br><span class="line">		case *LineNumberTableAttribute:</span><br><span class="line">			return attrInfo.(*LineNumberTableAttribute)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>异常指令athrow<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">func (self *ATHROW) Execute(frame *rtda.Frame) &#123;</span><br><span class="line">	ex := frame.OperandStack().PopRef()</span><br><span class="line">	if ex == nil &#123;</span><br><span class="line">		panic(&quot;java.lang.NullPointerException&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	thread := frame.Thread()</span><br><span class="line">	//未找异常处理方法</span><br><span class="line">	if !findAndGotoExceptionHandler(thread, ex) &#123;</span><br><span class="line">		//抛出uncaught异常</span><br><span class="line">		handleUncaughtException(thread, ex)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func findAndGotoExceptionHandler(thread *rtda.Thread, ex *heap.Object) bool &#123;</span><br><span class="line">	for &#123;</span><br><span class="line">		frame := thread.CurrentFrame()</span><br><span class="line">		pc := frame.NextPC() - 1</span><br><span class="line"></span><br><span class="line">		handlerPC := frame.Method().FindExceptionHandler(ex.Class(), pc)</span><br><span class="line">		if handlerPC &gt; 0 &#123;</span><br><span class="line">			stack := frame.OperandStack()</span><br><span class="line">			stack.Clear()</span><br><span class="line">			stack.PushRef(ex)</span><br><span class="line">			frame.SetNextPC(handlerPC)</span><br><span class="line">			return true</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		thread.PopFrame()</span><br><span class="line">		if thread.IsStackEmpty() &#123;</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// todo</span><br><span class="line">func handleUncaughtException(thread *rtda.Thread, ex *heap.Object) &#123;</span><br><span class="line">	thread.ClearStack()</span><br><span class="line"></span><br><span class="line">	jMsg := ex.GetRefVar(&quot;detailMessage&quot;, &quot;Ljava/lang/String;&quot;)</span><br><span class="line">	goMsg := heap.GoString(jMsg)</span><br><span class="line">	println(ex.Class().JavaName() + &quot;: &quot; + goMsg)</span><br><span class="line"></span><br><span class="line">	stes := reflect.ValueOf(ex.Extra())</span><br><span class="line">	for i := 0; i &lt; stes.Len(); i++ &#123;</span><br><span class="line">		ste := stes.Index(i).Interface().(interface &#123;</span><br><span class="line">			String() string</span><br><span class="line">		&#125;)</span><br><span class="line">		println(&quot;	at &quot; + ste.String())</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>异常测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#exception 异常处理</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  123</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest  abc</span><br><span class="line">go run main   -cp test/lib/example.jar   jvmgo.book.ch10.ParseIntTest</span><br></pre></td></tr></table></figure></p>
-<h4 id="实战项目地址"><a href="#实战项目地址" class="headerlink" title="实战项目地址"></a>实战项目地址</h4><p><a href="https://github.com/yinlingchaoliu/jvmgo.git" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/jvmgo.git</a></p>
-<p>提交标签 “exception”</p>
+            <p>####导航<br><a href="https://www.jianshu.com/p/20108abc1dd6" target="_blank" rel="noopener">第3章 组件声明式编程 仿微信”.api”化(上)</a><br><a href="https://www.jianshu.com/p/b5b8afd008b3" target="_blank" rel="noopener">第3章 仿微信”.api”化 实现原理（下）</a></p>
+<p>#####1、思考路径<br>将原本下沉到base模块的通用性不高的代码，被重新申领到各个业务模块，运行时动态放入到base模块，在项目不断扩大时，避免了base在后期开发时急速膨胀，约束好代码边界</p>
+<p>反复参考<a href="https://mp.weixin.qq.com/s/6Q818XA5FaHd7jJMFBG60w" target="_blank" rel="noopener">微信Android模块化架构重构实践</a>思想，忽然有一个灵感，“.api”文件是java JVM不识别的，可不可以在编译之前，将这些”.api”文件变成系统可识别的。weixinapi，是这个插件由来的原因</p>
+<h5 id="2、代码实现的核心逻辑"><a href="#2、代码实现的核心逻辑" class="headerlink" title="2、代码实现的核心逻辑"></a>2、代码实现的核心逻辑</h5><p>1、将项目中所有module中”.api”文件拷贝至指定ApiModule<br>2、因为java jvm不识别”.api”文件，将ApiModule中“.api”文件后缀改为”.java”<br>3、同理，将原来所有module中”.api”文件编译时移除使用（exclude）<br>4、清理ApiModule中空文件夹，使该项目显得更加清晰</p>
+<h5 id="3、示例核心代码-gradle脚本编写"><a href="#3、示例核心代码-gradle脚本编写" class="headerlink" title="3、示例核心代码 gradle脚本编写"></a>3、示例核心代码 gradle脚本编写</h5><p>1、删除api_module中所有java代码 做项目初始化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task cleanApiLib() &#123;</span><br><span class="line">    delete project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2、api文件拷贝指定api_module ,且文件后缀改为”.java”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">task copyApiForCommLib(type: Copy) &#123;</span><br><span class="line"></span><br><span class="line">    group &apos;api&apos;</span><br><span class="line">    //遍历所有项目 将api文件</span><br><span class="line">    for (Project mProject : project.rootProject.getAllprojects()) &#123;</span><br><span class="line">        println(mProject.projectDir.path + &quot;/src/main/java&quot;)</span><br><span class="line">        from(mProject.projectDir.path + &quot;/src/main/java&quot;) &#123;</span><br><span class="line">            include &apos;**/**.api&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    println(project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;)</span><br><span class="line">    into file(project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;)</span><br><span class="line"></span><br><span class="line">    //将&quot;.api&quot;改名为&quot;.java&quot;</span><br><span class="line">    rename &#123; String filename -&gt;</span><br><span class="line">        int index = filename.indexOf(&quot;.api&quot;)</span><br><span class="line">        String name = filename[0..index] + &quot;java&quot;</span><br><span class="line">        return name</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>3、api_module空文件夹清理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">task clearApiEmptyDir() &#123;</span><br><span class="line">    String filePath = project.rootProject.project(&apos;:module_api&apos;).projectDir.path + &quot;/src/main/java&quot;</span><br><span class="line">    println(&quot;show all filePath:&quot; + filePath)</span><br><span class="line">    clear(new File(filePath))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void clear(File dir) &#123;</span><br><span class="line">    File[] dirs = dir.listFiles()</span><br><span class="line">    for (File file : dirs) &#123;</span><br><span class="line">        if (file.isDirectory()) &#123;</span><br><span class="line">            clear(file)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (dir.isDirectory() &amp;&amp; dir.delete())</span><br><span class="line">        println(dir.name + &quot;清理成功&quot;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>4、项目编译时移除原有module中“.api”文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//删除api文件</span><br><span class="line">sourceSets &#123;</span><br><span class="line">    main &#123;</span><br><span class="line">        java &#123;</span><br><span class="line">            exclude(&apos;**/**.api&apos;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>#####4、 采用groovy编写weixinApi插件<br>本插件采用groovy编写，难点在中间的一些语法差异，和细节优化，请大家给我一个star，<br>主要考虑三点：</p>
+<ul>
+<li>1、有利于开发者用户快速集成</li>
+<li>2、减少不必要gradle脚本，干扰到用户，重点在于业务</li>
+<li>3、增强weixinapi通用性</li>
+</ul>
+<p>groovy 编写其中有很多技术难点，想要学习的朋友，可以我写的插件源码component/weixinApi</p>
+<p>#####5、喜欢的朋友们记得给我的项目一个star<br><a href="https://github.com/yinlingchaoliu/AndroidComponent" target="_blank" rel="noopener">https://github.com/yinlingchaoliu/AndroidComponent</a><br>具体代码位置去”.api”插件<br>component/weixinApi</p>
 
           
         
@@ -2090,7 +2037,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -2132,7 +2079,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">334</span>
+                    <span class="site-state-item-count">299</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2195,9 +2142,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

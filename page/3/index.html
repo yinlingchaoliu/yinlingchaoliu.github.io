@@ -288,7 +288,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/Android-app冷启动/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/Charles-抓包--安卓模拟器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="CHEN TONG">
@@ -308,172 +308,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/05/26/Android相关/Android-app冷启动/" class="post-title-link" itemprop="url">Android-app冷启动</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####Android App启动流程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">冷启动app：Application:attachBaseContext()------&gt;Application:onCreate()-----&gt;Activity:onCreate()</span><br></pre></td></tr></table></figure></p>
-<p><strong><em>Application:attachBaseContext()</em></strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MultiDex.install();</span><br></pre></td></tr></table></figure></p>
-<p><strong><em>Application:onCreate()</em></strong><br>*第三方sdk初始化放在异步线程中<br>方案：<br>1、Thread 、AsyncTask、Handler<br>2、IntentService初始化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 第三方sdk启动</span><br><span class="line"> */</span><br><span class="line">public class InitializeService extends IntentService &#123;</span><br><span class="line"></span><br><span class="line">    private static final String ACTION_INIT_WHEN_APP_CREATE = &quot;com.app.start&quot;;</span><br><span class="line">    private static String TAG = InitializeService.class.getSimpleName();</span><br><span class="line"></span><br><span class="line">    public InitializeService() &#123;</span><br><span class="line">        super(TAG);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public InitializeService(String name) &#123;</span><br><span class="line">        super(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onHandleIntent(Intent intent) &#123;</span><br><span class="line">        if (intent != null) &#123;</span><br><span class="line">            final String action = intent.getAction();</span><br><span class="line">            if (ACTION_INIT_WHEN_APP_CREATE.equals(action)) &#123;</span><br><span class="line">                performInit();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void performInit() &#123;</span><br><span class="line">        //此处进行第三方sdk初始化</span><br><span class="line">        //融360</span><br><span class="line">        Context applicationContext = MyApplication.getInstance();</span><br><span class="line">        CrawlerManager.initSDK(applicationContext);//初始化SDK</span><br><span class="line">        CrawlerManager.getInstance().setDebug(true);</span><br><span class="line">        /**</span><br><span class="line">         * webView 内核初始化</span><br><span class="line">         * 说明WebView 初处初始化耗时 250ms 左右。</span><br><span class="line">         */</span><br><span class="line">//        WebView mWebView=new WebView(new MutableContextWrapper(applicationContext));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void start(Context context) &#123;</span><br><span class="line">        Intent intent = new Intent(context, InitializeService.class);</span><br><span class="line">        intent.setAction(ACTION_INIT_WHEN_APP_CREATE);</span><br><span class="line">        context.startService(intent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//xml</span><br><span class="line">        &lt;service</span><br><span class="line">            android:name=&quot;.app.service.InitializeService&quot;</span><br><span class="line">            android:exported=&quot;false&quot;/&gt;</span><br></pre></td></tr></table></figure>
-<p><strong><em>Activity:onCreate()</em></strong><br>在onCreate之前设置透明主题或者闪屏页<br>给用户秒开的视觉效果</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 透明主题 --&gt;</span><br><span class="line">&lt;style name=&quot;No_Splash_Light&quot; parent=&quot;Theme.AppCompat.Light&quot;&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowBackground&quot;&gt;@android:color/transparent&lt;/item&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowContentOverlay&quot;&gt;@null&lt;/item&gt;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 闪屏页主题 --&gt;</span><br><span class="line">&lt;style name=&quot;SplashTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowBackground&quot;&gt;@mipmap/flash_icon&lt;/item&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowIsTranslucent&quot;&gt;false&lt;/item&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowFullscreen&quot;&gt;true&lt;/item&gt;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-<p>在Activiy.onCreate()方法中加载视图之前设置回原来主题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTheme( R.style.AppTheme );</span><br></pre></td></tr></table></figure></p>
-<p>####性能测试工具<br>项目地址：<a href="https://github.com/JakeWharton/hugo" target="_blank" rel="noopener">https://github.com/JakeWharton/hugo</a></p>
-<p>####参考<br><a href="https://blog.csdn.net/u012811342/article/details/77568718" target="_blank" rel="noopener">https://blog.csdn.net/u012811342/article/details/77568718</a><br><a href="https://blog.csdn.net/u012124438/article/details/56340949" target="_blank" rel="noopener">https://blog.csdn.net/u012124438/article/details/56340949</a><br><a href="https://www.jianshu.com/p/f5514b1a826c" target="_blank" rel="noopener">https://www.jianshu.com/p/f5514b1a826c</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/Flutter-沉侵式与ListView冲突/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/Flutter-沉侵式与ListView冲突/" class="post-title-link" itemprop="url">Flutter-沉侵式与ListView冲突</a>
+                <a href="/2020/05/26/Android相关/Charles-抓包--安卓模拟器/" class="post-title-link" itemprop="url">Charles-抓包--安卓模拟器</a>
               
             
           </h1>
@@ -557,168 +392,11 @@
       
         
           
-            <p>ListView 默认会与沉侵式冲突<img src="https://upload-images.jianshu.io/upload_images/5526061-3b8357304eea8605.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="解决沉侵式问题"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/EditText输入金额类型/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/EditText输入金额类型/" class="post-title-link" itemprop="url">EditText输入金额类型</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>别废话，优雅解决<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">public class EditTextUtils &#123;</span><br><span class="line">    /**</span><br><span class="line">     *  设置edittext只能输入小数点后两位</span><br><span class="line">     */</span><br><span class="line">    public static void afterDotTwo(final EditText editText) &#123;</span><br><span class="line">        editText.addTextChangedListener(new TextWatcher() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onTextChanged(CharSequence s, int start, int before, int count) &#123;</span><br><span class="line">                // 限制最多能输入9位整数</span><br><span class="line">                if (s.toString().contains(&quot;.&quot;)) &#123;</span><br><span class="line">                    if (s.toString().indexOf(&quot;.&quot;) &gt; 9) &#123;</span><br><span class="line">                        s = s.toString().subSequence(0,9) + s.toString().substring(s.toString().indexOf(&quot;.&quot;));</span><br><span class="line">                        editText.setText(s);</span><br><span class="line">                        editText.setSelection(9);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;else &#123;</span><br><span class="line">                    if (s.toString().length() &gt; 9)&#123;</span><br><span class="line">                        s = s.toString().subSequence(0,9);</span><br><span class="line">                        editText.setText(s);</span><br><span class="line">                        editText.setSelection(9);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                // 判断小数点后只能输入两位</span><br><span class="line">                if (s.toString().contains(&quot;.&quot;)) &#123;</span><br><span class="line">                    if (s.length() - 1 - s.toString().indexOf(&quot;.&quot;) &gt; 2) &#123;</span><br><span class="line">                        s = s.toString().subSequence(0,</span><br><span class="line">                                s.toString().indexOf(&quot;.&quot;) + 3);</span><br><span class="line">                        editText.setText(s);</span><br><span class="line">                        editText.setSelection(s.length());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                //如果第一个数字为0，第二个不为点，就不允许输入</span><br><span class="line">                if (s.toString().startsWith(&quot;0&quot;) &amp;&amp; s.toString().trim().length() &gt; 1) &#123;</span><br><span class="line">                    if (!s.toString().substring(1, 2).equals(&quot;.&quot;)) &#123;</span><br><span class="line">                        editText.setText(s.subSequence(0, 1));</span><br><span class="line">                        editText.setSelection(1);</span><br><span class="line">                        return;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            @Override</span><br><span class="line">            public void beforeTextChanged(CharSequence s, int start, int count, int after) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            @Override</span><br><span class="line">            public void afterTextChanged(Editable s) &#123;</span><br><span class="line">                if (editText.getText().toString().trim() != null &amp;&amp; !editText.getText().toString().trim().equals(&quot;&quot;)) &#123;</span><br><span class="line">                    if (editText.getText().toString().trim().substring(0, 1).equals(&quot;.&quot;)) &#123;</span><br><span class="line">                        editText.setText(&quot;0&quot; + editText.getText().toString().trim());</span><br><span class="line">                        editText.setSelection(1);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+            <p>#####Charles 抓包<br>在控制台下，前往以下目录 ../Android/sdk/tools，输入以下命令：</p>
+<p><code>emulator -avd &lt;your emulator name&gt; -http-proxy http://&lt;your_proxy&gt;</code></p>
+<p>eg：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emulator -avd Nexus_5X -http-proxy http://172.20.223.78:8888</span><br></pre></td></tr></table></figure></p>
+<p>tips:<br>1、当前网络wifi地址 172.29.223.78<br>2、Nexus_5X 模拟器名字<br>3、执行文件目录android/sdk/tools/</p>
+<p>如果觉得实用，给点赞👍👍👍</p>
 
           
         
@@ -936,6 +614,167 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/EditText输入金额类型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/EditText输入金额类型/" class="post-title-link" itemprop="url">EditText输入金额类型</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>别废话，优雅解决<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">public class EditTextUtils &#123;</span><br><span class="line">    /**</span><br><span class="line">     *  设置edittext只能输入小数点后两位</span><br><span class="line">     */</span><br><span class="line">    public static void afterDotTwo(final EditText editText) &#123;</span><br><span class="line">        editText.addTextChangedListener(new TextWatcher() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onTextChanged(CharSequence s, int start, int before, int count) &#123;</span><br><span class="line">                // 限制最多能输入9位整数</span><br><span class="line">                if (s.toString().contains(&quot;.&quot;)) &#123;</span><br><span class="line">                    if (s.toString().indexOf(&quot;.&quot;) &gt; 9) &#123;</span><br><span class="line">                        s = s.toString().subSequence(0,9) + s.toString().substring(s.toString().indexOf(&quot;.&quot;));</span><br><span class="line">                        editText.setText(s);</span><br><span class="line">                        editText.setSelection(9);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;else &#123;</span><br><span class="line">                    if (s.toString().length() &gt; 9)&#123;</span><br><span class="line">                        s = s.toString().subSequence(0,9);</span><br><span class="line">                        editText.setText(s);</span><br><span class="line">                        editText.setSelection(9);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                // 判断小数点后只能输入两位</span><br><span class="line">                if (s.toString().contains(&quot;.&quot;)) &#123;</span><br><span class="line">                    if (s.length() - 1 - s.toString().indexOf(&quot;.&quot;) &gt; 2) &#123;</span><br><span class="line">                        s = s.toString().subSequence(0,</span><br><span class="line">                                s.toString().indexOf(&quot;.&quot;) + 3);</span><br><span class="line">                        editText.setText(s);</span><br><span class="line">                        editText.setSelection(s.length());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                //如果第一个数字为0，第二个不为点，就不允许输入</span><br><span class="line">                if (s.toString().startsWith(&quot;0&quot;) &amp;&amp; s.toString().trim().length() &gt; 1) &#123;</span><br><span class="line">                    if (!s.toString().substring(1, 2).equals(&quot;.&quot;)) &#123;</span><br><span class="line">                        editText.setText(s.subSequence(0, 1));</span><br><span class="line">                        editText.setSelection(1);</span><br><span class="line">                        return;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            @Override</span><br><span class="line">            public void beforeTextChanged(CharSequence s, int start, int count, int after) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            @Override</span><br><span class="line">            public void afterTextChanged(Editable s) &#123;</span><br><span class="line">                if (editText.getText().toString().trim() != null &amp;&amp; !editText.getText().toString().trim().equals(&quot;&quot;)) &#123;</span><br><span class="line">                    if (editText.getText().toString().trim().substring(0, 1).equals(&quot;.&quot;)) &#123;</span><br><span class="line">                        editText.setText(&quot;0&quot; + editText.getText().toString().trim());</span><br><span class="line">                        editText.setSelection(1);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/H5接入支付宝支付，android适配url拦截alipays---platformapi/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1043,6 +882,330 @@
             <p>####1、问题背景：<br>问题：商城H5接入支付宝支付，点击白屏<br>解决方案：需要移动端配合拦截指定url(alipays://platformapi)，并唤起支付宝</p>
 <p>####2、代码实现<br>webview拦截<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//覆盖WebView默认通过第三方或者是系统浏览器打开网页的行为，使得网页可以在WebView中打开</span><br><span class="line"> webview.setWebViewClient( new WebViewClient()&#123;</span><br><span class="line">     @Override</span><br><span class="line">     public boolean shouldOverrideUrlLoading(WebView webView, String url) &#123;</span><br><span class="line">         //调用</span><br><span class="line">         if (AlipayUtil.isAlipay( url ))&#123;</span><br><span class="line">             AlipayUtil.goAlipays( getActivity(), url );</span><br><span class="line">             return true;</span><br><span class="line">         &#125;</span><br><span class="line">         return super.shouldOverrideUrlLoading( webView, url );</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;);</span><br></pre></td></tr></table></figure></p>
 <p>封装工具<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">@Keep</span><br><span class="line">public class AlipayUtil &#123;</span><br><span class="line"></span><br><span class="line">    //拦截特定支付标识</span><br><span class="line">    public static boolean isAlipay(String url) &#123;</span><br><span class="line">        if (StringUtils.startsWith( url, &quot;alipays:&quot; ) || StringUtils.startsWith( url, &quot;alipay&quot; )) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void goAlipays(Activity activity, String url) &#123;</span><br><span class="line">        //判断是否安装支付宝</span><br><span class="line">        if (checkAliPayInstalled( activity ))&#123;</span><br><span class="line">            goUrl( activity, url );</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            //安装下载支付宝</span><br><span class="line">            updateAlipayDialog(activity);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  //直接隐式调用</span><br><span class="line">    private static void goUrl(Activity activity, String url)&#123;</span><br><span class="line">        Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );</span><br><span class="line">        activity.startActivity( intent );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //判断是否安装支付宝app</span><br><span class="line">    private static boolean checkAliPayInstalled(Context context) &#123;</span><br><span class="line">        Uri uri = Uri.parse( &quot;alipays://platformapi/startApp&quot; );</span><br><span class="line">        Intent intent = new Intent( Intent.ACTION_VIEW, uri );</span><br><span class="line">        ComponentName componentName = intent.resolveActivity( context.getPackageManager() );</span><br><span class="line">        return componentName != null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static volatile CustomDialog updateDialog = null;</span><br><span class="line"></span><br><span class="line">    //安装alipay支付宝  弹框和文案根据实际情况定制</span><br><span class="line">    private static synchronized void updateAlipayDialog(Context context) &#123;</span><br><span class="line">        updateDialog = new CustomDialog.Builder( context ).setMessage( &quot;未检测到支付宝客户端，请安装后重试&quot; )</span><br><span class="line">                .setNegativeButton( &quot;取消&quot;, (dialogInterface, i) -&gt; &#123;</span><br><span class="line">                    updateDialog.dismiss();</span><br><span class="line">                    updateDialog = null;</span><br><span class="line">                &#125; ).setPositiveButton( &quot;立即安装&quot;, (dialogInterface, i) -&gt; &#123;</span><br><span class="line">                    Uri alipayUrl = Uri.parse(&quot;https://d.alipay.com&quot;);</span><br><span class="line">                    context.startActivity(new Intent(Intent.ACTION_VIEW, alipayUrl));</span><br><span class="line">                    updateDialog.dismiss();</span><br><span class="line">                    updateDialog = null;</span><br><span class="line">                &#125; ).build();</span><br><span class="line"></span><br><span class="line">        if (updateDialog != null) &#123;</span><br><span class="line">            updateDialog.show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/Flutter-沉侵式与ListView冲突/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/Flutter-沉侵式与ListView冲突/" class="post-title-link" itemprop="url">Flutter-沉侵式与ListView冲突</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>ListView 默认会与沉侵式冲突<img src="https://upload-images.jianshu.io/upload_images/5526061-3b8357304eea8605.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="解决沉侵式问题"></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/Keep混淆/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/Keep混淆/" class="post-title-link" itemprop="url">Keep混淆</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>keep注解 支持变量、方法、构造方法、类、注解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Retention(RetentionPolicy.CLASS)</span><br><span class="line">@Target(&#123;ElementType.PACKAGE, ElementType.TYPE, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD&#125;)</span><br><span class="line">public @interface Keep &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>混淆文件proguard-rules.pro<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Understand the @Keep support annotation.</span><br><span class="line">-dontwarn android.support.**</span><br><span class="line">-keep class android.support.annotation.Keep</span><br><span class="line"></span><br><span class="line">-keep @android.support.annotation.Keep class * &#123;*;&#125;</span><br><span class="line"></span><br><span class="line">-keepclasseswithmembers class * &#123;</span><br><span class="line">    @android.support.annotation.Keep &lt;methods&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclasseswithmembers class * &#123;</span><br><span class="line">    @android.support.annotation.Keep &lt;fields&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclasseswithmembers class * &#123;</span><br><span class="line">    @android.support.annotation.Keep &lt;init&gt;(...);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>android代码，哪些类不需要混淆，就@Keep即可</p>
 
           
         
@@ -1556,6 +1719,169 @@ fun forward(pixels: Double){
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/aapt打印apk信息-配置安卓环境变量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="CHEN TONG">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="引领潮流">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/05/26/Android相关/aapt打印apk信息-配置安卓环境变量/" class="post-title-link" itemprop="url">aapt打印apk信息-配置安卓环境变量</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>打印apk信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aapt dump badging app-debug.apk</span><br></pre></td></tr></table></figure></p>
+<p>配置安卓环境变量<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ANDROID_HOME=/Users/chentong/Android/sdk</span><br><span class="line"><span class="built_in">export</span> ANDROID_NDK=<span class="variable">$ANDROID_HOME</span>/ndk-bundle</span><br><span class="line"><span class="built_in">export</span> ANDROID_TOOLS=<span class="variable">$ANDROID_HOME</span>/tools</span><br><span class="line"><span class="built_in">export</span> ANDROID_PLATFORM_TOOLS=<span class="variable">$ANDROID_HOME</span>/platform-tools</span><br><span class="line"><span class="built_in">export</span> ANDROID_BUILD_TOOLS=<span class="variable">$ANDROID_HOME</span>/build-tools/26.0.2</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$ANDROID_HOME</span>:<span class="variable">$ANDROID_TOOLS</span>:<span class="variable">$ANDROID_PLATFORM_TOOLS</span>:<span class="variable">$ANDROID_NDK</span>:<span class="variable">$ANDROID_BUILD_TOOLS</span></span><br></pre></td></tr></table></figure></p>
+<p>环境变量生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> .bash_profile</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/UI颜色透明度（不透明度）计算-+表格自动生成/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1708,345 +2034,11 @@ fun forward(pixels: Double){
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/aop-singleClick-双击去重/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/aop-singleClick-双击去重/" class="post-title-link" itemprop="url">aop-singleClick-双击去重</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####使用方法<br>引用依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;android-aspectjx&apos;</span><br><span class="line"></span><br><span class="line">aspectjx &#123;</span><br><span class="line">    enabled true</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">classpath &apos;com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.4&apos;</span><br></pre></td></tr></table></figure></p>
-<p>使用范例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//从此就有去重功能</span><br><span class="line">@ SingleClick</span><br><span class="line">void testClick()&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####代码示例</p>
-<ul>
-<li><p>SingleClick注解</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 防止View被连续点击</span><br><span class="line"> */</span><br><span class="line">@Retention(RetentionPolicy.CLASS)</span><br><span class="line">@Target(ElementType.METHOD)</span><br><span class="line">public @interface SingleClick &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>SingleClickAspect</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 防止View被连续点击,间隔时间600ms</span><br><span class="line"> *</span><br><span class="line"> * @author chentong</span><br><span class="line"> * @date 18/3/29</span><br><span class="line"> */</span><br><span class="line">@Aspect</span><br><span class="line">public class SingleClickAspect &#123;</span><br><span class="line">    private static long lastClickTime;</span><br><span class="line">   @Pointcut(&quot;execution(@com.xxx.app.aop.annotation.aspect.SingleClick * *(..))&quot;)</span><br><span class="line">    //方法切入点</span><br><span class="line">    public void methodAnnotated() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Around(&quot;methodAnnotated()&quot;)//在连接点进行方法替换</span><br><span class="line">    public void aroundJoinPoint(ProceedingJoinPoint joinPoint) throws Throwable &#123;</span><br><span class="line">        if (!isFastDoubleClick()) &#123;</span><br><span class="line">            joinPoint.proceed();//执行原方法</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public  boolean isFastDoubleClick() &#123;</span><br><span class="line">        long time = System.currentTimeMillis();</span><br><span class="line">        long timeD = time - lastClickTime;</span><br><span class="line">        if (0 &lt; timeD &amp;&amp; timeD &lt; 600) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        lastClickTime = time;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/Android相关/aapt打印apk信息-配置安卓环境变量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="CHEN TONG">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="引领潮流">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/26/Android相关/aapt打印apk信息-配置安卓环境变量/" class="post-title-link" itemprop="url">aapt打印apk信息-配置安卓环境变量</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-05-26 10:55:48 / Modified: 10:55:49" itemprop="dateCreated datePublished" datetime="2020-05-26T10:55:48+08:00">2020-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android相关/" itemprop="url" rel="index"><span itemprop="name">Android相关</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>打印apk信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aapt dump badging app-debug.apk</span><br></pre></td></tr></table></figure></p>
-<p>配置安卓环境变量<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ANDROID_HOME=/Users/chentong/Android/sdk</span><br><span class="line"><span class="built_in">export</span> ANDROID_NDK=<span class="variable">$ANDROID_HOME</span>/ndk-bundle</span><br><span class="line"><span class="built_in">export</span> ANDROID_TOOLS=<span class="variable">$ANDROID_HOME</span>/tools</span><br><span class="line"><span class="built_in">export</span> ANDROID_PLATFORM_TOOLS=<span class="variable">$ANDROID_HOME</span>/platform-tools</span><br><span class="line"><span class="built_in">export</span> ANDROID_BUILD_TOOLS=<span class="variable">$ANDROID_HOME</span>/build-tools/26.0.2</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$ANDROID_HOME</span>:<span class="variable">$ANDROID_TOOLS</span>:<span class="variable">$ANDROID_PLATFORM_TOOLS</span>:<span class="variable">$ANDROID_NDK</span>:<span class="variable">$ANDROID_BUILD_TOOLS</span></span><br></pre></td></tr></table></figure></p>
-<p>环境变量生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> .bash_profile</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -2088,7 +2080,7 @@ fun forward(pixels: Double){
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">334</span>
+                    <span class="site-state-item-count">299</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2151,9 +2143,7 @@ fun forward(pixels: Double){
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">categories</span>
                   
                 </div>

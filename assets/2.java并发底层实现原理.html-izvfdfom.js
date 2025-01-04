@@ -1,0 +1,56 @@
+import{_ as e}from"./plugin-vue_export-helper-DlAUqK2U.js";import{o as a,c as i,f as n}from"./app-CtvCwAmI.js";const t="/assets/markword1-DL3mgwWy.png",l="/assets/markword2-VykTtenr.png",s="/assets/upgrade1-DDokKXwl.png",d="/assets/upgrade2-R3fC4uX6.png",r="/assets/upgrade3-DUBPv0f6.png",c={},o=n(`<h3 id="_1-并发三要素" tabindex="-1"><a class="header-anchor" href="#_1-并发三要素"><span>1.并发三要素</span></a></h3><p>原子性：不可被中断的一个或一系列操作 可见性： 当一个线程修改一个共享变量时，另一个线程能读到修改的值 有序性：</p><h3 id="_2-volatile原理" tabindex="-1"><a class="header-anchor" href="#_2-volatile原理"><span>2.volatile原理</span></a></h3><p>volatile 轻量级的synchronized，多处理器保证【可见性】 volatile使用恰当，不会引起线程上下文切换和调度 禁止指令重排</p><h4 id="volatile" tabindex="-1"><a class="header-anchor" href="#volatile"><span>volatile</span></a></h4><div class="language-text line-numbers-mode" data-ext="text" data-title="text"><pre class="language-text"><code>volatile Singleton instance = new Singleton()
+
+//汇编指令
+0x01a3de1d: movb $0×0,0×1104800(%esi);
+0x01a3de24: lock addl $0×0,(%esp);
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>volatile原理 1、Lock前缀指令会引起处理器缓存回写到内存 2、一个处理器的缓存回写到内存会导致其他处理器的缓存无效</p><h3 id="_3-synchronized原理" tabindex="-1"><a class="header-anchor" href="#_3-synchronized原理"><span>3.synchronized原理</span></a></h3><h4 id="应用" tabindex="-1"><a class="header-anchor" href="#应用"><span>应用</span></a></h4><ol><li>对于普通同步方法，锁是当前实例对象。</li><li>对于静态同步方法，锁是当前类的Class对象</li><li>对于同步方法块，锁是Synchonized括号里配置的对象。</li></ol><p>用法</p><div class="language-text line-numbers-mode" data-ext="text" data-title="text"><pre class="language-text"><code>public class SyncDemo {
+
+    Object A = new Object();
+
+    public synchronized void method() {
+        System.out.println( &quot;锁是当前实例对象&quot; );
+    }
+
+    public synchronized static void method1() {
+        System.out.println( &quot;锁是当前类Class&quot; );
+    }
+
+    public void method2() {
+        synchronized (A) {
+            System.out.println( &quot;锁是synchronized配置对象&quot; );
+        }
+    }
+
+    public static void main(String[] args){
+        SyncDemo demo = new SyncDemo();
+        demo.method();
+        demo.method2();
+        SyncDemo.method1();
+    }
+
+}
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>synchronized原理 JVM基于进入和退出Monitor对象来实现方法同步和代码块同步</p><h4 id="java对象头" tabindex="-1"><a class="header-anchor" href="#java对象头"><span>java对象头</span></a></h4><p>synchronized用的锁是存在Java对象头里的</p><figure><img src="`+t+'" alt="java对象存储结构" tabindex="0" loading="lazy"><figcaption>java对象存储结构</figcaption></figure><figure><img src="'+l+'" alt="Mark Word的状态变化" tabindex="0" loading="lazy"><figcaption>Mark Word的状态变化</figcaption></figure><h4 id="锁的升级与对比" tabindex="-1"><a class="header-anchor" href="#锁的升级与对比"><span>锁的升级与对比</span></a></h4><p>1.锁的级别：无锁状态 &lt; 偏向锁状态 &lt; 轻量级锁状态 &lt; 重量级锁状态</p><p>2.锁可以升级，但不能降级 这种策略，目的是为了提高 获得锁和释放锁的效率</p><h6 id="偏向锁" tabindex="-1"><a class="header-anchor" href="#偏向锁"><span>偏向锁</span></a></h6><p>场景: 锁不仅不存在多线程竞争，而且总是由同一线程多次获得，为了让线程获得锁的代价更低而引入了偏向锁</p><p>偏向锁加锁 当一个线程访问同步块并获取锁时，会在对象头和栈帧中的锁记录里存储锁偏向的线程ID， 以后该线程在进入和退出 同步块时不需要进行CAS操作来加锁和解锁</p><p>偏向锁撤销</p><p>偏向锁使用了一种等到竞争出现才释放锁的机制</p><p>当其他线程尝试竞争偏向锁时， 持有偏向锁的线程才会释放锁。偏向锁的撤销，需要等待全局安全点</p><h6 id="轻量级锁" tabindex="-1"><a class="header-anchor" href="#轻量级锁"><span>轻量级锁</span></a></h6><p>Displaced Mark Word ： JVM会先在当前线程的栈桢中创建用于存储锁记录的空间，并将对象头中的Mark Word复制到锁记录中</p><p>轻量级锁加锁</p><p>1、Displaced Mark Word</p><p>2、线程尝试使用 CAS将对象头中的Mark Word替换为指向锁记录的指针</p><p>轻量级锁解锁</p><p>轻量级解锁时，会使用原子的CAS操作将Displaced Mark Word替换回到对象头 成功，表示没有竞争发生, 失败，表示当前锁存在竞争，锁就会膨胀成重量级锁</p><h5 id="锁升级流程" tabindex="-1"><a class="header-anchor" href="#锁升级流程"><span>锁升级流程</span></a></h5><figure><img src="'+s+'" alt="偏向锁升级" tabindex="0" loading="lazy"><figcaption>偏向锁升级</figcaption></figure><figure><img src="'+d+'" alt="轻量锁升级" tabindex="0" loading="lazy"><figcaption>轻量锁升级</figcaption></figure><h6 id="锁的优缺点比较" tabindex="-1"><a class="header-anchor" href="#锁的优缺点比较"><span>锁的优缺点比较</span></a></h6><figure><img src="'+r+`" alt="锁的优缺点比较" tabindex="0" loading="lazy"><figcaption>锁的优缺点比较</figcaption></figure><h3 id="_4-原子操作原理" tabindex="-1"><a class="header-anchor" href="#_4-原子操作原理"><span>4.原子操作原理</span></a></h3><p>CAS(Compare And Swap)</p><h4 id="处理器如何实现原子操作" tabindex="-1"><a class="header-anchor" href="#处理器如何实现原子操作"><span>处理器如何实现原子操作</span></a></h4><ol><li>使用总线锁保证原子性 cpu操作互斥</li><li>使用缓存锁保证原子性</li></ol><h4 id="java实现原子操作" tabindex="-1"><a class="header-anchor" href="#java实现原子操作"><span>java实现原子操作</span></a></h4><ol><li>使用循环CAS实现原子操作</li><li>juc包 atomic类</li><li>使用锁机制实现原子操作</li></ol><p>jvm 中CAS操作利用CMPXCHG指令实现</p><div class="language-text line-numbers-mode" data-ext="text" data-title="text"><pre class="language-text"><code>    private AtomicInteger atomicI = new AtomicInteger( 0 );
+    //循环CAS
+    public void safeCount() {
+        for (; ; ) {
+            int i = atomicI.get();
+            //cas  期望值  更新值
+            boolean suc = atomicI.compareAndSet( i, ++i );
+            if (suc)
+                break;
+        }
+    }
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h4 id="cas实现原子操作的三大问题" tabindex="-1"><a class="header-anchor" href="#cas实现原子操作的三大问题"><span>CAS实现原子操作的三大问题</span></a></h4><ol><li>ABA问题 :使用版本号</li><li>循环时间长开销大</li><li>只能保证一个共享变量的原子操作</li></ol><p>AtomicStampedReference A-&gt;B-&gt;A =&gt; 1A-&gt;2B-&gt;3A ABA解决方案</p><div class="language-text line-numbers-mode" data-ext="text" data-title="text"><pre class="language-text"><code>    private AtomicStampedReference&lt;Integer&gt; atomicStampedRef = new AtomicStampedReference&lt;Integer&gt;( 0,0 );
+    public void safeABACount() {
+        for (;;){
+            //当前值
+            int ref = atomicStampedRef.getReference();
+            //版本
+            int stamp = atomicStampedRef.getStamp();
+            boolean suc = atomicStampedRef.compareAndSet( ref, ++ref, stamp, stamp + 1 );
+            System.out.println( suc + &quot; ref = &quot; + ref + &quot; stamp = &quot; + stamp );
+            if (suc)
+                break;
+        }
+    }
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-juc编程源码" tabindex="-1"><a class="header-anchor" href="#_5-juc编程源码"><span>5.juc编程源码</span></a></h3><p>https://github.com/yinlingchaoliu/juc</p>`,52),p=[o];function v(m,u){return a(),i("div",null,p)}const g=e(c,[["render",v],["__file","2.java并发底层实现原理.html.vue"]]),f=JSON.parse('{"path":"/basis/juc/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/2.java%E5%B9%B6%E5%8F%91%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.html","title":"2.java并发底层实现原理","lang":"zh-CN","frontmatter":{"title":"2.java并发底层实现原理","date":"2024-03-25T22:02:09.000Z","order":2,"category":["java并发编程艺术"],"tag":["juc"],"description":"1.并发三要素 原子性：不可被中断的一个或一系列操作 可见性： 当一个线程修改一个共享变量时，另一个线程能读到修改的值 有序性： 2.volatile原理 volatile 轻量级的synchronized，多处理器保证【可见性】 volatile使用恰当，不会引起线程上下文切换和调度 禁止指令重排 volatile volatile原理 1、Lock...","head":[["meta",{"property":"og:url","content":"https://yinlingchaoliu.github.io/basis/juc/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/2.java%E5%B9%B6%E5%8F%91%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.html"}],["meta",{"property":"og:site_name","content":"引领潮流"}],["meta",{"property":"og:title","content":"2.java并发底层实现原理"}],["meta",{"property":"og:description","content":"1.并发三要素 原子性：不可被中断的一个或一系列操作 可见性： 当一个线程修改一个共享变量时，另一个线程能读到修改的值 有序性： 2.volatile原理 volatile 轻量级的synchronized，多处理器保证【可见性】 volatile使用恰当，不会引起线程上下文切换和调度 禁止指令重排 volatile volatile原理 1、Lock..."}],["meta",{"property":"og:type","content":"article"}],["meta",{"property":"og:locale","content":"zh-CN"}],["meta",{"property":"og:updated_time","content":"2024-04-08T23:43:10.000Z"}],["meta",{"property":"article:author","content":"引领潮流"}],["meta",{"property":"article:tag","content":"juc"}],["meta",{"property":"article:published_time","content":"2024-03-25T22:02:09.000Z"}],["meta",{"property":"article:modified_time","content":"2024-04-08T23:43:10.000Z"}],["script",{"type":"application/ld+json"},"{\\"@context\\":\\"https://schema.org\\",\\"@type\\":\\"Article\\",\\"headline\\":\\"2.java并发底层实现原理\\",\\"image\\":[\\"\\"],\\"datePublished\\":\\"2024-03-25T22:02:09.000Z\\",\\"dateModified\\":\\"2024-04-08T23:43:10.000Z\\",\\"author\\":[{\\"@type\\":\\"Person\\",\\"name\\":\\"引领潮流\\",\\"url\\":\\"https://www.jianshu.com/u/bdcce32c05dd\\"}]}"]]},"headers":[{"level":3,"title":"1.并发三要素","slug":"_1-并发三要素","link":"#_1-并发三要素","children":[]},{"level":3,"title":"2.volatile原理","slug":"_2-volatile原理","link":"#_2-volatile原理","children":[]},{"level":3,"title":"3.synchronized原理","slug":"_3-synchronized原理","link":"#_3-synchronized原理","children":[]},{"level":3,"title":"4.原子操作原理","slug":"_4-原子操作原理","link":"#_4-原子操作原理","children":[]},{"level":3,"title":"5.juc编程源码","slug":"_5-juc编程源码","link":"#_5-juc编程源码","children":[]}],"git":{"createdTime":1712619790000,"updatedTime":1712619790000,"contributors":[{"name":"引领潮流","email":"heat13@qq.com","commits":1}]},"readingTime":{"minutes":3.48,"words":1045},"filePathRelative":"basis/juc/java并发编程艺术/2.java并发底层实现原理.md","localizedDate":"2024年3月26日","excerpt":"<h3>1.并发三要素</h3>\\n<p>原子性：不可被中断的一个或一系列操作\\n可见性： 当一个线程修改一个共享变量时，另一个线程能读到修改的值\\n有序性：</p>\\n<h3>2.volatile原理</h3>\\n<p>volatile 轻量级的synchronized，多处理器保证【可见性】\\nvolatile使用恰当，不会引起线程上下文切换和调度\\n禁止指令重排</p>\\n<h4>volatile</h4>\\n<div class=\\"language-text\\" data-ext=\\"text\\" data-title=\\"text\\"><pre class=\\"language-text\\"><code>volatile Singleton instance = new Singleton()\\n\\n//汇编指令\\n0x01a3de1d: movb $0×0,0×1104800(%esi);\\n0x01a3de24: lock addl $0×0,(%esp);\\n</code></pre></div>","autoDesc":true}');export{g as comp,f as data};

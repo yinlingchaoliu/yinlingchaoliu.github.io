@@ -1,0 +1,80 @@
+import{_ as n}from"./plugin-vue_export-helper-DlAUqK2U.js";import{o as s,c as a,f as e}from"./app-CtvCwAmI.js";const t={},p=e(`<h3 id="_1-上下文切换" tabindex="-1"><a class="header-anchor" href="#_1-上下文切换"><span>1.上下文切换</span></a></h3><h4 id="多线程一定快吗" tabindex="-1"><a class="header-anchor" href="#多线程一定快吗"><span>多线程一定快吗？</span></a></h4><p>不一定 当并发操作执行操作循环累加不超百万次时，速度比串行执行慢。 原因是线程创建和上下切换的开销</p><h4 id="测量上下文切换和时长" tabindex="-1"><a class="header-anchor" href="#测量上下文切换和时长"><span>测量上下文切换和时长</span></a></h4><p>Lmbench3 测量上下文切换的时长 vmstat 测量上下文切换次数</p><div class="language-bash line-numbers-mode" data-ext="sh" data-title="sh"><pre class="language-bash"><code> $ <span class="token function">vmstat</span> <span class="token number">1</span>
+    procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu-----
+    r  b swpd  <span class="token function">free</span>   buff  cache            si so     bi bo       <span class="token keyword">in</span> cs    us sy <span class="token function">id</span> wa st 
+    <span class="token number">0</span>  <span class="token number">0</span> <span class="token number">0</span>    <span class="token number">127876</span> <span class="token number">398928</span> <span class="token number">2297092</span>          <span class="token number">0</span>   <span class="token number">0</span>     <span class="token number">0</span>   <span class="token number">4</span>        <span class="token number">2</span> <span class="token number">2</span>     <span class="token number">0</span>  <span class="token number">0</span>  <span class="token number">99</span> <span class="token number">0</span>  <span class="token number">0</span>
+    <span class="token number">0</span>  <span class="token number">0</span> <span class="token number">0</span>    <span class="token number">127868</span> <span class="token number">398928</span> <span class="token number">2297092</span>          <span class="token number">0</span>   <span class="token number">0</span>     <span class="token number">0</span>   <span class="token number">0</span>     <span class="token number">595</span> <span class="token number">1171</span>   <span class="token number">0</span>  <span class="token number">1</span>  <span class="token number">99</span> <span class="token number">0</span>  <span class="token number">0</span>
+
+    <span class="token comment">#CS(Content Switch)表示上下文切换的次数，从上面的测试结果中我们可以看到，上下文 每1秒切换1000多次。</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h4 id="如何减少上下文切换" tabindex="-1"><a class="header-anchor" href="#如何减少上下文切换"><span>如何减少上下文切换</span></a></h4><p>1、无锁并发编程 : 数据id按照hash算法分段取模，不同线程处理不同数据段 2、CAS算法: atomic包使用cas算法更新数据 3、使用最少线程 4、使用协程: 单线程多任务调度</p><h4 id="实战案例" tabindex="-1"><a class="header-anchor" href="#实战案例"><span>实战案例</span></a></h4><div class="language-bash line-numbers-mode" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 用jstack命令dump线程信息，看看pid为3117的进程</span>
+<span class="token function">sudo</span> <span class="token parameter variable">-u</span> admin /opt/ifeve/java/bin/jstack <span class="token number">31177</span> <span class="token operator">&gt;</span> /home/tengfei.fangtf/dump17
+
+<span class="token comment"># 统计所有线程分别处于什么状态</span>
+ <span class="token function">grep</span> java.lang.Thread.State dump17 <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">&#39;{print $2$3$4$5}&#39;</span> <span class="token operator">|</span> <span class="token function">sort</span> <span class="token operator">|</span> <span class="token function">uniq</span> <span class="token parameter variable">-c</span>
+    <span class="token number">39</span> RUNNABLE
+    <span class="token number">21</span> TIMED_WAITING<span class="token punctuation">(</span>onobjectmonitor<span class="token punctuation">)</span>
+    <span class="token number">6</span> TIMED_WAITING<span class="token punctuation">(</span>parking<span class="token punctuation">)</span>
+    <span class="token number">51</span> TIMED_WAITING<span class="token punctuation">(</span>sleeping<span class="token punctuation">)</span>
+    <span class="token number">305</span> WAITING<span class="token punctuation">(</span>onobjectmonitor<span class="token punctuation">)</span>
+    <span class="token number">3</span> WAITING<span class="token punctuation">(</span>parking<span class="token punctuation">)</span>
+
+
+<span class="token comment"># 打开dump文件 查看WAITING状态</span>
+ <span class="token string">&quot;http-0.0.0.0-7001-97&quot;</span> daemon <span class="token assign-left variable">prio</span><span class="token operator">=</span><span class="token number">10</span> <span class="token assign-left variable">tid</span><span class="token operator">=</span>0x000000004f6a8000 <span class="token assign-left variable">nid</span><span class="token operator">=</span>0x555e <span class="token keyword">in</span>
+       Object.wait<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">[</span>0x0000000052423000<span class="token punctuation">]</span>
+    java.lang.Thread.State: WAITING <span class="token punctuation">(</span>on object monitor<span class="token punctuation">)</span>
+    at java.lang.Object.wait<span class="token punctuation">(</span>Native Method<span class="token punctuation">)</span>
+    - waiting on <span class="token operator">&lt;</span>0x00000007969b228<span class="token operator"><span class="token file-descriptor important">0</span>&gt;</span> <span class="token punctuation">(</span>a org.apache.tomcat.util.net.AprEndpoint<span class="token variable">$Worker</span><span class="token punctuation">)</span>
+    at java.lang.Object.wait<span class="token punctuation">(</span>Object.java:485<span class="token punctuation">)</span>
+    at org.apache.tomcat.util.net.AprEndpoint<span class="token variable">$Worker</span>.await<span class="token punctuation">(</span>AprEndpoint.java:1464<span class="token punctuation">)</span>
+    - locked <span class="token operator">&lt;</span>0x00000007969b228<span class="token operator"><span class="token file-descriptor important">0</span>&gt;</span> <span class="token punctuation">(</span>a org.apache.tomcat.util.net.AprEndpoint<span class="token variable">$Worker</span><span class="token punctuation">)</span>
+    at org.apache.tomcat.util.net.AprEndpoint<span class="token variable">$Worker</span>.run<span class="token punctuation">(</span>AprEndpoint.java:1489<span class="token punctuation">)</span>
+    at java.lang.Thread.run<span class="token punctuation">(</span>Thread.java:662<span class="token punctuation">)</span>
+
+
+<span class="token comment"># 减少工作线程数</span>
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>WAITING的线程少了，系统上下文切换的次数就会少， 因为每一次从 WAITTING到RUNNABLE都会进行一次上下文的切换</p><h3 id="_2-死锁" tabindex="-1"><a class="header-anchor" href="#_2-死锁"><span>2.死锁</span></a></h3><p>避免死锁方法 1、避免一个线程获取多个锁 2、避免一个线程在所内同时占有多个资源，尽量保证每个锁只占用一个资源 3、尝试使用定时锁 lock.tryLock(timeout) 4、加锁解锁在一起</p><div class="language-text line-numbers-mode" data-ext="text" data-title="text"><pre class="language-text"><code>//测试死锁
+public class DeadLockDemo {
+
+    private Object A = new Object();
+    private Object B = new Object();
+
+    private Runnable run1 = new Runnable() {
+        @Override
+        public void run() {
+            synchronized (A){
+                try {
+                    Thread.sleep( 2000 );
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                synchronized (B){
+                    System.out.println(&quot;1&quot;);
+                }
+            }
+        }
+    };
+
+    private Runnable run2 = new Runnable() {
+        @Override
+        public void run() {
+
+            synchronized (B){
+                synchronized (A){
+                    System.out.println(&quot;2&quot;);
+                }
+            }
+        }
+    };
+
+    public static void main(String[] args){
+        new DeadLockDemo().deadLock();
+    }
+    
+    private void deadLock(){
+        new Thread( run1 ).start();
+        new Thread( run2 ).start();
+    }
+
+}
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_3-资源限制挑战" tabindex="-1"><a class="header-anchor" href="#_3-资源限制挑战"><span>3.资源限制挑战</span></a></h3><p>资源限制的挑战: 程序的执行速度受限于计算机硬件资源或软件资源</p><p>引发问题: 代码并发执行，受限于资源，仍然串行执行，反而更慢，因为增加上线问调度和资源调度时间</p><p>根据资源受限情况调整并发度(并发线程数)</p><p>硬件资源：集群</p><p>软件资源:资源池复用</p><h4 id="juc编程源码" tabindex="-1"><a class="header-anchor" href="#juc编程源码"><span>juc编程源码</span></a></h4><p>https://github.com/yinlingchaoliu/juc tag &quot;dead lock&quot;</p>`,22),i=[p];function c(l,o){return s(),a("div",null,i)}const d=n(t,[["render",c],["__file","1.并发编程挑战.html.vue"]]),m=JSON.parse('{"path":"/basis/juc/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/1.%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%8C%91%E6%88%98.html","title":"1.并发编程挑战","lang":"zh-CN","frontmatter":{"title":"1.并发编程挑战","date":"2024-03-25T22:02:09.000Z","order":1,"category":["java并发编程艺术"],"tag":["juc"],"description":"1.上下文切换 多线程一定快吗？ 不一定 当并发操作执行操作循环累加不超百万次时，速度比串行执行慢。 原因是线程创建和上下切换的开销 测量上下文切换和时长 Lmbench3 测量上下文切换的时长 vmstat 测量上下文切换次数 如何减少上下文切换 1、无锁并发编程 : 数据id按照hash算法分段取模，不同线程处理不同数据段 2、CAS算法: ato...","head":[["meta",{"property":"og:url","content":"https://yinlingchaoliu.github.io/basis/juc/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/1.%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%8C%91%E6%88%98.html"}],["meta",{"property":"og:site_name","content":"引领潮流"}],["meta",{"property":"og:title","content":"1.并发编程挑战"}],["meta",{"property":"og:description","content":"1.上下文切换 多线程一定快吗？ 不一定 当并发操作执行操作循环累加不超百万次时，速度比串行执行慢。 原因是线程创建和上下切换的开销 测量上下文切换和时长 Lmbench3 测量上下文切换的时长 vmstat 测量上下文切换次数 如何减少上下文切换 1、无锁并发编程 : 数据id按照hash算法分段取模，不同线程处理不同数据段 2、CAS算法: ato..."}],["meta",{"property":"og:type","content":"article"}],["meta",{"property":"og:locale","content":"zh-CN"}],["meta",{"property":"og:updated_time","content":"2024-04-08T23:43:10.000Z"}],["meta",{"property":"article:author","content":"引领潮流"}],["meta",{"property":"article:tag","content":"juc"}],["meta",{"property":"article:published_time","content":"2024-03-25T22:02:09.000Z"}],["meta",{"property":"article:modified_time","content":"2024-04-08T23:43:10.000Z"}],["script",{"type":"application/ld+json"},"{\\"@context\\":\\"https://schema.org\\",\\"@type\\":\\"Article\\",\\"headline\\":\\"1.并发编程挑战\\",\\"image\\":[\\"\\"],\\"datePublished\\":\\"2024-03-25T22:02:09.000Z\\",\\"dateModified\\":\\"2024-04-08T23:43:10.000Z\\",\\"author\\":[{\\"@type\\":\\"Person\\",\\"name\\":\\"引领潮流\\",\\"url\\":\\"https://www.jianshu.com/u/bdcce32c05dd\\"}]}"]]},"headers":[{"level":3,"title":"1.上下文切换","slug":"_1-上下文切换","link":"#_1-上下文切换","children":[]},{"level":3,"title":"2.死锁","slug":"_2-死锁","link":"#_2-死锁","children":[]},{"level":3,"title":"3.资源限制挑战","slug":"_3-资源限制挑战","link":"#_3-资源限制挑战","children":[]}],"git":{"createdTime":1712619790000,"updatedTime":1712619790000,"contributors":[{"name":"引领潮流","email":"heat13@qq.com","commits":1}]},"readingTime":{"minutes":2.45,"words":735},"filePathRelative":"basis/juc/java并发编程艺术/1.并发编程挑战.md","localizedDate":"2024年3月26日","excerpt":"<h3>1.上下文切换</h3>\\n<h4>多线程一定快吗？</h4>\\n<p>不一定\\n当并发操作执行操作循环累加不超百万次时，速度比串行执行慢。\\n原因是线程创建和上下切换的开销</p>\\n<h4>测量上下文切换和时长</h4>\\n<p>Lmbench3 测量上下文切换的时长\\nvmstat 测量上下文切换次数</p>\\n<div class=\\"language-bash\\" data-ext=\\"sh\\" data-title=\\"sh\\"><pre class=\\"language-bash\\"><code> $ <span class=\\"token function\\">vmstat</span> <span class=\\"token number\\">1</span>\\n    procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu-----\\n    r  b swpd  <span class=\\"token function\\">free</span>   buff  cache            si so     bi bo       <span class=\\"token keyword\\">in</span> cs    us sy <span class=\\"token function\\">id</span> wa st \\n    <span class=\\"token number\\">0</span>  <span class=\\"token number\\">0</span> <span class=\\"token number\\">0</span>    <span class=\\"token number\\">127876</span> <span class=\\"token number\\">398928</span> <span class=\\"token number\\">2297092</span>          <span class=\\"token number\\">0</span>   <span class=\\"token number\\">0</span>     <span class=\\"token number\\">0</span>   <span class=\\"token number\\">4</span>        <span class=\\"token number\\">2</span> <span class=\\"token number\\">2</span>     <span class=\\"token number\\">0</span>  <span class=\\"token number\\">0</span>  <span class=\\"token number\\">99</span> <span class=\\"token number\\">0</span>  <span class=\\"token number\\">0</span>\\n    <span class=\\"token number\\">0</span>  <span class=\\"token number\\">0</span> <span class=\\"token number\\">0</span>    <span class=\\"token number\\">127868</span> <span class=\\"token number\\">398928</span> <span class=\\"token number\\">2297092</span>          <span class=\\"token number\\">0</span>   <span class=\\"token number\\">0</span>     <span class=\\"token number\\">0</span>   <span class=\\"token number\\">0</span>     <span class=\\"token number\\">595</span> <span class=\\"token number\\">1171</span>   <span class=\\"token number\\">0</span>  <span class=\\"token number\\">1</span>  <span class=\\"token number\\">99</span> <span class=\\"token number\\">0</span>  <span class=\\"token number\\">0</span>\\n\\n    <span class=\\"token comment\\">#CS(Content Switch)表示上下文切换的次数，从上面的测试结果中我们可以看到，上下文 每1秒切换1000多次。</span>\\n</code></pre></div>","autoDesc":true}');export{d as comp,m as data};
